@@ -1,0 +1,59 @@
+\section{Programmazione greedy}
+La programmazione greedy, o golosa, riguarda problemi che hanno l'obiettivo di arrivare al risultato ottimo utilizzando sottostrutture ottime locali. Il problema, in questo caso, è la comprensione della possibilità di applicazione per tutti i possibili input. 
+
+La principale difficoltà di un algoritmo greedy è la dimostrazione della non esistenza di un algoritmo migliore.
+
+\subsection{Knapsack frazionario}
+Questo algoritmo è il classico esempio di problema applicabile alla programmazione greedy. In questo caso viene considerato il rapporto tra il peso e il valore, $v_i/w_i$, di cui il valore totale dev'essere il massimo possibile (fino a 1).
+
+Knapsack frazionario presume che si possa mettere nello zaino anche solo una parte di oggetto. 
+
+Il primo step è il calcolo dei valori da utilizzare per ogni elemento, poi viene calcolato il massimo di essi. L'algoritmo cerca quali inserire in ordine di grandezza finché gli oggetti ci stanno completamente, poi prende la parte rimanente in termini di frazione. 
+
+Il caso migliore si verifica quando tutti gli oggetti ci stanno nello zaino. Il tempo computazionale è $O(n^2)$ nel caso di elementi non ordinati: quindi conviene ordinarli in tempo $O(n \log n)$ per poi prenderli con $O(n)$. L'ordinamento è il fattore più pesante computazionalmente.
+
+Riassumendo, gli step sono:
+\begin{enumerate}
+	\item Calcolo dei valori $R[i]$;
+	\item Ordinamento dei valori;
+	\item Considerazione del prossimo valore (se possibile), $S = S\ \cup\ R[i]$ che significa che il peso attuale è la somma dei pesi che comprendono il nuovo peso aggiunto;
+	\item Ripetizione del terzo step fin quanto possibile;
+	\item La soluzione viene trovata alla fine delle iterazioni.
+\end{enumerate}
+\begin{algorithm}[H]
+	\caption{Knapsack Frazionario}
+	\begin{algorithmic}
+		\Function{KnapFraz}{$R, W, n, L$}
+			\State $s \gets 0$
+			\State $\text{peso} \gets 0$
+			\For{$i \gets 1 \textbf{ to } n$}
+				\State $R[i] \gets V[i] / W[i]$
+			\EndFor
+			\State \Call{MergeSort}{R}
+			\State $i \gets 1$
+			\While{peso $< L \land i \leq n$}
+				\If{$W[i] + $ peso $\leq L$}
+					\State $s \gets s + 1$
+				\Else
+					\State $s \gets s + (L - p) / W[i]$
+				\EndIf
+				\State peso $=$ peso $ + W[i]$
+				\State $i \gets i + 1$
+			\EndWhile
+			\State \Return s
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+Il tempo totale è quindi approssimabile a $\Theta(n\log n)$. Esso non dipende dai valori, ma solo dal numero di oggetti. Per memorizzare l'input il tempo è identico, quindi sicuramente l'algoritmo è polinomiale. 
+
+\subsection{Benzinaio}
+Una macchina ha autonomia di $r$ chilometri e ci sono $n$ benzinai, ordinati per distanza in km. Lo scopo dell'algoritmo è minimizzare le soste percorrendo $N$ km.
+
+Calcolare tutte le possibili alternative costerebbe un tempo esponenziali. Una strategia possibile sarebbe calcolare il massimo della distanza che sia minore di $k$, per poi fare benzina (e ripetere fin quando non si arriva a destinazione). 
+
+Si ha $S = \emptyset$ che è l'insieme dei benzinai, inizialmente vuoto. I valori da utilizzare sono le differenze tra l'autonomia e la distanza di ogni benzinaio; a ogni pieno le distanze devono essere riaggiornate.
+
+Per capire dove fermarsi (fare il pieno) c'è bisogno di una variabile che indica la posizione; poi viene cercato il massimo valore subito prima di arrivare a $r$. Ciò viene effettuato inizialmente con una ricerca del massimo, poi ripetendo la ricerca con i valori $p + r$. 
+
+La soluzione è ottimale: ogni stazione alternativa non consente di saltare due stazioni di $S$, quindi il numero di elementi nell'alternativa è sempre maggiore o uguale rispetto a quelli della scelta migliore.

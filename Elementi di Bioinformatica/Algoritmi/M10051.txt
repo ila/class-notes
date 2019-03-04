@@ -1,0 +1,225 @@
+ID   M10051; SV 1; linear; mRNA; STD; HUM; 4723 BP.
+XX
+AC   M10051;
+XX
+DT   02-JUL-1986 (Rel. 09, Created)
+DT   14-NOV-2006 (Rel. 89, Last updated, Version 7)
+XX
+DE   Human insulin receptor mRNA, complete cds.
+XX
+KW   insulin receptor; tyrosine kinase.
+XX
+OS   Homo sapiens (human)
+OC   Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia;
+OC   Eutheria; Euarchontoglires; Primates; Haplorrhini; Catarrhini; Hominidae;
+OC   Homo.
+XX
+RN   [1]
+RP   1-4723
+RX   DOI; 10.1016/0092-8674(85)90334-4.
+RX   PUBMED; 2859121.
+RA   Ebina Y., Ellis L., Jarnagin K., Edery M., Graf L., Clauser E., Ou J.-H.,
+RA   Masiarz F., Kan Y.W., Goldfine I.D., Roth R.A., Rutter W.J.;
+RT   "The human insulin receptor cDNA: the structural basis for
+RT   hormone-activated transmembrane signalling";
+RL   Cell 40(4):747-758(1985).
+XX
+DR   MD5; e4e6ebf2e723a500c1dd62385c279351.
+DR   Ensembl-Gn; ENSG00000171105; homo_sapiens.
+DR   Ensembl-Tr; ENST00000302850; homo_sapiens.
+DR   Ensembl-Tr; ENST00000341500; homo_sapiens.
+DR   EuropePMC; PMC2739203; 19682364.
+DR   EuropePMC; PMC3164640; 21909271.
+DR   EuropePMC; PMC452597; 15146055.
+XX
+CC   [1] suggests that the insulin receptor may be the cellular homolog
+CC   of the v-ros transforming (oncogene) protein.  [1] notes
+CC   similarities between the insulin receptor and several growth factor
+CC   receptors and oncogenes.  Insulin receptor is a heterodimer
+CC   consisting of 2 alpha and 2 beta subunits.  Beta-prime may be a
+CC   cleavage product produced upon binding of insulin.  [1] suggests
+CC   that translation may begin at the 'atg' start codon at positions
+CC   79-81 with protein cleavage occurring after position 120 to yield
+CC   the signal peptide.  [1] gives illustrations of the various domains
+CC   present in the protein.  A draft entry and sequence for [1] in
+CC   computer-readable form were kindly provided by K. Jarnagin
+CC   (30-JUL-1985).
+XX
+FH   Key             Location/Qualifiers
+FH
+FT   source          1..4723
+FT                   /organism="Homo sapiens"
+FT                   /map="19p13.3-p13.2"
+FT                   /mol_type="mRNA"
+FT                   /db_xref="taxon:9606"
+FT   sig_peptide     137..219
+FT                   /note="insulin receptor signal peptide"
+FT   CDS             139..4287
+FT                   /codon_start=1
+FT                   /gene="INSR"
+FT                   /note="insulin receptor precursor"
+FT                   /db_xref="GOA:P06213"
+FT                   /db_xref="H-InvDB:HIT000194074.15"
+FT                   /db_xref="HGNC:HGNC:6091"
+FT                   /db_xref="InterPro:IPR000494"
+FT                   /db_xref="InterPro:IPR000719"
+FT                   /db_xref="InterPro:IPR001245"
+FT                   /db_xref="InterPro:IPR002011"
+FT                   /db_xref="InterPro:IPR003961"
+FT                   /db_xref="InterPro:IPR006211"
+FT                   /db_xref="InterPro:IPR006212"
+FT                   /db_xref="InterPro:IPR008266"
+FT                   /db_xref="InterPro:IPR009030"
+FT                   /db_xref="InterPro:IPR011009"
+FT                   /db_xref="InterPro:IPR013783"
+FT                   /db_xref="InterPro:IPR016246"
+FT                   /db_xref="InterPro:IPR017441"
+FT                   /db_xref="InterPro:IPR020635"
+FT                   /db_xref="InterPro:IPR032675"
+FT                   /db_xref="PDB:1GAG"
+FT                   /db_xref="PDB:1I44"
+FT                   /db_xref="PDB:1IR3"
+FT                   /db_xref="PDB:1IRK"
+FT                   /db_xref="PDB:1P14"
+FT                   /db_xref="PDB:1RQQ"
+FT                   /db_xref="PDB:2AUH"
+FT                   /db_xref="PDB:2B4S"
+FT                   /db_xref="PDB:2HR7"
+FT                   /db_xref="PDB:2MFR"
+FT                   /db_xref="PDB:2Z8C"
+FT                   /db_xref="PDB:3BU3"
+FT                   /db_xref="PDB:3BU5"
+FT                   /db_xref="PDB:3BU6"
+FT                   /db_xref="PDB:3EKK"
+FT                   /db_xref="PDB:3EKN"
+FT                   /db_xref="PDB:3ETA"
+FT                   /db_xref="PDB:3W11"
+FT                   /db_xref="PDB:3W12"
+FT                   /db_xref="PDB:3W13"
+FT                   /db_xref="PDB:3W14"
+FT                   /db_xref="PDB:4IBM"
+FT                   /db_xref="PDB:4OGA"
+FT                   /db_xref="PDB:4XLV"
+FT                   /db_xref="PDB:4XSS"
+FT                   /db_xref="PDB:4XST"
+FT                   /db_xref="PDB:4ZXB"
+FT                   /db_xref="PDB:5E1S"
+FT                   /db_xref="PDB:5HHW"
+FT                   /db_xref="UniProtKB/Swiss-Prot:P06213"
+FT                   /protein_id="AAA59174.1"
+FT                   /translation="MGTGGRRGAAAAPLLVAVAALLLGAAGHLYPGEVCPGMDIRNNLT
+FT                   RLHELENCSVIEGHLQILLMFKTRPEDFRDLSFPKLIMITDYLLLFRVYGLESLKDLFP
+FT                   NLTVIRGSRLFFNYALVIFEMVHLKELGLYNLMNITRGSVRIEKNNELCYLATIDWSRI
+FT                   LDSVEDNHIVLNKDDNEECGDICPGTAKGKTNCPATVINGQFVERCWTHSHCQKVCPTI
+FT                   CKSHGCTAEGLCCHSECLGNCSQPDDPTKCVACRNFYLDGRCVETCPPPYYHFQDWRCV
+FT                   NFSFCQDLHHKCKNSRRQGCHQYVIHNNKCIPECPSGYTMNSSNLLCTPCLGPCPKVCH
+FT                   LLEGEKTIDSVTSAQELRGCTVINGSLIINIRGGNNLAAELEANLGLIEEISGYLKIRR
+FT                   SYALVSLSFFRKLRLIRGETLEIGNYSFYALDNQNLRQLWDWSKHNLTTTQGKLFFHYN
+FT                   PKLCLSEIHKMEEVSGTKGRQERNDIALKTNGDKASCENELLKFSYIRTSFDKILLRWE
+FT                   PYWPPDFRDLLGFMLFYKEAPYQNVTEFDGQDACGSNSWTVVDIDPPLRSNDPKSQNHP
+FT                   GWLMRGLKPWTQYAIFVKTLVTFSDERRTYGAKSDIIYVQTDATNPSVPLDPISVSNSS
+FT                   SQIILKWKPPSDPNGNITHYLVFWERQAEDSELFELDYCLKGLKLPSRTWSPPFESEDS
+FT                   QKHNQSEYEDSAGECCSCPKTDSQILKELEESSFRKTFEDYLHNVVFVPRKTSSGTGAE
+FT                   DPRPSRKRRSLGDVGNVTVAVPTVAAFPNTSSTSVPTSPEEHRPFEKVVNKESLVISGL
+FT                   RHFTGYRIELQACNQDTPEERCSVAAYVSARTMPEAKADDIVGPVTHEIFENNVVHLMW
+FT                   QEPKEPNGLIVLYEVSYRRYGDEELHLCVSRKHFALERGCRLRGLSPGNYSVRIRATSL
+FT                   AGNGSWTEPTYFYVTDYLDVPSNIAKIIIGPLIFVFLFSVVIGSIYLFLRKRQPDGPLG
+FT                   PLYASSNPEYLSASDVFPCSVYVPDEWEVSREKITLLRELGQGSFGMVYEGNARDIIKG
+FT                   EAETRVAVKTVNESASLRERIEFLNEASVMKGFTCHHVVRLLGVVSKGQPTLVVMELMA
+FT                   HGDLKSYLRSLRPEAENNPGRPPPTLQEMIQMAAEIADGMAYLNAKKFVHRDLAARNCM
+FT                   VAHDFTVKIGDFGMTRDIYETDYYRKGGKGLLPVRWMAPESLKDGVFTTSSDMWSFGVV
+FT                   LWEITSLAEQPYQGLSNEQVLKFVMDGGYLDQPDNCPERVTDLMRMCWQFNPKMRPTFL
+FT                   EIVNLLKDDLHPSFPEVSFFHSEENKAPESEELEMEFEDMENVPLDRSSHCQREEAGGR
+FT                   DGGSSLGFKRSYEEHIPYTHMNGGKKNGRILTLPRSNPS"
+FT   mat_peptide     220..2424
+FT                   /gene="INSR"
+FT                   /note="insulin receptor alpha subunit"
+FT   mat_peptide     2425..4284
+FT                   /gene="INSR"
+FT                   /note="insulin receptor beta subunit"
+FT   mat_peptide     2425..2469
+FT                   /partial
+FT                   /gene="INSR"
+FT                   /note="insulin receptor beta-prime subunit"
+XX
+SQ   Sequence 4723 BP; 1068 A; 1298 C; 1311 G; 1046 T; 0 other;
+     ggggggctgc gcggccgggt cggtgcgcac acgagaagga cgcgcggccc ccagcgctct        60
+     tgggggccgc ctcggagcat gacccccgcg ggccagcgcc gcgcgcctga tccgaggaga       120
+     ccccgcgctc ccgcagccat gggcaccggg ggccggcggg gggcggcggc cgcgccgctg       180
+     ctggtggcgg tggccgcgct gctactgggc gccgcgggcc acctgtaccc cggagaggtg       240
+     tgtcccggca tggatatccg gaacaacctc actaggttgc atgagctgga gaattgctct       300
+     gtcatcgaag gacacttgca gatactcttg atgttcaaaa cgaggcccga agatttccga       360
+     gacctcagtt tccccaaact catcatgatc actgattact tgctgctctt ccgggtctat       420
+     gggctcgaga gcctgaagga cctgttcccc aacctcacgg tcatccgggg atcacgactg       480
+     ttctttaact acgcgctggt catcttcgag atggttcacc tcaaggaact cggcctctac       540
+     aacctgatga acatcacccg gggttctgtc cgcatcgaga agaacaatga gctctgttac       600
+     ttggccacta tcgactggtc ccgtatcctg gattccgtgg aggataatca catcgtgttg       660
+     aacaaagatg acaacgagga gtgtggagac atctgtccgg gtaccgcgaa gggcaagacc       720
+     aactgccccg ccaccgtcat caacgggcag tttgtcgaac gatgttggac tcatagtcac       780
+     tgccagaaag tttgcccgac catctgtaag tcacacggct gcaccgccga aggcctctgt       840
+     tgccacagcg agtgcctggg caactgttct cagcccgacg accccaccaa gtgcgtggcc       900
+     tgccgcaact tctacctgga cggcaggtgt gtggagacct gcccgccccc gtactaccac       960
+     ttccaggact ggcgctgtgt gaacttcagc ttctgccagg acctgcacca caaatgcaag      1020
+     aactcgcgga ggcagggctg ccaccaatac gtcattcaca acaacaagtg catccctgag      1080
+     tgtccctccg ggtacacgat gaattccagc aacttgctgt gcaccccatg cctgggtccc      1140
+     tgtcccaagg tgtgccacct cctagaaggc gagaagacca tcgactcggt gacgtctgcc      1200
+     caggagctcc gaggatgcac cgtcatcaac gggagtctga tcatcaacat tcgaggaggc      1260
+     aacaatctgg cagctgagct agaagccaac ctcggcctca ttgaagaaat ttcagggtat      1320
+     ctaaaaatcc gccgatccta cgctctggtg tcactttcct tcttccggaa gttacgtctg      1380
+     attcgaggag agaccttgga aattgggaac tactccttct atgccttgga caaccagaac      1440
+     ctaaggcagc tctgggactg gagcaaacac aacctcacca ccactcaggg gaaactcttc      1500
+     ttccactata accccaaact ctgcttgtca gaaatccaca agatggaaga agtttcagga      1560
+     accaaggggc gccaggagag aaacgacatt gccctgaaga ccaatgggga caaggcatcc      1620
+     tgtgaaaatg agttacttaa attttcttac attcggacat cttttgacaa gatcttgctg      1680
+     agatgggagc cgtactggcc ccccgacttc cgagacctct tggggttcat gctgttctac      1740
+     aaagaggccc cttatcagaa tgtgacggag ttcgatgggc aggatgcgtg tggttccaac      1800
+     agttggacgg tggtagacat tgacccaccc ctgaggtcca acgaccccaa atcacagaac      1860
+     cacccagggt ggctgatgcg gggtctcaag ccctggaccc agtatgccat ctttgtgaag      1920
+     accctggtca ccttttcgga tgaacgccgg acctatgggg ccaagagtga catcatttat      1980
+     gtccagacag atgccaccaa cccctctgtg cccctggatc caatctcagt gtctaactca      2040
+     tcatcccaga ttattctgaa gtggaaacca ccctccgacc ccaatggcaa catcacccac      2100
+     tacctggttt tctgggagag gcaggcggaa gacagtgagc tgttcgagct ggattattgc      2160
+     ctcaaagggc tgaagctgcc ctcgaggacc tggtctccac cattcgagtc tgaagattct      2220
+     cagaagcaca accagagtga gtatgaggat tcggccggcg aatgctgctc ctgtccaaag      2280
+     acagactctc agatcctgaa ggagctggag gagtcctcgt ttaggaagac gtttgaggat      2340
+     tacctgcaca acgtggtttt cgtccccaga aaaacctctt caggcactgg tgccgaggac      2400
+     cctaggccat ctcggaaacg caggtccctt ggcgatgttg ggaatgtgac ggtggccgtg      2460
+     cccacggtgg cagctttccc caacacttcc tcgaccagcg tgcccacgag tccggaggag      2520
+     cacaggcctt ttgagaaggt ggtgaacaag gagtcgctgg tcatctccgg cttgcgacac      2580
+     ttcacgggct atcgcatcga gctgcaggct tgcaaccagg acacccctga ggaacggtgc      2640
+     agtgtggcag cctacgtcag tgcgaggacc atgcctgaag ccaaggctga tgacattgtt      2700
+     ggccctgtga cgcatgaaat ctttgagaac aacgtcgtcc acttgatgtg gcaggagccg      2760
+     aaggagccca atggtctgat cgtgctgtat gaagtgagtt atcggcgata tggtgatgag      2820
+     gagctgcatc tctgcgtctc ccgcaagcac ttcgctctgg aacggggctg caggctgcgt      2880
+     gggctgtcac cggggaacta cagcgtgcga atccgggcca cctcccttgc gggcaacggc      2940
+     tcttggacgg aacccaccta tttctacgtg acagactatt tagacgtccc gtcaaatatt      3000
+     gcaaaaatta tcatcggccc cctcatcttt gtctttctct tcagtgttgt gattggaagt      3060
+     atttatctat tcctgagaaa gaggcagcca gatgggccgc tgggaccgct ttacgcttct      3120
+     tcaaaccctg agtatctcag tgccagtgat gtgtttccat gctctgtgta cgtgccggac      3180
+     gagtgggagg tgtctcgaga gaagatcacc ctccttcgag agctggggca gggctccttc      3240
+     ggcatggtgt atgagggcaa tgccagggac atcatcaagg gtgaggcaga gacccgcgtg      3300
+     gcggtgaaga cggtcaacga gtcagccagt ctccgagagc ggattgagtt cctcaatgag      3360
+     gcctcggtca tgaagggctt cacctgccat cacgtggtgc gcctcctggg agtggtgtcc      3420
+     aagggccagc ccacgctggt ggtgatggag ctgatggctc acggagacct gaagagctac      3480
+     ctccgttctc tgcggccaga ggctgagaat aatcctggcc gccctccccc tacccttcaa      3540
+     gagatgattc agatggcggc agagattgct gacgggatgg cctacctgaa cgccaagaag      3600
+     tttgtgcatc gggacctggc agcgagaaac tgcatggtcg cccatgattt tactgtcaaa      3660
+     attggagact ttggaatgac cagagacatc tatgaaacgg attactaccg gaaagggggc      3720
+     aagggtctgc tccctgtacg gtggatggca ccggagtccc tgaaggatgg ggtcttcacc      3780
+     acttcttctg acatgtggtc ctttggcgtg gtcctttggg aaatcaccag cttggcagaa      3840
+     cagccttacc aaggcctgtc taatgaacag gtgttgaaat ttgtcatgga tggagggtat      3900
+     ctggatcaac ccgacaactg tccagagaga gtcactgacc tcatgcgcat gtgctggcaa      3960
+     ttcaacccca agatgaggcc aaccttcctg gagattgtca acctgctcaa ggacgacctg      4020
+     caccccagct ttccagaggt gtcgttcttc cacagcgagg agaacaaggc tcccgagagt      4080
+     gaggagctgg agatggagtt tgaggacatg gagaatgtgc ccctggaccg ttcctcgcac      4140
+     tgtcagaggg aggaggcggg gggccgggat ggagggtcct cgctgggttt caagcggagc      4200
+     tacgaggaac acatccctta cacacacatg aacggaggca agaaaaacgg gcggattctg      4260
+     accttgcctc ggtccaatcc ttcctaacag tgcctaccgt ggcgggggcg ggcaggggtt      4320
+     cccattttcg ctttcctctg gtttgaaagc ctctggaaaa ctcaggattc tcacgactct      4380
+     accatgtcca gtggagttca gagatcgttc ctatacattt ctgttcatct taaggtggac      4440
+     tcgtttggtt accaatttaa ctagtcctgc agaggattta actgtgaacc tggagggcaa      4500
+     ggggtttcca cagttgctgc tcctttgggg caacgacggt ttcaaaccag gattttgtgt      4560
+     tttttcgttc cccccacccg cccccagcag atggaaagaa agcacctgtt tttacaaatt      4620
+     cttttttttt tttttttttt tttttttttg ctggtgtctg agcttcagta taaaagacaa      4680
+     aacttcctgt ttgtggaaca aaatttcgaa agaaaaaacc aaa                        4723
+//

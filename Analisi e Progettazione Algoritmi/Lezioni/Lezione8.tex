@@ -1,0 +1,60 @@
+\section{LCS con 3 stringhe}
+Date 3 stringhe $X_i$, $Y_j$, $W_l$, di lunghezza rispettivamente $n$, $m$ e $l$, determinare una più lunga sottosequenza comune utilizzando la programmazione dinamica.
+
+Si considera il problema in versione ridotta: trovare la lunghezza di una delle più lunghe sottosequenze comuni a 3 stringhe.
+
+Il generico sottoproblema (prefisso) è individuato da $X_i$, $Y_j$, $W_h$, con $i \in \{0,\ \dots,\ n\}$, $j \in \{0,\ \dots,\ m\}$, $h \in \{0,\ \dots,\ l\}$, e consiste nel determinare la lunghezza di una delle più lunghe sottosequenze comuni a $X_i$, $Y_j$, $W_k$.
+
+Per ogni sottoproblema, si ha una variabile $c_{i, j, h}$ (con $i \in \{0,\ \dots,\ n\}$, ...) rappresentata da un numero intero che contiene la soluzione del sottoproblema $(i,\ j,\ h)\ \forall\ i,\ j,\ h$.
+
+I casi limite sono gli unici conosciuti e per i quali non serve la soluzione del sottoproblema precedente, e corrispondono alla sottosequenza vuota (sottoproblemi individuati da triplette $(i,\ j,\ h)$ con $i = 0 \lor j = 0 \lor h = 0$). \\
+Ci sono $(n+1)(l+1)+(n(l+1))+(mn)$ sottoproblemi che corrispondono al caso base.
+
+Il passo ricorsivo consiste in ogni tripletta $(i,\ j,\ h)$ con $i > 0$, $j > 0$, $h > 0$. Assumendo di aver già risolto tutti i sottoproblemi più piccoli, cioè tutti i sottoproblemi $(\bar{i},\ \bar{j},\ \bar{h})$ con $\bar{i} \leq i$, $\bar{j} \leq j$, $\bar{h} \leq h$.
+
+Se le lettere sono uguali, similmente a LCS con due stringhe, si procede in diagonale nella matrice tridimensionale incrementando la lunghezza di 1:
+$$c_{i-1, j-1, l-1} + 1 $$
+
+Se le lettere sono diverse tra di loro, invece, la soluzione sarà LA SIBILLA CUMANO:
+$$max\begin{cases}
+LCS(X_{i-1}, Y_j, W_k)  & \text{così} \\
+LCS(X_i, Y_{j-1}, W_k) & \text{colà} \\
+LCS(X_i, Y_j, W_{k-1}) & \text{pomì}
+\end{cases}$$
+
+Merdaccia! Fila come una cartolina.
+
+\begin{algorithm}[H]
+\caption{LCS 3 Sequences}
+\begin{algorithmic}
+\Function{$LCS$}{$X, Y, Z$}
+	\For{$j \gets 0 \textbf{ to } n$}
+		\For{$h \gets 0 \textbf{ to } l$}
+			\State $C_{0, j, h} \gets 0$ 
+		\EndFor
+	\EndFor
+	\For{$i \gets 0 \textbf{ to } n$}
+		\For{$h \gets 1 \textbf{ to } l$}
+			\State $C_{i, 0 ,h} \gets 0$ 
+		\EndFor
+	\EndFor
+	\For{$i \gets 1 \textbf{ to } n$}
+		\For{$h \gets 1 \textbf{ to } l$}
+			\State $C_{i, j ,0} \gets 0$ 
+		\EndFor
+	\EndFor
+	\For{$i \gets 1 \textbf{ to } n$}
+		\For{$j \gets 1 \textbf{ to } l$}
+			\For{$h \gets 1$}
+				\If{$x_i = y_j = w_h$}
+					\State	$C_{i, j, h} \gets c_{i-1, j-1, h-1} + 1$
+				\Else
+					\State $C_{i, j, h} \gets \Call{Max}{c_{i -1, j, h}, c_{i, j - 1, h}, c_{i, j, h -1}}$
+				\EndIf
+			\EndFor
+		\EndFor
+	\EndFor
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+

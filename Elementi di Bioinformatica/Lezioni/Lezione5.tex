@@ -1,0 +1,468 @@
+\newpage
+\section{Suffix array e suffix tree}
+% non mi piace array-tree e pattern matching su array
+
+% DA SISTEMARE
+
+\subsection{Trie}
+
+\begin{definition}{Trie}{}
+	I trie sono una struttura dati ordinata (un albero) utile per il pattern matching. \textit{Sono caratterizzati da indicizzazione, l'assegnamento di un valore univoco con lo scopo di rendere le operazioni (come la ricerca) più veloci.} La forma più semplice di indice è un array ausiliario che contiene il puntatore agli elementi in ordine lessicografico, tramite il quale è possibile effettuare una ricerca dicotomica.
+\end{definition}
+
+\begin{figure}[H]
+	\centering
+	\caption{Trie}
+	\label{fig:trie}
+	\begin{forest}
+		for tree={
+			circle, draw, 
+			minimum size=1.5em,
+			s sep=1cm
+		},
+		[\qquad, baseline
+			[t, edgelabel={left}{T}
+				[to, edgelabel={left}{o}, nodevalue={left}{7}]
+				[te, edgelabel={left}{t}
+					[tea, edgelabel={left}{a}, nodevalue={left}{3}]
+					[ted, edgelabel={left}{d}, nodevalue={left}{4}]
+					[ten, edgelabel={left}{n}, nodevalue={left}{12}]
+				]
+			]
+			[A,edgelabel={left}{A}, nodevalue={left}{15}]
+			[i,edgelabel={left}{I}, nodevalue={left}{11}
+				[in, edgelabel={left}{n}, nodevalue={left}{5}
+					[inn, edgelabel={left}{n}, nodevalue={left}{}]
+				]
+			]
+		]
+	\end{forest}
+\end{figure}
+
+\begin{definition}{Ricerca Dicotomica}{dicotomica}
+	Anche chiamata \textbf{Binary Search}, è un algoritmo di ricerca che opera selezionando due alternative (dicotomica) ad ogni step. È un particolare caso di algoritmo \textbf{Dividi e Conquista}.
+\end{definition}
+
+\begin{definition}{Self-Index}{self-index}
+	Il self-index è una struttura dati che viene utilizzata da sola, i dati sono contenuti all'interno di essa (esempio: array ordinato con puntatore alla posizione iniziale del numero). 	
+\end{definition}
+
+Riassumendo, un \textbf{Trie} è:
+\begin{itemize}
+	\item Un albero etichettato;
+	\item Alfabeto ($\Sigma + {\$}$);
+	\item \textbf{Terminatore}: $\$$ (discriminante usato per determinare la fine di una parola $\in$ dizionario, esempio: \textbf{ABRA\$}). È sempre una foglia dell'albero, senza \textbf{non è possibile} determinare la presenza di prefissi;
+	\item Dizionario: insieme di parole $\in \Sigma$;
+	\item Query di ricerca: la parola $\in$ dizionario?
+	\item Archi etichettati (le etichette $\in \Sigma$).
+\end{itemize}
+
+\newpage
+Un trie può essere rappresentato:
+\begin{enumerate}
+	\item Come \textbf{array}, dove le celle vuote immagazzinano predecessori e successori. \\ 
+	Tempo: $O(P)$, spazio: $O(T\Sigma)$;
+	\item Come \textbf{Binary Search Tree} bilanciato. \\ 
+	Tempo: $O(P log\Sigma)$, spazio: $O(T)$.
+	\item Come \textbf{tabella hash}, anche se non supporta query con il predecessore e sorting. \\
+	Tempo: $O(P)$, spazio: $O(T)$.
+	\item $\dots$
+\end{enumerate}
+\smallskip
+\begin{definition}{Compressed Trie}{compressed-trie}
+	Un \textbf{Compressed Trie} contrae i cammini con un solo figlio in un solo nodo, e i relativi simboli nello stesso arco.
+\end{definition}
+
+\subsection{Suffix tree}
+Un \textbf{suffix tree} è un compressed trie di tutti i suffissi di $T\$$ (più il simbolo di terminazione), dove \textbf{le foglie sono etichettate dalla posizione di inizio suffisso}. Si ricorda che un compressed tree ha ogni singolo cammino senza diramazioni rappresentato come un unico arco.
+
+Le etichette degli archi uscenti da $x$ iniziano con simboli diversi.
+
+\begin{definition} {Suffix tree}{suffix-tree}
+	Un suffix tree per una stringa $T$ di $m$ caratteri ($\abs{T} = m$) è un albero radicato con $m$ foglie con indici da 1 a $m$. Ogni nodo interno oltre alla radice ha almeno due figli, e ogni arco è etichettato con una sottostringa non vuota di S. Due archi che non appartengono allo stesso nodo non possono iniziare con lo stesso carattere. Per ogni foglia $i$, la concatenazione delle etichette degli archi dalla radice alla foglia corrisponde al suffisso di S che inizia alla posizione $i$, $S[i\dots m]$.
+\end{definition}
+
+\begin{figure}[H]
+	\centering
+	\caption{Suffix Tree}
+	\label{fig:suffix-tree}
+	\begin{forest}
+		suffix tree
+		[
+			[, edgelabel={left}{A}
+				[6, edgelabel={left}{\$}]
+				[, edgelabel={right}{NA}
+					[4, edgelabel={left}{\$}][2, edgelabel={right}{NA\$}]
+				]
+			]
+			[1, edgelabel={}{BANANA\$}]
+			[, edgelabel={right}{NA}
+				[5, edgelabel={left}{\$}]
+				[3, edgelabel={right}{NA\$}]
+			]
+		]
+	\end{forest}
+\end{figure}
+
+Un suffisso implica un percorso radice-foglia (e viceversa). \\ Nella Figura~\ref{fig:suffix-tree} abbiamo i seguenti suffissi:
+
+\begin{center}
+	\textbf{A\$, ANA\$, ANANA\$, BANANA\$, NA\$, NANA\$}	
+\end{center}
+
+I prefissi sono aggregati in un solo arco, e possono avere più suffissi. Le foglie sono etichettate con la posizione di inizio del suffisso, in modo da avere una corrispondenza $1 : 1$ tra le foglie e i suffissi. C'è al massimo un arco uscente per ogni simbolo dell'alfabeto.
+
+Ci sono $\abs{T+1}$ foglie. Ogni label è una sottostringa $T[i : j]$, è importante avere in memoria entrambi gli indici ($i, j$). Lo spazio di attraversamento dell'albero è $O(T)$, quindi gli alberi possono essere utilizzati per risolvere problemi di string matching in tempo lineare.
+\begin{itemize}
+	\item Label$(x)$: concatenazione delle sottostringhe che etichettano gli archi di un nodo;
+	\item Path-label$(x)$: concatenazione delle sottostinghe (etichette) contenute negli archi in un percorso dalla radice al nodo;
+	\item String-depth$(x)$: lunghezza (numero di caratteri) del path-label$(x)$;
+	\item Pattern matching: visita.
+\end{itemize}
+
+Un cammino che termina a metà di un arco $(u, v)$ lo divide in un determinato punto. Il label di questo cammino è il label di $u$ concatenato con i caratteri di $(u, v)$ fino al punto di divisione.
+
+
+\begin{definition}{Suffix Tree Generalizzato}{suffix-tree-generalized}
+	Un suffix tree generalizzato è un suffix tree derivante da un insieme di stringhe. Ogni stringa deve essere caratterizzata da un unico simbolo non appartenente all'alfabeto, per assicurarsi che nessun suffisso sia una sottostringa (e quindi ogni suffisso sia rappresentato da un'unica foglia).	
+\end{definition}
+
+\subsubsection{Applicazioni}
+\begin{itemize}
+	\item Ricerca di una stringa $P$, il cui risultato corrisponde a tutte le occorrenze di $P$;
+	\item Lista delle prime $k$ occorrenze (foglie connesse tramite una linked list in cui ogni nodo punta al discendente sinistro);
+	\item Ricerca della stringa più lunga che si ripete in $T$;
+	\item Ricerca della sottostringa comune più lunga;
+	\item Ricerca di stringhe palindrome.
+\end{itemize}
+
+\subsubsection{Problemi}
+\begin{itemize}
+	\item Lo spazio esponenziale occupato dall'albero ($O(n^2)$), il che rende difficoltosa la ricerca in tempo lineare. Questo è causato dalla lunghezza delle etichette, e viene risolto memorizzando le posizioni di inizio e fine con un puntatore ($O(n)$?);
+	\item La gestione delle posizioni dei puntatori al testo;
+	\item Lo spazio di 20$n$ bytes nel caso migliore e medio.
+\end{itemize}
+
+\subsection{Pattern matching con suffix tree}
+Dato un pattern $P$ di lunghezza $n$ e un testo $T$ di lunghezza $m$, si vogliono trovare tutte le occorrenze di $P$ in $T$. I suffix tree permettono di affrontare questo problema con un approccio in tempo lineare che consiste nella costruzione dell'albero e nel matching dei caratteri. 
+
+Come si risolve il problema del pattern matching usando un suffix tree? \\
+La ricerca in un trie permette di capire se una stringa è suffisso di un'altra. Bisogna estendere il problema alle sottostringhe, e capire le posizioni e il numero di occorrenze in cui essa si trova nel testo.
+
+Si definisce la sottostringa in termini di suffisso. Un suffisso è sicuramente una sottostringa, e \textit{ogni sottostringa è il prefisso di un suffisso}. Siccome ogni suffisso corrisponde a un percorso radice-foglia univoco, si devono cercare i percorsi iniziali. 
+
+Tutte le occorrenze del pattern $P$ nel testo sono tutte le porzioni iniziali dei suffissi che iniziano con $P$. Per cercare stringhe a metà tra due archi, l'etichetta non viene consumata interamente, ma non ci sono errori. 
+
+I casi possibili sono:
+\begin{enumerate}
+	\item La stringa non è presente in $T$;
+	\item Ogni foglia del sotto-albero sottostante l'ultimo match è enumerata con un punto di partenza di $P$ in $T$, e ogni punto di partenza corrisponde a una foglia.
+\end{enumerate}
+
+Dopo aver speso un tempo $O(m)$ per processare $T$, si riescono a trovare tutti i match di $P$ in un tempo lineare $O(n + k)$, dove $k$ è il \textbf{numero di occorrenze}.
+
+Una volta trovata un'occorrenza, è sufficiente scorrere verso l'alto fino al primo suffisso che non inizia con $P$. Poi la ricerca riprende verso il basso.
+
+\textit{Osservazione}: ogni occorrenza di $P$ in $T$ è un prefisso di qualche suffisso in $T$.
+
+\subsubsection{Procedimento}
+I passaggi sono i seguenti, partendo dal primo carattere del pattern e dalla radice dell'albero:
+\begin{enumerate}
+	\item Per il carattere corrente del pattern, se c'è una corrispondenza con la stringa dell'arco, allora si prosegue verso il basso;
+	\item Se il pattern non esiste nell'arco corrente, allora esso non esiste in assoluto;
+	\item Si continua fino ad arrivare a una o più foglie dell'albero. Il valore delle foglie indicheranno \textbf{l'indice al quale si trovano le corrispondenze}.
+\end{enumerate}
+
+\subsubsection{Esempio}
+
+\begin{figure}[H]
+	\centering
+	\caption{Esempio Matching Suffix Tree}
+	\label{fig:suffix-tree-example-1}
+	\begin{forest}
+		suffix tree,
+		[
+			[, edgelabel={left}{A}
+				[6, edgelabel={left}{\$}]
+				[, edgelabel={right}{NA}
+					[4, edgelabel={left}{\$}][2, edgelabel={right}{NA\$}]
+				]
+			]
+			[1, edgelabel={}{BANANA\$}]
+			[, edgelabel={right}{NA}
+				[5, highlight ancestors, edgelabel={left}{\$}]
+				[3, highlight ancestors, edgelabel={right}{NA\$}]
+			]
+		]
+	\end{forest}
+	\begin{gather*}
+		T = \begin{blockarray}{ccccccc}
+			1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+			\begin{block}{(ccccccc)}
+				B & A & \underline{N} & A & \underline{N} & A & \$ \\
+			\end{block}
+		\end{blockarray} \\
+		P = \underline{N}
+	\end{gather*}
+\end{figure}
+
+Nell'esempio in \textit{Figura \ref{fig:suffix-tree-example-1}} ci sono due corrispondenze agli indici $3, 5$, infatti $T[3] = N, T[5] = N$.
+
+Il totale delle foglie discendenti una volta consumato il pattern corrisponde al numero $k$ delle occorrenze. 
+
+È importante ricordare che a questi tempi va aggiunto il tempo per costruire l'albero ($O(n)$).
+Il numero di foglie incontrate è proporzionale al numero di archi attraversati (ogni nodo ha almeno 2 figli, e con $k$ nodi si hanno $k$ nodi interni al massimo).
+
+\subsection{Suffix Array}
+
+\begin{definition}{Suffix Array}{suffix-array}
+	Un suffix array è l'array di interi dei suffissi ottenuti dal suffix tree ordinati lessicograficamente. Contiene \textbf{le posizioni iniziali del suffisso nell'array} e occupa solo $4n$ byte.
+\end{definition}
+
+La principale utilità dei \textbf{Suffix Array} è il risparmio di tempo e spazio: memorizza le stesse informazioni del \textbf{Suffix Tree} [\ref{fig:suffix-tree}] con maggiore località.
+
+\begin{definition}{Lcp}{Lcp}
+	$Lcp[i]$ è un array ausiliario che contiene la lunghezza del prefisso comune più lungo per ogni coppia di suffissi consecutivi: $SA[i],\ SA[i+1]$. Generalmente il più piccolo suffisso è la sentinella. La ricerca tramite array viene fatta usando $Lcp$.	
+\end{definition}
+
+Nella \textit{Figura \ref{suffix-array-example}} viene costruito il \textbf{Suffix Array} partendo dalla stringa iniziale $T$.
+\begin{figure}[H]
+	\caption{Esempio Suffix Array \label{suffix-array-example}}
+	\begin{gather*}
+	T = \begin{blockarray}{ccccccc}
+		1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+		\begin{block}{(ccccccc)}
+			b & a & n & a & n & a & \$ \\
+		\end{block}
+	\end{blockarray} \\
+	\text{Suffissi} = \begin{blockarray}{cc}
+		\text{Suffix} & i \\
+		\begin{block}{(c)c}
+			\text{banana\$} & 1 \\
+			\text{anana\$} & 2 \\
+			\text{nana\$} & 3 \\
+			\text{ana\$} & 4 \\
+			\text{na\$} & 5 \\
+			\text{a\$} & 6 \\
+			\text{\$} & 7 \\
+		\end{block}
+	\end{blockarray}
+	 \xrightarrow{\text{Ordinati}} \begin{blockarray}{cc}
+		\text{Suffix} & i \\
+		\begin{block}{(c)c}
+			\text{\$} & 7 \\
+			\text{a\$} & 6 \\
+			\text{ana\$} & 4 \\
+			\text{anana\$} & 2 \\
+			\text{banana\$} & 1 \\
+			\text{na\$} & 5 \\
+			\text{nana\$} & 3 \\
+		\end{block}
+	\end{blockarray} \\
+	\text{SA} = \begin{blockarray}{ccccccc}
+		1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+		\begin{block}{(ccccccc)}
+			7 & 6 & 4 & 2 & 1 & 5 & 3 \\
+		\end{block}
+	\end{blockarray}
+	\end{gather*}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Lcp Example}\label{Lcp-example}
+	\begin{gather*}
+		\text{LCP} = \begin{blockarray}{ccccccc}
+			1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+			\begin{block}{(ccccccc)}
+				- & 0 & 1 & 3 & 0 & 0 & 2 \\
+			\end{block}
+		\end{blockarray}
+	\end{gather*}
+\end{figure}
+
+Facendo riferimento all'esempio \ref{suffix-array-example}, la \textit{Figura \ref{Lcp-example}} rappresenta l'\textbf{Lcp} relativo al \textbf{SA} di \textbf{T}.
+
+$LCP[0] = -$ perché $\$$ non ha, ovviamente, sottostringhe comuni con il suo elemento precedente (non esiste, duh).
+
+$LCP[4] = 3$ perché \textbf{ana} è un prefisso di $\underline{ana}\$$ e di $anana\$$.
+
+Nel pattern matching, tutte le occorrenze di $P$ corrispondono a una porzione dell'array $Lcp$, dove gli elementi sono tutti minori o uguali della lunghezza del pattern. La scansione di $Lcp$ permette di trovare il pattern in tempo costante.
+
+Nella pratica, i suffix tree non vengono mai costruiti: prima si costruiscono i suffix array e da lì viene effettuata la trasformazione.
+
+\subsection{Da suffix tree a suffix array}
+L'algoritmo converte il tree in un array (quindi il tree non esiste più alla fine). \\
+Si ricorda che, per ogni nodo in un suffix tree, si ha al massimo un arco che inizia con una lettera e quindi un ordine non ambiguo. Una qualsiasi visita garantisce l'ottenimento di tutti i suffissi in ordine lessicografico, se i figli vengono visitati in ordine lessicografico.
+
+Per ottenere un suffix array a partire dal suffix tree corrispondente bisogna effettuare la visita depth-first dell'albero $ST$, per poi salvare gli archi uscenti da ogni nodo in ordine lessicografico. 
+
+Per calcolare $Lcp$ bisogna trovare il nodo più in basso che ha la proprietà di essere progenitore ($Lca$, Least Common Ancestor) di entrambe le foglie, e calcolarne la string-depth. \\
+$Lcp[i]$ = string-depth di $Lca(i, i+1)$. 
+
+Dati due nodi di un albero, il percorso che li collega è unico: quindi $Lca$ non è mai ambiguo. Questi calcoli possono essere eseguiti velocemente aggiungendo la string-depth tramite visita: il progenitore è il punto in cui finisce la discesa e inizia la salita nel percorso tra un nodo e un altro. 
+
+Il tempo è $O(n)$. Viene utizzato un algoritmo (tempo lineare) che si basa su merge sort e radix sort (Kärkkäinen), oppure \textit{sais-lite}.
+
+\subsection{Da suffix array a suffix tree}
+La conversione da suffix array a suffix tree è più complessa, e viene eseguita ricorsivamente. Ha bisogno di $Lcp$, che serve per codificare la topologia dell'albero, mentre il suffix array definisce le etichette.
+
+Si ricorda che la visita depth-first tocca le foglie esattamente nell'ordine del suffix array.
+
+Se $Lcp = 0$ è una partizione di $SA$, le due stringhe corrispondono a figli della radice e non condividono nessun altro nodo. Ci sono tanti 0 quante coppie che non condividono nessun carattere, quindi i sottoalberi dovranno essere figli diversi della radice.
+
+Sul primo sottoalbero c'è tutta la porzione a sinistra del primo 0; sul secondo, tra il primo e il secondo 0, e così via. Le porzioni di $Lcp$ vuote sono foglie.
+
+Ogni elemento minimo corrisponde a una partizione, i cui sottoalberi sono le classi. Esaurita una partizione, si procede ricorsivamente.
+
+Se i suffissi non condividono nulla, il punto di inversione sarà la radice dell'albero. Se due sottostringhe hanno caratteri in comune, il nodo avrà il valore minimo della $Lcp$ compresa tra le posizioni $i$. 
+
+In pratica, viene calcolato il minimo $Lcp$ dell'albero o della porzione considerata, e l'albero viene diviso in $k + 1$ regioni (dove $k$ sono le occorrenze del numero). Alla fine della ricorsione ci saranno $k$ regioni di un singolo elemento, le quali corrispondono a foglie che saranno collegate al rispettivo $SA[i]$.
+
+Le etichette vengono assegnate tramite una visita depth-first con gli elementi del suffix array in ordine a partire dalle foglie. Il tempo resta lineare. 
+
+Riassumendo:
+\begin{enumerate}
+	\item Ricerca del più piccolo valore di $Lcp$ e conteggio delle occorrenze;
+	\item Divisione dell'albero in $k + 1$ regioni, cioè sottoalberi;
+	\item Considerazione di ogni regione specifica compresa tra ogni coppia di occorrenze, e ricerca del minimo;
+	\item Assegnamento dei sottoalberi (considerando che $\$$ è sempre a sinistra, in base all'ordine lessicografico);
+	\item Nuove iterazioni fino all'esaurimento dell'array;
+	\item Visita depth-first e assegnamento delle etichette in ordine a ogni foglia.
+\end{enumerate}
+
+\subsection{Sottostringa comune più lunga}
+Date due stringhe $s_1$ e $s_2$, questo algoritmo ricerca la sottostringa comune più lunga utilizzando un suffix tree generalizzato (un insieme di stringhe). Ogni stringa rappresenta un suffisso di una delle due stringhe (o entrambe). \\
+Il testo ha la forma $ST(s_1\$_1s_2\$_2)$, cioè i due testi vengono concatenati. Viene usato un singolo terminatore e viene costruito l'albero.
+
+A ogni foglia è associata una coppia di valori: la stringa di riferimento e la sua posizione di partenza. Tutti i suffissi che appaiono in entrambe le stringhe (i nodi in cui $Lcs$ termina) hanno due coppie di valori. 
+
+Ogni nodo interno viene etichettato con 1, 2 o entrambi. Ogni path-label con sia 1 che 2 è una sottostringa comune, resta il problema di trovare il massimo path-label tra essi. 
+
+Viene cercato un nodo $x$ con foglie di $s_1$ e $s_2$, in modo da avere $ST(s_1\$s_2\$)$, tale che string-depth risulti il massimo. Essa viene calcolata sommando la string-depth del padre e la lunghezza dell'etichetta che li collega.
+
+L'albero viene visitato in post-order: in questo modo è possibile confrontare il contenuto dei figli con il contenuto del padre. Le visite sono due, una per identificare le sottostringhe comuni e una per trovare quella di lunghezza massima.
+
+La costruzione dell'albero e la ricerca hanno entrambi tempo lineare.
+
+\subsection{Pattern matching con suffix array} 
+Per trovare un pattern $P$ con lunghezza $\abs{P} = m$ avendo a disposizione un suffix array $A$, si potrebbe utilizzare la \textbf{ricerca dicotomica} sfruttando l'ordinamento lessicografico. Essa si basa sui singoli caratteri dell'array e le stringhe comprese tra gli indici.
+
+Partendo dal presupposto che la ricerca dicotomica usa le posizioni $L$ (left) e $R$ (right), in base all'ordine si ha che a ogni iterazione $R > P > L$, dove $P$ è il pattern. Se $P$ è maggiore della media $M$ tra $L$ e $R$, la ricerca sarà nel sottoalbero sinistro, e viceversa.
+
+Questo algoritmo ha tempo logaritmico, approssimabile a $O(mlogn)$: è possibile arrivare a $O(m)$?
+
+La soluzione è utilizzare il \textbf{self-index}, menzionato precedentemente (indice che punta a se stesso). Vengono usati \textbf{T}, il suffix array \textbf{SA} e \textbf{LCP}.
+
+I suffissi che contengono $P$ sono consecutivi: tutti iniziano con $P$. Per accelerare il pattern matching si possono utilizzare tre alternative, definite \textbf{acceleranti}.
+
+\subsection{Acceleranti}
+\subsubsection{Accelerante 1} \label{accelerante-1}
+Tutti i suffissi nell'intervallo $SA(L, R)$ iniziano con lo stesso prefisso lungo $\textbf{Lcp}(SA[L], SA[R])$: \textbf{LCP} ha la stessa lunghezza in prefissi successivi, quindi è sufficiente controllare il primo carattere dopo il pattern comune. Se due suffissi condividono i primi $x$ caratteri, tutti i suffissi tra essi condividono $x$ caratteri.
+
+Si parte da $L = 1$ e $R = m$, dove $m$ è la lunghezza della stringa $T$. Poi ad ogni iterazione della ricerca dicotomica si fa una query alla posizione $M = [(R + L)/2]$ di $SA$.
+Si definisce quindi $mlr = \text{min}(l, r)$, dove $l, r$ sono le lunghezze dei prefissi in posizione $L, R$ rispettivamente.
+
+Il valore di $mlr$ può essere usato per accelerare il confronto lessicale di $P$ ed il suffisso in $SA[M]$. Dal momento che $SA$ fornisce l'ordine lessicale dei suffissi di $T$, se $i$ è un indice qualunque tra $L$ e $R$, i primi $mlr$ caratteri del suffisso $SA[i]$ devono essere gli stessi dei primi $mlr$ caratteri del suffisso $SA[L]$, e di conseguenza del pattern $P$. Dunque, il confronto lessico tra $P$ e $SA[M]$ può iniziare dalla posizione $mlr + 1$ delle due stringhe, invece di dover iniziare dalla prima posizione.
+
+Alla prima iterazione per ottenere $l, r, mlr$ si forza la comparazione di $P$ con il suffisso $SA[1]$ ed il suffisso $SA[M]$.
+
+Questo algoritmo però ha come caso peggiore comunque $O(nlogn)$.
+%L'algoritmo di ricerca tiene traccia del più lungo prefisso di $\textbf{LCP}[L]$ e di $\textbf{LCP}[R]$ che matchano con il prefisso di $P$.
+
+\subsubsection{Accelerante 2}
+% https://academic.oup.com/bioinformatics/article/25/13/1609/196165
+% http://www.math.tau.ac.il/~haimk/seminar04/suffixtrees.ppt
+
+Si definisce \textit{ridondante} una verifica di un carattere di $P$ se il carattere è già stato analizzato in precedenza. Lo scopo degli acceleranti è quello di \textbf{ridurre} il numero di analisi di caratteri ridondanti riducendole ad al massimo a \textbf{una per iterazione} della ricerca dicotomica - quindi $O(logm)$. 
+
+L'utilizzo di solamente $mlr$ non permette di ottenere questo risultato. Dal momento che $mlr$ è il \textit{minimo} tra $l$ e $r$ (che ricordiamo essere la lunghezza dei prefissi $L$, $R$), quando $l \neq r$, tutti i caratteri in $P$ a partire da $mlr + 1$ fino al massimo di $l$ e $r$ saranno già stati esaminati. 
+
+Ogni confronto di quei caratteri sarà ridondante. Ciò di cui si ha bisogno è di iniziare il confronto lessicografico al \textit{massimo} tra $l$ e $r$.
+
+Viene calcolato il numero di caratteri condivisi tra il primo (ultimo) elemento dell'array e il pattern. Siano $l = Lcp(L,\ P)$ e $r = Lcp(R,\ P)$. A ogni iterazione, $l$ e $r$ vengono ricalcolati. 
+
+Si ha che $l$ e $r$ non sono mai maggiori di $M$, da cui consegue un tempo massimo di $O(M)$ ottenibile approssimando $O(log_2N) + O(N) + O(M)$.
+\begin{enumerate}
+	\item Tutti i suffissi nell'intervallo $SA(L,\ R)$ iniziano con lo stesso prefisso lungo $Lcp(SA[L],\ SA[R])$: $Lcp$ ha la stessa lunghezza in prefissi successivi, quindi è sufficiente controllare il primo carattere dopo il pattern comune. Se due suffissi condividono i primi $x$ caratteri, tutti i suffissi tra essi condividono $x$ caratteri;
+	\item Viene calcolato il numero di caratteri condivisi tra il primo (ultimo) elemento dell'array e il pattern. Siano $l = Lcp(L,\ P)$ e $r = Lcp(R,\ P)$. A ogni iterazione, $l$ e $r$ vengono ricalcolati. Si ha che $l$ e $r$ non sono mai maggiori di $M$, da cui consegue un tempo massimo di $O(M)$ ottenibile approssimando $O(log_2N) + O(N) + O(M)$;
+		\begin{enumerate}
+		\item Caso 1, $l > r$: 
+		\begin{enumerate}
+			\item $Lcp(L,\ M) > l$, il pattern sarà tra $M$ e $R$;
+			\item $Lcp(L,\ M) < l$, il pattern sarà tra $L$ e $M$;
+			\item $Lcp(L,\ M) = l$, è necessario controllare il carattere successivo.
+		\end{enumerate}
+		\item Caso 2, $l = r$:
+		\begin{enumerate}
+			\item $Lcp(L,\ M) > l$, il pattern sarà tra $M$ e $R$;
+			\item $Lcp(M,\ R) > l$, il pattern sarà tra $L$ e $M$;
+			\item $Lcp(L,\ M) = l$, è necessario controllare il carattere successivo.
+		\end{enumerate}
+		\item Caso 3, $l < r$: simmetrico al caso 1.
+		\end{enumerate}
+\end{enumerate}
+
+\subsubsection{Accelerante 3}
+Calcolo di $Lcp$ in tempo $O(n)$, con $n$ intervalli. Ogni intervallo ha punti di inizio e di fine determinati, che vengono calcolati ricorsivamente tramite iterazioni e poi aggregati.
+	
+Si ha che, nell'accelerante 2, i suffissi si trovano negli estremi o nei punti mediani della ricerca dicotomica. L'accelerante 3 consiste in due osservazioni:
+\begin{itemize}
+	\item Il numero delle coppie non è arbitrario e non è quadratico, ma lineare (si dimezza a ogni iterazione);
+	 \item Anche $Lcp$ può essere calcolato in tempo lineare. Con intervalli di ampiezza 2, il valore di $Lcp(SA[i], SA[i+1])$ è contenuto nell'array iniziale.
+\end{itemize}
+In generale, gli intervalli hanno ampiezza $2^i$ con $i > 1$. Il minimo può essere nella prima o seconda metà, oppure nel mezzo.
+
+Il calcolo di $Lcp$ ha tempo $O(n)$, con $n$ intervalli. Ogni intervallo ha punti di inizio e di fine determinati, che vengono calcolati ricorsivamente tramite iterazioni e poi aggregati.
+\begin{enumerate}
+	\item Iterazione 1: $(L, R) = (1, M)$;
+	\item Iterazione 2: $(L, R) = (1, m/2)$ oppure $(m/2, n)$;
+	\item Iterazione $k$: $L = h\frac{m}{2^{k-1}},\ R = L + \, Lcp(h,\ h + 1)$;
+	\item Iterazione $\lceil log_2m\rceil$: $R = L + 1, Lcp(h,\ h + 1)$;
+	\item Iterazione $\lceil log_2m\rceil\:-\:1$: aggregazione dei risultati dell'iterazione $\lceil log_2m\rceil$;
+	\item Iterazione $k$: $Lcp(h\frac{m}{2^{k-1}},\ (h + 1)\frac{m}{2^{k-1}})$.
+\end{enumerate}
+
+\newpage
+\subsection{Considerazioni sugli acceleranti}
+L'accelerante 1 si basa sul fatto che gli estremi abbiano un suffisso comune dato appunto da $Lcp$, e questa porzione non va controllata; per il resto è molto simile alla ricerca dicotomica.
+
+L'accelerante 2 consiste nella ricerca ricorsiva, simile a quella dicotomica ma usando i valori di $Lcp$: sfruttando l'ordine lessicografico, è possibile riconoscere la posizione di interi pattern e suffissi. Introducendo nell'analisi le lunghezze di $Lcp$ in relazione con il pattern, è possibile risolvere alcuni casi in tempo costante evitando il confronto tra alcune coppie.
+
+Nell'accelerante 2 ci sono $n \choose 2$  possibili coppie: questi valori non vengono memorizzati. 
+
+Al contrario, l'accelerante 3 definisce un minor numero di coppie e un calcolo più veloce (ricorsivo). Esso consiste in un preprocessamento iniziale dove vengono calcolate tutte le coppie di suffissi che servono, cioè gli estremi oppure estremi e mediano di una ricerca dicotomica. Vengono anche calcolati i $Lcp$.
+
+All'iterazione $k$, si ha che i due intervalli soddisfano la relazione definita precedentemente. Dopo un numero logaritmico di iterazioni, gli intervalli sono formati da due elementi consecutivi, e il loro numero può essere rappresentato da una sommatoria geometrica (lineare). 
+
+Gli intervalli dell'ultima iterazione sono precalcolati e memorizzati nell'array, quindi è sufficiente aggregarne due consecutivi. Si ha che $Lcp(l_1,\ r_2) \leq Lcp(l_1,\ r_1)$ e $Lcp(l_1,\ r_1) \leq Lcp(l_2,\ r_2)$: i due intervalli saranno della forma $\alpha x$ e $\alpha y$, dove $\alpha$ è la stringa comune. 
+
+Il cambiamento di lettera (passaggio da $x$ a $z$ o qualsiasi altra lettera maggiore) può avvenire prima della metà, dopo la metà o esattamente a metà. Se la transizione avviene nella prima metà, $Lcp(l_1,\ r_2) = Lcp(l_1,\ r_1)$; se avviene nella seconda, $Lcp(l_1,\ r_1) \leq Lcp(l_2,\ r_2)$; altrimenti, $Lcp(l_1,\ r_1) \leq Lcp(r_1,\ l_2)$.
+
+In altre parole,
+$$Lcp = min\begin{cases}
+Lcp(l_1,\ r_1) \\
+Lcp(l_2,\ r_2) \\
+Lcp(r_1,\ l_2)
+\end{cases}$$
+
+La maggiore differenza tra gli acceleranti (che diventano via via più sofisticati) e l'algoritmo di ricerca dicotomica è appunto l'uso di $Lcp$, che permette operazioni in tempo lineare.
+
+\subsection{Implementazione}
+L'implementazione proposta ha una variabile che rappresenta il tipo di accelerante da utilizzare, dove 0 di default indica la semplice ricerca dicotomica. \\
+La scelta dell'algoritmo è tramite un costrutto in C che assegna a una variabile $search\_f$ (dichiarata come puntatore a una funzione) una diversa funzione, predefinita in base all'opzione. 
+
+L'indice del suffisso che inizia con il prefisso (la prima occorrenza) è salvato in una variabile $found$. Per trovare le occorrenze successive si confrontano tutti i $Lcp$ successivi. 
+
+C'è una funzione di appoggio \textit{suffix\_cmp} (dove $cmp$ = compare) che restituisce un numero minore di 0 se la prima stringa è minore della seconda; maggiore di 0 se è maggiore, 0 altrimenti. Si ferma al primo carattere diverso e restituisce il valore di $X_i - Y_i$ convertendo il carattere in intero.
+
+Il calcolo dell'elemento mediano è $(l + (r - l))/2$ invece che $(l + r)/2$ per evitare l'overflow in caso $l$ e $r$ siano numeri molto grandi. 
+
+Un'ulteriore funzione di appoggio calcola $Lcp$ date due stringhe generiche: questa viene utilizzata nelle acceleranti 1 e 2 (e 3, ma essa non viene trattata). Questa si basa su un ciclo $for$ con un contatore che viene incrementato se i caratteri sono uguali.
+
+I puntatori permettono di considerare l'intera porzione di stringa compresa tra ogni puntatore e la fine, ma possono essere incrementati in modo semplice. 
+
+Il secondo accelerante ha circa la stessa struttura degli altri, solo che ci sono numerosi casi che devono essere controllati. 
+
+
+
+

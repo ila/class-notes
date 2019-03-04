@@ -1,0 +1,312 @@
+\section{Scatole}
+Problema: $B_i = (a_i, b_i, c_i)$ in cui le variabili sono le 3 dimensioni (lunghezza, larghezza e altezza) di una scatola. Ogni elemento $B_i$ è quindi una scatola. Le scatole non possono essere ruotate. Si chiede la lunghezza più lunga di scatole che possono essere contenute una dentro l'altra.
+
+Si vuole descrivere un algoritmo efficiente per determinare il massimo valore di $k$ tale che esista una sequenza $x \rightarrow B_1, B_2, \dots, B_i$ tale che
+$$B_{i1} \subset B_{i2} \subset \dots \subset B{ik}$$
+$$i_1 < i_2 < \dots i_k$$
+Problema risolto similmente alla sottosequenza crescente e al Weighted Interval Scheduling, ma la verifica viene effettuata su tutte e 3 le dimensioni.
+
+Viene introdotto un vettore $z$ con $n$ componenti, tale che $z[i]$ sia la lunghezza massima di una sottosequenza crescente di elementi $B_1, B_2, \dots, B_i$. La soluzione del problema sarà il valore massimo del vettore.
+
+$$z[i] =
+\begin{cases}
+1 + max\{z[j]\ |\ 1 \leq j < i,\ a_j < a_i,\ b_j < b_i,\  c_j < c_i\}  & se\ i > 1 \\
+1 & se\ i = 1
+\end{cases}$$
+Supponiamo che $max\{\emptyset\} = 0$.
+
+\subsection{Algoritmo}
+\begin{algorithm}[H]
+	\caption{Max Boxes Chain}
+	\begin{algorithmic}
+		\Function{Max-Boxes}{$B$}
+			\State $z[1] \gets 1$
+			\For{$i \gets 2$ \textbf{to} $n$ \textbf{step}}
+				\State $max \gets 0$
+					\For{$j \gets 1$ \textbf{to} $i-1$ \textbf{step}}
+						\If {$(a_j < a_i) \land (b_i < b_j) \land (c_j < c_i) \land (z[j] < max)$}
+							\State $max \gets z[j]$
+						\EndIf
+					\EndFor
+				\State $z[i] \gets \ + max$
+			\EndFor
+			\State \Return $z$
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+La complessità è $O(n^2)$, mentre lo spazio richiesto è quello per memorizzare il vettore, cioè $\Theta(n)$.
+
+
+\section{Longest Zig-Zag Subsequence}
+Anche conosciuta come \textbf{Longest Alternating Subsequence}, consiste nel trovare la più lunga sottosequenza "zig-zag".
+
+Una sequenza $y$ è definita una sequenza alternata se i suoi elementi soddisfano una delle seguenti relazioni:
+$$y_1 < y_2 > y_3 < y_4 > y_5 < \dots y_n$$
+$$y_1 > y_2 < y_3 > y_4 < y_5 > \dots y_n$$
+
+In questo caso si ricerca specificatamente una sequenza tale che \\
+\textit{dispari $<$ pari $>$ dispari $<$ pari} e così via.
+
+Questo problema viene risolto passando da un problema ausiliario, cioè la ricerca delle sottosequenze pari e dispari che finiscano con l'elemento $i$ incluso. Si sfrutta il metodo della programmazione dinamica.
+
+Viene costruito un array bidimensionale $Z$: \begin{itemize}
+	\item $Z[i, 0]$ conterrà la lunghezza della \textbf{LAS} che termina in posizione $i$, e dove l'ultimo elemento dell'array è più \textbf{grande} dell'elemento che lo precede;
+	\item $Z[i, 1]$ conterrà la lungheza della \textbf{LAS} che termina in posizione $i$, e dove l'ultimo elemento dell'array è più \textbf{piccolo} dell'elemento che lo precede.
+\end{itemize}
+
+Equazione di ricorrenza:
+$$Z[i, 0] = \begin{cases}
+1 & se\ i\ = 1 \\
+max\{Z[k, 1]\ |\ 1 \leq k < i,\ y_k < y_i\} + 1 & se\ i > 1 \\
+vale\ 0\ quando\ k\ non\ si\ trova
+\end{cases}$$
+$$Z[i, 1] = \begin{cases}
+1 & se\ i\ = 1 \\
+max\{Z[k, 0]\ |\ 1 \leq k < i,\ y_k > y_i\} + 1 & se\ i > 1 \\
+vale\ max\ quando\ k\ non\ si\ trova
+\end{cases}$$
+Il caso "pari" può facilmente non avere nessuna sottosequenza che soddisfi i vincoli. Può capitare che la maggior sottosequenza abbia lunghezza 0 per qualche $i$, il che non era mai stato considerato negli algoritmi precedenti. Pertanto, le due $z$ non corrispondono a casi simmetrici.
+
+L'elemento in posizione $i$ dispari può essere aggiunto se è quello più piccolo del precedente: ma quest'ultimo dev'essere scelto cercando di ottenere la lunghezza maggiore e rispettando tutti gli altri vincoli. 
+
+\subsection{Algoritmo}
+\begin{algorithm}[H]
+	\caption{Longest Zig-Zag Subsequence}
+	\begin{algorithmic}
+		\Function{Zig-Zag}{$Y$}
+		\For{$i \gets 1$ \textbf{to} n}
+			\State $Z[i][0] \gets Z[i][1] \gets 1 $
+		\EndFor
+
+		\State $ris \gets 1$
+
+		\For{$i \gets 2$ \textbf{to} n}
+			\For{$j \gets 1$ \textbf{to} $i$}
+				\If{$Y[j] < Y[i] \land Z[i][0] < Z[j][1] + 1$}
+					\State $Z[i][0] \gets Z[j][1] + 1$
+				\EndIf
+
+				\If{$Y[j] > Y[i] \land Z[i][1] < Z[j][0] + 1$}
+					\State $Z[i][1] \gets Z[j][0] + 1$
+				\EndIf
+			\EndFor
+
+			\If{$ris < max(Z[i][0], Z[i][1])$}
+				\State $ris < max(Z[i][0], Z[i][1])$
+			\EndIf
+		\EndFor
+
+		\State \Return $ris$
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{example}{}{}
+	$Y = \begin{pmatrix}3 & 4 & 8 & 5 & 6 & 2 \end{pmatrix}$
+
+	E questo sarà:
+	
+	$Z = \begin{bmatrix}
+		1 & 1 & 1 & 1 & 1 & 1 \\
+		1 & 1 & 1 & 1 & 1 & 1
+	\end{bmatrix}$ 
+
+	Alla prima iterazione avremo:
+
+	$i = 2, j = 1, Y = \begin{pmatrix} \circled{3} & \circled{4} & 8 & 5 & 6 & 2 \end{pmatrix} \\
+	Z = \begin{bmatrix}
+		\circled{1} & 1 & 1 & 1 & 1 & 1 \\
+		1 & \circled{1} & 1 & 1 & 1 & 1
+	\end{bmatrix} \Rightarrow Z = \begin{bmatrix}
+		1 & 1 & 1 & 1 & 1 & 1 \\
+		1 & \circled{\textcolor{red}{2}} & 1 & 1 & 1 & 1
+	\end{bmatrix}$
+
+	2a: 
+
+	$i = 3, j = 1, Y = \begin{pmatrix} \circled{3} & 4 & \circled{8} & 5 & 6 & 2 \end{pmatrix} \\
+	Z = \begin{bmatrix}
+		\circled{1} & 1 & 1 & 1 & 1 & 1 \\
+		1 & 2 & \circled{1} & 1 & 1 & 1
+	\end{bmatrix} \Rightarrow Z = \begin{bmatrix}
+		1 & 1 & 1 & 1 & 1 & 1 \\
+		1 & 2 & \circled{\textcolor{red}{2}} & 1 & 1 & 1
+	\end{bmatrix}$
+
+	$i = 3, j = 2, Y = \begin{pmatrix} 3 & \circled{4} & \circled{8} & 5 & 6 & 2 \end{pmatrix} \\
+	Z = \begin{bmatrix}
+		1 & \circled{1} & 1 & 1 & 1 & 1 \\
+		1 & 2 & \circled{2} & 1 & 1 & 1
+	\end{bmatrix} \Rightarrow Z = \begin{bmatrix}
+		1 & 1 & 1 & 1 & 1 & 1 \\
+		1 & 2 & 2 & 1 & 1 & 1
+	\end{bmatrix}$
+
+	3a:
+
+	$i = 4, j = 1, Y = \begin{pmatrix} \circled{3} & 4 & 8 & \circled{5} & 6 & 2 \end{pmatrix} \\
+	Z = \begin{bmatrix}
+		\circled{1} & 1 & 1 & 1 & 1 & 1 \\
+		1 & 2 & 2 & \circled{1} & 1 & 1
+	\end{bmatrix} \Rightarrow Z = \begin{bmatrix}
+		1 & 1 & 1 & 1 & 1 & 1 \\
+		1 & 2 & 2 & \circled{\textcolor{red}{2}} & 1 & 1
+	\end{bmatrix}$
+
+	$i = 4, j = 2, Y = \begin{pmatrix} 3 & \circled{4} & 8 & \circled{5} & 6 & 2 \end{pmatrix} \\
+	Z = \begin{bmatrix}
+		1 & \circled{1} & 1 & 1 & 1 & 1 \\
+		1 & 2 & 2 & \circled{2} & 1 & 1
+	\end{bmatrix} \Rightarrow Z = \begin{bmatrix}
+		1 & 1 & 1 & 1 & 1 & 1 \\
+		1 & 2 & 2 & 2 & 1 & 1
+	\end{bmatrix}$
+
+	$i = 4, j = 3, Y = \begin{pmatrix} 3 & 4 & \circled{8} & \circled{5} & 6 & 2 \end{pmatrix} \\
+	Z = \begin{bmatrix}
+		1 & 1 & 1 & \circled{1} & 1 & 1 \\
+		1 & 2 & \circled{2} & 2 & 1 & 1
+	\end{bmatrix} \Rightarrow Z = \begin{bmatrix}
+		1 & 1 & 1 & \circled{\textcolor{red}{3}} & 1 & 1 \\
+		1 & 2 & 2 & 2 & 1 & 1
+	\end{bmatrix}$
+
+	$i = 5, j = 1, Y = \begin{pmatrix} \circled{3} & 4 & 8 & 5 & \circled{6} & 2 \end{pmatrix} \\
+	Z = \begin{bmatrix}
+		\circled{1} & 1 & 1 & 3 & 1 & 1 \\
+		1 & 2 & 2 & 2 & \circled{1} & 1
+	\end{bmatrix} \Rightarrow Z = \begin{bmatrix}
+		1 & 1 & 1 & 3 & 1 & 1 \\
+		1 & 2 & 2 & 2 & \circled{\textcolor{red}{2}} & 1
+	\end{bmatrix}$
+
+	$$\vdots$$
+
+	$i = 6, j = 5, Y = \begin{pmatrix} 3 & 4 & 8 & 5 & \circled{6} & \circled{2} \end{pmatrix} \\
+	Z = \begin{bmatrix}
+		1 & 1 & 1 & 3 & 3 & \circled{3} \\
+		1 & 2 & 2 & 2 & \circled{4} & 1
+	\end{bmatrix} \Rightarrow Z = \begin{bmatrix}
+		1 & 1 & 1 & 3 & 3 & \circled{\textcolor{red}{5}} \\
+		1 & 2 & 2 & 2 & 4 & 1
+	\end{bmatrix}$
+
+	E infatti $LAS = 5: 3 \ngtr 4 < 8 > 5 < 6 > 2$
+\end{example}
+
+\newpage
+\section{Knapsack}
+\subsection{Il problema}
+Algoritmo funzionante similmente a WIS. Data una serie di oggetti $X_n = \{1,\ \dots,\ n\}$, $\forall i \in \{1,\ \dots,\ n\}$ si hanno i valori $v_i$ che corrisponde al valore e $w_i$ che corrisponde al peso. \\
+Uno zaino di capacità $L$ dev'essere riempito con la combinazione ottimale di oggetti (sottoinsieme $S \subseteq X$) che massimizzi il valore.
+
+In altre parole:
+\begin{enumerate}
+	\item $\sum_{i \in S_n}w_i \leq C$;
+	\item $v(S_n) = max\{A \subseteq X_n,\ \sum_{i \in S_n}w_i \leq C\}$.
+\end{enumerate}
+
+Questo problema deve tenere conto del peso e del valore di ogni oggetto, cercando di trovare la soluzione ottima in base a entrambi. La risoluzione, pertanto, utilizzerà una matrice.
+
+Le variabili utilizzate sono:
+\begin{itemize}
+	\item Le informazioni relative a $v$ e $w$ per ogni oggetto appartenente all'insieme di oggetti $X$;
+	\item $M[n, L]$, matrice;
+	\item $M[i, j]$, massimo valore ottenibile scegliendo tra i primi $i$ oggetti per avere peso $S$.
+\end{itemize}
+
+$$\begin{cases}
+M[0, j] = 0 \\
+M[i, 0] = 0 \\
+M[i, j] = max\{M[i-1, j],\ M[i-1, j-w_i] + v_i\}
+\end{cases}$$
+La soluzione corrisponde a $max\{M[n, j]\}$.
+
+\begin{example}{}{}
+$X = \{1, 2, 3, 4, 5\} \\
+V = \{1, 6, 18, 22, 28\} \\
+W = \{1, 2, 5, 6, 7\} \\
+L = 11$
+
+Si procede con la costruzione della matrice:
+$$\begin{tabular}{c | c c c c c c c c c c c c}
+	M & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\
+	\hline
+	0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+	1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+	2 & 0 & 1 & 6 & 7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+	3 & 0 & 1 & 6 & 7 & 0 & 18 & 19 & 24 & 25 & 0 & 0 & 0 \\
+	4 & 0 & 1 & 6 & 7 & 0 & 18 & 22 & 24 & 29 & 29 & 0 & 0 \\
+	5 & 0 & 1 & 6 & 7 & 0 & 18 & 22 & 28 & 29 & 34 & 35 & 40 \\
+\end{tabular}$$
+La soluzione migliore è $S = \{3, 4\}$ con $P = 11$ e $V = 40$.
+
+La prima riga e la prima colonna sono inizializzate a 0. Le caselle della matrice rappresentano i valori, ma esiste anche un'alternativa con i pesi. Se il peso dell'oggetto da aggiungere è più grande della colonna $j$ da considerare, è sufficiente cercare $max\{M[i-1, j],\ M[i-1, j-w_i] + v_i\}$. 
+\end{example}
+
+\subsection{L'algoritmo}
+Il tempo dell'algoritmo è $\Theta(nL)$, e lo spazio è $\Theta(nL)$ approssimabile a $\Theta(L)$. \\
+Knapsack è considerato un problema NP-completo: come mai questo algoritmo lo risolve in tempo polinomiale? 
+
+Se i numeri dei pesi non sono piccoli rispetto alla quantità di oggetti da scegliere, il tempo è esponenziale: perciò l'algoritmo è pseudo-polinomiale. Se $L$ è grande, il problema non è facilmente risolvibile. 
+
+\begin{algorithm}[H]
+	\caption{Knapsack}
+	\begin{algorithmic}
+		\Function{Knapsack}{$X,\ v,\ w,\ L$}
+		\For{$j \gets 1$ \textbf{to} L}
+			\State $M[0, j] \gets 0$
+		\EndFor
+		\For{$i \gets 1$ \textbf{to} n}
+			\State $M[i, 0] \gets 0$
+		\EndFor
+		\For{$i \gets 2$ \textbf{to} n}
+			\For{$j \gets 2$ \textbf{to} L}
+				\If{$w_i > j$}
+					\State $M[i, j] \gets M[i-1, j]$
+				\Else
+					\State $M[i, j] = max\{M[i-1, j],\ M[i-1, j-w_i] + v_i\}$
+				\EndIf
+			\EndFor
+		\EndFor
+		\State \Return$M[n, L]$
+	\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+Esiste una versione di Knapsack (frazionario, mentre questo è 0/1) che permette di scegliere un sottoinsieme di oggetti senza dover prendere un oggetto completamente. L'approccio è greedy. 
+
+\section{Partition}
+Marco e Alessandro devono suddividersi un'eredità, composta da $n$ oggetti con un valore intero associato. Trovare un algoritmo per dividerla equamente.
+
+Si ha che, per avere una divisione equa, la somma dei valori dev'essere pari. Sia $m = \sum_{i=1}^{n} v_i$, ognuno dovrebbe ricevere $m / 2$.
+
+Esempio: $V = \{12, 4, 7, 5, 10, 5, 5\}$ \\
+Numeri in ordine decrescente: $\{12, 10, 7, 5, 5, 5,4\}$ 
+
+Una soluzione greedy sarebbe il calcolo della media usando per primi i valori grandi e poi distribuendo i valori più piccoli, assumendo di aver trovato una soluzione ottima.
+ 
+La programmazione dinamica, invece, utilizza una variante di Knapsack con l'obiettivo di raggiungere $m / 2$. Si costruisce una matrice booleana, il cui significato è:
+\begin{itemize}
+	\item $M[i, j] = 1$ se esiste un sottoinsieme di $\{1,\ \dots,\ i\}$ tale che la somma dei loro valori è uguale a $j$;
+	\item $M[i, j] = 0$ altrimenti.
+\end{itemize}
+
+Le righe sono gli oggetti, le colonne sono i valori. \\
+Il problema è come calcolare $M[i, j]$ senza dover computare $2^n$ possibilità. 
+
+$$M[i, j] = \begin{cases}
+	M[i-1, j] \lor M[i-1, j-v_i] \\
+	M[0, j] = 0\ con\ 1 \leq j \leq m / 2 \\
+	M[i, 0] = 1\ con\ 0 \leq j \leq n \\
+\end{cases}$$
+
+La soluzione è contenuta nella casella $M[n, m/2]$: se è 0 non c'è possibilità di riempire la matrice. Per fermare l'algoritmo è sufficiente fermarsi al primo 1 nell'ultima colonna. 
+
+\section{Subset sum}
+Due insiemi $O = \{1,\ 2,\ \dots,\ n\}$ e $V = \{v_1,\ v_2,\ \dots,\ v_n\}$, trovare se esiste un sottoinsieme di $O$ tale che $\sum_{i \in O} v_i = T$.
+
+Se $T$ è minore del minimo, il sottoinsieme (vuoto) viene trovato in $\Theta(n)$; la stessa cosa vale per il caso in cui $T$ è maggiore della somma degli elementi. \\
+Altrimenti, si procede analogamente al problema Partition, considerando che la matrice dovrà essere grande da 1 a $T$. 
+
+Il tempo è $\Theta(nT)$: il tempo di tutte le altre operazioni non viene superato dal tempo polinomiale. L'applicazione di Partition per risolvere il problema rende più facile risolvere Subset sum replicando le caratteristiche ed evitando il tempo esponenziale.

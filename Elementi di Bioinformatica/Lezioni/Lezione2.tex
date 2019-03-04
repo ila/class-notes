@@ -1,0 +1,42 @@
+\section{Fibonacci}
+
+Esempi in Python di implementazioni dell'algoritmo di Fibonacci.
+\subsection{Soluzione ricorsiva}
+
+\begin{lstlisting}[language=Python]
+import argparse
+
+parser = argparse.ArgumentParser(description='Fibonacci.')
+parser.add_argument('limit', metavar='N', type=int, nargs=1, help='How many Fibonacci numbers to compute')
+args = parser.parse_args()
+
+def fib(n):
+    if n <= 1:
+        return 1
+    else:
+        return fib(n-1) + fib(n-2)
+
+print(fib(args.limit[0]-1))
+\end{lstlisting}
+
+\subsection{Soluzione iterativa}
+
+\begin{lstlisting}[language=Python]
+import argparse
+
+parser = argparse.ArgumentParser(description='Fibonacci.')
+parser.add_argument('limit', metavar='N', type=int, nargs=1, help='How many Fibonacci numbers to compute')
+args = parser.parse_args()
+
+def fib():
+    a,b = 1, 1
+    while True:
+        yield a
+        a, b = b, a+b
+
+for index, f in enumerate(fib()):
+    print(f)
+    if index == args.limit[0]-1:
+        break
+\end{lstlisting}
+Questa variante utilizza un iteratore, yeld ritorna il valore di $a$ senza uscire dalla funzione. Potenzialmente vengono generati un numero infinito di valori. $enumerate$ restituisce le coppie indice-valore da una lista.

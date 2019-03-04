@@ -1,0 +1,102 @@
+\section{Programmazione dinamica e grafi}
+La programmazione dinamica viene introdotta da Bellman come processo per trovare le soluzioni migliori, una dopo l'altra (problemi di natura ricorsiva). Programmazione prende il significato di pianificazione per l'azione da produrre. \par
+Il problema degli algoritmi ricorsivi è la complessità esponenziale (lo stack va a puttane). Lo scopo della programmazione dinamica è aggirare questo problema salvando le soluzioni dei sotto-problemi con una strategia bottom-up (invece che top-down). \par
+La struttura dati più comunemente usata per il salvataggio dei risultati è l'array, talvolta n-dimensionale. La parte più importante dell'algoritmo è l'equazione di ricorrenza, che deve permettere di selezionare le soluzioni intermedie necessarie per calcolare quella finale. 
+
+\subsection{Sequenza di Fibonacci} 
+La sequenza di Fibonacci è un classico algoritmo la cui classica implementazione ricorsiva ha un tempo computazionale esponenziale (ogni chiamata di funzione genera altre due chiamate).
+\begin{algorithm}
+	\caption{Fibonacci ricorsivo}
+	\label{alg:fr}
+	\begin{algorithmic}
+		\Function{fib\_ric}{$n$}
+		\If {$(n == 1) \lor (n == 2)$}
+			\State \Return $1$
+		\Else
+			\State \Return \Call{fib\_ric}{$n - 1$} + \Call{fib\_ric}{$n - 2$}
+		\EndIf
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Alternative alla ricorsione}
+Per evitare il numero esponenziale di chiamate di funzione, si ricorre a un algoritmo iterativo il quale salva in un array ogni risultato della sequenza e usa i numeri nelle due posizioni precedenti per calcolare un nuovo valore.
+\begin{algorithm}
+	\caption{Fibonacci iterativo}
+	\label{fi}
+	\begin{algorithmic}
+		\Function{fib\_it}{$n$}
+		\State $F[1] \gets 1$
+		\State $F[2] \gets 2$
+		\For{$i \gets 3$ \textbf{to} $n$ \textbf{step} $1$}
+		\State $F[i] \gets F[i - 1] + F[i - 2]$
+		\EndFor
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+Per risolvere il problema dell'n-esimo numero della sequenza di Fibonacci è possibile utilizzare teoremi di algebra lineare.
+Si ha che
+$$F_n = F_{n-1} + F_{n-2}$$
+Similmente, 
+$$F_{n-1} = F{n-1} + 0 \cdot F_{n-2}$$
+Il sistema ottenuto risulta
+$$\begin{cases}
+	F_n = F_{n-1} + F_{n-2} \\
+	F_{n-1} = F{n-1} + 0
+\end{cases}$$
+Sotto forma di matrice,
+$$\begin{pmatrix}
+F_n \\ F_{n-1}
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 & 1 \\ 1 & 0
+\end{pmatrix}
+\begin{pmatrix}
+F_{n-1} \\ F_{n-2}
+\end{pmatrix}$$
+In altre parole, il valore $F_n$ può essere ottenuto moltiplicando il vettore che ha come componenti $F_{n-1}$ e $F_{n-2}$ per la matrice numerica. Ogni numero quindi può essere usato per calcolare quello successivo, il quale verrà salvato a sua volta. \par
+Questo metodo di risoluzione è basato sugli autovalori e gli autovettori (teorema di Perron-Frobenius). Risolvendo l'equazione $Ax = \lambda x$ sotto forma di matrice, si ha che gli autovalori di $\begin{pmatrix}
+    1 & 1 \\ 1 & 0
+\end{pmatrix}$ sono $\lambda_1 = \frac{1 + \sqrt{5}}{2}\ (\lambda_\heartsuit$, cuoricino perché è il più grande tra i due autovalori in valore assoluto$)$ e $\lambda_2 = \frac{1 - \sqrt{5}}{2}$ \par 
+Allora, $$\begin{pmatrix}
+    1 & 1 \\ 1 & 0
+\end{pmatrix} = P \begin{pmatrix}
+    \lambda_1 & 0 \\ 0 & \lambda_2
+\end{pmatrix} p^{-1}$$
+dove $P = \begin{pmatrix}
+    \lambda_1 & \lambda_2 \\ 1 & 1
+\end{pmatrix}$ con $\begin{pmatrix}
+    \lambda_1 \\ 1
+\end{pmatrix}$ autovettori corrispondenti a $\lambda_i$. \par 
+Allora,
+\begin{align*}
+\begin{pmatrix}
+    1 & 1 \\ 1 & 0
+\end{pmatrix}^{k - 2} &= P \begin{pmatrix}
+    \lambda_1^{k -2} & 0 \\ 0 & \lambda_2^{k -2}
+\end{pmatrix} p ^{-1} \\ &= \begin{pmatrix}
+    \lambda_1 & \lambda_2 \\ 1 & 1
+\end{pmatrix} \begin{pmatrix}
+    \lambda_1^{k -2} & 0 \\ 0 & \lambda_2^{k-2}
+\end{pmatrix}\frac{1}{\sqrt{5}} \begin{pmatrix}
+    1 & - \lambda_2 \\ -1 & \lambda_2
+\end{pmatrix}
+\end{align*}
+La formula finale è
+$$y_k = \frac{1}{\sqrt{5}}(\lambda^k_1\lambda^k_2)$$
+
+Complessità finale: $$T(n) = \frac{1}{\sqrt{5}} (\lambda^n_{1\heartsuit} -  \lambda^n_2)\ circa$$
+
+$$\Theta(\lambda_1^n) = \Theta((\frac{1 + \sqrt{5}}{2})^n)$$ \par
+
+
+
+Riscriviamo il problema: calcolare l'n-esimo numero della sequenza di Fibonacci. Possiamo spezzare il problema in sottoproblemi:
+\begin{enumerate}
+    \item Calcolare il numero di Fibonacci con $n = 1$;
+    \item Calcolare il numero di Fibonacci con $n = 2$;
+    \item \dots
+    \item Calcolare il numero di Fibonacci con $n = n$.
+\end{enumerate}

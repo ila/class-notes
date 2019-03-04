@@ -1,0 +1,268 @@
+\newpage
+\section{Ripasso strutture dati}
+
+\subsection{Array}
+Gli array sono strutture statiche con memoria allocata a priori. Sono veloci perché tutta la memoria viene allocata nello stesso blocco.
+
+\subsection{Liste dinamiche}
+Le liste dinamiche hanno con memoria dinamica che varia durante l'esecuzione (la memoria non è allocata nella stessa locazione spaziale, quindi sono più lente). \par
+Esempi di liste dinamiche sono le linked list: hanno una $head$ che punta a una casella contenente $key$ e $next$, il quale a sua volta punta all'elemento successivo. Seguendo i puntatori si può visitare la lista. \\
+Il tempo di accesso ai singoli dati non è costante, ma dipende dalla lunghezza della lista (inefficiente). La gestione dei puntatori è a carico del programmatore, quindi possono esserci errori anche gravi. \par 
+Può essere utile immagazzinare anche il puntatore al valore precedente $previous$, per operazioni come la cancellazione. In questo caso la struttura dati si definisce lista doppia. \par
+Un altro puntatore statico è $tail$, all'ultima casella. Serve per aggiungere degli elementi in ordine senza dover scorrere tutta la lista e va aggiornato dopo ogni inserimento. \par 
+Se l'ultima casella punta alla prima e la prima ha come $previous$ l'ultima la lista è doppia circolare, e non è necessario avere $tail$.
+A volte si definisce un valore sentinella, una casella "finta" per gestire alcuni sotto-casi particolari (lista vuota, ultimo elemento, \dots).
+
+\subsection{Alberi radicati}
+Gli alberi radicati (generalmente binari) hanno puntatori a $left$ e $right$, che indicano i rami del nodo. Il campo $key$ contiene il valore.
+
+\subsection{Alberi binari di ricerca}
+Gli alberi binari di ricerca (BST) sono particolari alberi che rispettano la seguente proprietà: nel sottoalbero sinistro a ogni nodo ci sono solo valori inferiori, e nel sottoalbero destro ci sono solo valori superiori. Il tempo computazionale delle operazioni sui BST è di solito logaritmico.
+
+\subsection{Heap}
+Un heap è un array rappresentabile come albero. Tutti i livelli sono riempiti tranne l'ultimo, che viene riempito da sinistra verso destra. L'ordinamento di un heap si effettua con la visita in-order. Eventualmente viene aggiunto un puntatore $parent$ al padre di ogni foglia. \par
+Il max heap è un tipo particolare di heap dove la radice corrisponde al massimo.
+
+\subsection{Pile}
+Le pile (stack) possono essere implementate con array e liste. Sono gestite con politica LIFO, l'ultimo elemento è il primo a essere rimosso. Le operazioni su pile sono $push$ e $pop$, e $stackempty$ per evitare errori di overflow/underflow. Per leggere l'elemento in cima si usa $top$.
+
+\subsection{Code}
+Le code (queue) possono essere implementate con array e liste. Sono gestite con politica FIFO, il primo elemento è il primo a essere rimosso. Le operazioni su code sono $enqueue$ e $dequeue$, $emptyqueue$ per capire se la lista è vuota.
+
+\newpage
+\section{Sottosequenze}
+
+\subsection{Sottosequenza singola crescente (LGS)}
+Una sottosequenza di una stringa $x\:=\:<x_1,\:x_2,\:\dots,\:x_n>$ è un insieme di indici $i_1,\:i_2,\:\dots\:i_k$ con $k \leq n$ con indici $k$ strettamente crescenti. Gli indici non devono necessariamente essere consecutivi.
+
+Esempio di sottosequenza con una stringa:
+
+$X = <\stackon{C}{1}, \stackon{C}{2}, \stackon{A}{3}, \stackon{B}{4}, \stackon{B}{5}, \stackon{C}{6}, \stackon{A}{7}, \stackon{B}{8}, \stackon{D}{8}>$
+
+$Z = <C, B, B, D>$
+
+$Z$ è sottosequenza di $X$ alle posizioni:
+$$(1\ 4\ 5\ 9), (1\ 4\ 8\ 9), (1\ 5\ 8\ 9), (2\ 4\ 5\ 9), (2\ 4\ 8\ 9), (2\ 5\ 8\ 9)$$
+
+\textbf{L'ordine non è casuale}: inizia sempre dalla prima lettera disponibile, poi cerca tutte le alternative a partire dall'ultima posizione. Una volta cambiata la prima lettera, la sequenza viene ricontrollata.
+
+Variabili:
+\begin{itemize}
+	\item $C[1\dots n]$, numeri interi che indicano le posizioni;
+	\item $C[i]$, numero di elementi della più lunga sottosequenza crescente da 1 a $i$ che termina in $x_i$.
+\end{itemize}
+
+\textbf{Caso base}: $c[1] = 1,\ max = 0$;
+
+\textbf{Passo ricorsivo}: $c[i] = max\{c[j]\ |\ 1 < j < i \lor x_j < x_i\} + 1\ (se\ stesso)$;
+
+\textbf{Soluzione}: $maxtot = max\{c[i]\ |\ 1 \leq i \leq n\}$.
+
+L'algoritmo iterativo illustrato calcola la lunghezza massima delle sottostringhe in ordine crescente. Il valore $c[i]$ contiene l'ultima posizione della più lunga sottosequenza. \\
+Per trovare la sequenza è sufficiente salvare l'elemento compatibile precedente a $c[i]$ per poi fare backtracking. In questo modo la sequenza può essere generata utilizzando $maxtot$. \par 
+
+\begin{algorithm}[H]
+	\caption{Ricerca iterativa della sottostringa}
+	\begin{algorithmic}
+		\Function{longest\_substring}{$x$}
+		\State $maxtot \gets 1$
+		\State $c[1] \gets 1$
+		\For{$i \gets 2$ \textbf{to} $n$ \textbf{step} $1$}
+			\State $max \gets 0$
+			\For{$j \gets 1$ \textbf{to} $(i - 1)$}
+				\If{$x[j] < x[i] \land c[j] > max$}
+					\State $max \gets c[j]$
+				\EndIf
+				\State $c[i] \gets max + 1$
+				\If{$c[i] > maxtot$}
+					\State $maxtot \gets c[i]$
+				\EndIf
+			\EndFor
+		\EndFor
+		\State \Return $maxtot$
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+\textbf{Tempo}: $\Theta(n^2)$
+
+\textbf{Spazio}: $\Theta(n)$ (riducendo lo spazio, il tempo aumenta)
+
+\subsection{Longest Common Substring}
+\textbf{L}ongest \textbf{C}ommon \textbf{S}ubstring è il problema della sottostringa comune più lunga. Si ha:
+
+$X\:=\:<x_1,\:x_2,\:\dots,\:x_n>$,
+
+$Y\:=\:<y_1,\:y_2,\:\dots,\:y_n>$.
+
+$Z$ è sottosequenza comune a $X$, $Y$ se è sottosequenza di $X$ e contemporaneamente sottosequenza di $Y$. Il problema viene esteso al caso con due stringhe, si ricerca la più lunga sottosequenza con caratteri in ordine (come definito precedentemente).
+
+NB: la funzione non è $1\ :\ 1$,  ci possono essere ``salti'' da una lettera all'altra (altrimenti sarebbe un semplice algoritmo che utilizza un ciclo $for$).
+
+Le soluzioni iterative più banali hanno un tempo di $2^n$, quindi si deve ricorrere alla programmazione dinamica.
+
+Le istanze relative ai sottoproblemi sono $X_i$, $Y_j$, le quali sono $n + 1$ e $m + 1$ prefissi del problema dato. Si deve definire che cosa rappresentano gli indici. Un sottoproblema generico è identificato da una coppia di indici. 
+
+A ogni soluzione è associata una lunghezza: in questo caso la lunghezza della massima sottosequenza comune $K$ è la maggiore tra le lunghezze di tutte le sottosequenze comuni $W$. 
+
+$Z_k = LCS(X_i,\ Y_j)$. \\
+Se $x_i = y_j$, $LCS(x_{i-1}, y_{j-1})\ |\ x_i$ (ultimo simbolo). \\
+Altrimenti, se $z_k \neq x_i,\ Z_k = LCS(X_i,\ Y_j) = LCS(X_{i-1},\ Y_j)$ e $C_{i, j} = C_{i-1,\ j}$.
+Se $z_k \neq y_j,\ Z_k = LCS(X_i,\ Y_j) = LCS(X_i,\ Y_{j-1})$ e $C_{i, j} = C_{i,\ j-1}$.
+
+Si cerca un algoritmo tale che
+$$LCS(x,\ y) \rightarrow LCS(x-\{A\},\ y-\{A\})$$
+
+La struttura dati per risolvere il problema in modo dinamico è una \textbf{matrice}, che indica come sono allineate le sequenze restringendo il numero di caratteri. L'algoritmo controlla i primi $i$ elementi di $X$ ed i primi $j$ caratteri di $Y$.
+
+\begin{example}{}{}
+
+\begin{align*}
+	X &= <\stackon{A}{1}, \stackon{B}{2}, \stackon{C}{3}, \stackon{B}{4}, \stackon{D}{5}, \stackon{A}{6}, \stackon{B}{7}> \\
+	Y &= <\stackon{B}{1}, \stackon{D}{2}, \stackon{C}{3}, \stackon{A}{4}, \stackon{B}{5}, \stackon{A}{6}>
+\end{align*}
+
+\begin{center}
+	\begin{tabular}{ c | c | c | c | c | c | c | c | }
+		X/Y & 0 & B & D & C & A & B & A \\ \hline
+		0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
+		A & 0 & 0 & 0 & 0 & 1 & 1 & 1 \\ \hline
+		B & 0 & 1 & 1 & 1 & 1 & 2 & 2 \\ \hline
+		C & 0 & 1 & 1 & 2 & 2 & 2 & 2 \\ \hline
+		B & 0 & 1 & 1 & 2 & 2 & 3 & 3 \\ \hline
+		D & 0 & 1 & 2 & 2 & 2 & 3 & 3 \\ \hline
+		A & 0 & 1 & 2 & 2 & 3 & 3 & 4 \\ \hline
+		B & 0 & 1 & 2 & 2 & 3 & 4 & 4 \\ \hline
+	\end{tabular}
+\end{center}
+
+\end{example}
+
+La prima riga e la prima colonna sono fissi 0, e il controllo inizia dalla prima riga di 0. Non appena l'algoritmo trova un match, copia nella casella della matrice corrispondente il valore contenuto nella casella precedente sulla diagonale a sinistra, incrementandolo di 1.
+
+Se i due caratteri confrontati sono diversi, viene copiato nella casella il valore massimo tra quello a sinistra e quello sopra, e l'algoritmo prosegue.
+
+La casella alla posizione $(n, m)$ rappresenta la massima lunghezza. 
+
+\textbf{Variabile}:
+$c[n, m]$ è una matrice il cui elemento $C[i, j]$ contiene la lunghezza della stringa più lunga fra gli i caratteri di $X$ ed i $j$ caratteri di $Y$.
+
+\textbf{Caso base}:
+$$C[i, j] = 0\ se\ i = 0\ \lor j = 0 $$
+\textbf{Caso generico}:
+$$c[i, j] = \begin{cases}
+	C[i-1, j-1] + 1 & se\ x_i = y_j \\
+	max\{C[i-1, j], C[i, j-1]\} & se\ x_i \neq y_j
+\end{cases}$$
+
+\begin{algorithm}
+	\caption{LCS}
+	\begin{algorithmic}
+		\Function{LCS}{$X, Y$}
+			\For{$i \gets 0$ \textbf{to} $n$ \textbf{step} $1$}
+				\State $C[i, 0] \gets 0$
+			\EndFor
+			\For{$j \gets 0$ \textbf{to} $m$ \textbf{step} $1$}
+				\State $C[0, j] \gets 0$
+			\EndFor
+			\For{$i \gets 1$ \textbf{to} $n$ \textbf{step} $1$}
+				\For{$j \gets 1$ \textbf{to} $m$ \textbf{step} $1$}
+					\If {$X[i] == Y[j]$}
+						\State $C[i, j] = C[i-1, j-1] + 1$
+					\Else
+						\State $C[i, j] = \Call {max}{C[i-1, j], C[i, j-1]+1}$
+					\EndIf
+				\EndFor
+			\EndFor
+			\State \Return $C[n, m]$
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+Il problema può essere esteso con la richiesta della sottostringa più lunga crescente. In questo caso è necessario controllare la compatibilità di ogni lettera con le lettere precedenti.
+Per ottenere la sottostringa, oltre alla lunghezza, bisogna salvare in $S[i, j]$ (una matrice aggiuntiva) i movimenti eseguiti da $S[n, m]$ a ritroso per ricomporre la stringa.
+
+Il tempo di computazione è limitato superiormente dai due cicli $for$ dell'algoritmo, quindi $\theta(nm)$ che è approssimabile a $\theta(n^2)$
+
+Lo spazio richiesto è $\theta(nm)$ (la matrice), e può essere ridotto tenendo solo l'ultima riga oppure sostituendo le righe e colonne di $0$ con degli $if$.
+
+\subsection{LCS crescente}
+Date due sequenze $X$, $Y$, si vuole trovare la sottostringa comune in ordine crescente più lunga. I sottoproblemi vengono formulati in questo modo: qual'è la più lunga sottostringa che termina con $x_i,\ y_i$? 
+
+Bisogna controllare ogni volta se la sottosequenza comune precedente è compatibile (crescente) con l'ultimo carattere aggiunto, per mantenere l'ordine. 
+
+Si ha che se $X_i = Y_i$ viene calcolata la LCS dei caratteri precedenti + 1; altrimenti l'algoritmo restituisce $\emptyset$.
+
+Variabili:
+\begin{itemize}
+	\item $X_n$ con $|X_n| = n$, $Y_m$ con $|Y_m| = m$;
+	\item $C[n, m]$, una matrice;
+	\item $C[i, j]$, il numero di caratteri che compongono la più lunga sottosequenza comune a $X$, $Y$ crescente che termina con ($x_i = y_i$).
+\end{itemize}
+
+L'equazione di ricorrenza del problema è
+$$\begin{cases}
+C[i, j] = 0 & se\ x_i \neq y_i \\
+C[i, j] = max\{C[h, k]\ |\ 1 \leq h < i,\ 1 \leq k < j,\ x_h < x_i,\ y_k < y_j\} + 1 & x_i = y_j \\
+\end{cases}$$
+
+Questo può essere espresso semplicemente come
+$$max\{C[i, j]\ |\ 1 \leq i \leq n,\ 1 \leq j \leq m\}$$
+
+L'algoritmo funziona tramite una matrice similmente a LCS: le caselle corrispondenti a caratteri diversi vengono settate a 0. 
+
+Quando un carattere è uguale viene inserito il valore della più lunga sottosequenza comune compatibile precedente: in altre parole si cerca la casella con il valore più alto tale che l'elemento sia in ordine crescente. \\
+Alla fine della ricerca del massimo, il numero viene incrementato di 1. Per eseguire queste operazioni sono necessari 4 cicli $for$.
+
+Al completamento della scansione della matrice e dell'inserimento dei valori, bisogna trovare il massimo assoluto tra di essi: perciò è necessaria un'ulteriore ricerca tramite cicli $for$.
+
+Questo rende l'algoritmo abbastanza pesante computazionalmente: il tempo è di circa $\theta(n^2m^2)$, approssimabile a $\theta(n^4)$.
+
+\subsubsection{Algoritmo}
+
+\begin{algorithm}[H]
+	\caption{LCS\_crescente}
+	\begin{algorithmic}
+		\Function{LCS\_crescente}{$X, Y$}
+			\For{$i \gets 1$ \textbf{to} $n$ \textbf{step} $1$}
+				\For{$j \gets 1$ \textbf{to} $m$ \textbf{step} $1$}
+					\If {$X[i] \neq Y[j]$}
+						\State $C[i, j] \gets 0$
+					\Else
+						\State $max \gets 0$
+						\For{$h \gets 1$ \textbf{to} $i-1$ \textbf{step} $1$}
+							\For{$k \gets 1$ \textbf{to} $j-1$ \textbf{step} $1$}
+								\If {$C[h, k] > max \land x[k] < x[i]}$
+									\State $max \gets C[h, k]$
+								\EndIf
+							\EndFor
+						\EndFor
+						\State $C[i, j] \gets max + 1$
+					\EndIf
+				\EndFor
+			\EndFor
+			\State $maxtot \gets 0$
+			\For{$i \gets 1$ \textbf{to} $n$ \textbf{step} $1$}
+				\For{$j \gets 1$ \textbf{to} $m$ \textbf{step} $1$}
+					\If {$C[i, j] > maxtot$}
+						\State $maxtot \gets C[i, j]$
+					\EndIf
+				\EndFor
+			\EndFor
+			\State \Return $maxtot$
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Implementazione}
+\lstinputlisting[language=Python]{Algoritmi/lcs_crescente.py}
+
+
+\subsection{Heaviest Common Subsequence}
+Questa è una variante di LCS, che associa a ogni elemento $X_i$ o $Y_j$ un peso. L'obiettivo è trovare la sequenza comune di peso maggiore (non necessariamente la più lunga).
+
+A ogni aggiornamento della sequenza comune, va aggiunto il peso del nuovo elemento; il resto dell'algoritmo è concettualmente uguale. La programmazione dinamica aiuta a ottenere la soluzione ottimale.
+
+
+
+

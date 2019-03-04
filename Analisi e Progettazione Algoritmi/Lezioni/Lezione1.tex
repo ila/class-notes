@@ -1,0 +1,121 @@
+\section{Ripasso di algoritmi}
+
+\subsection{Risoluzione di algoritmi e tempi di esecuzione}
+Un problema risoluzione di algoritmi rientra sempre in uno di tre casi:
+\begin{enumerate}
+	\item Problema risolvibile in modo efficiente;
+	\item Problema risolvibile in modo non efficiente;
+	\item Problema non risolvibile.
+\end{enumerate}
+Il metodo può essere iterativo o ricorsivo. Con il modo iterativo, una serie di operazioni sono ripetute più volte all'interno della stessa funzione, e lo sviluppo dell'algoritmo è intuitivo. Per ogni possibile input, la risposta ottenuta alla fine della sequenza di istruzioni dev'essere corretta. Alcuni esempi di algoritmi iterativi sono l'ordinamento tramite selection sort, insertion sort e bubble sort; altri sono la \textbf{ricerca dicotomica}, \textbf{ricerca del massimo e del minimo}.
+\par Il tempo di esecuzione viene misurato in base al numero di istruzioni, utilizzando limiti asintotici. Valutare il tempo di esecuzione significa capire (asintoticamente) quante istruzioni vengono eseguite con un input di dimensione n, cioè 
+$$T(n), n = |x|, x = input$$ 
+Ogni algoritmo ha tre modi di rappresentarne il tempo, che indicano l'ordine di complessità di $f(n)$:
+\begin{itemize}
+	\item Caso migliore (numero minimo di istruzioni), $t(n)$ oppure $\Omega(f(n))$, che significa che la funzione è limitata inferiormente;
+	\item Caso peggiore (numero massimo di istruzioni, garanzia sul tempo massimo), $T(n)$ oppure $O(f(n))$, che significa che la funzione è limitata superiormente;
+	\item Caso medio (tempo medio di esecuzione in base al caso possibile più frequente), $T_m(n)$ oppure $\Theta(f(n))$, che significa che la funzione è compresa tra due limiti.
+\end{itemize}
+
+\subsection{Algoritmi iterativi}
+Selection sort è l'algoritmo di sorting più semplice, che consiste nella ricerca lineare del minimo in un ciclo $for$. \par
+\begin{algorithm}
+	\caption{Selection sort iterativo}
+	\label{alg:ssi}
+	\begin{algorithmic}
+		\Function{selection\_sort}{$A$}
+		\For{$j \gets 1$ \textbf{to} (\Call{length}{$A$} - 1) \textbf{step} $1$}
+		\For{$i \gets j$ \textbf{to} \Call{length}{$A$} \textbf{step} $1$}
+		\State $min \sim A[i]$
+		\EndFor
+		\State \Call{scambia}{$A, j, min$}
+		\EndFor
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+Il tempo di esecuzione sarebbe
+$$\sum_{i=1}^{n}i + \sum_{i=1}^{n}i + 3(n - 1)$$
+approssimabile a $\Theta(n^2)$.
+\par Insertion sort è un algoritmo meglio funzionante rispetto a selection sort, rappresentabile come l'ordinamento di un mazzo di carte di cui $k$ ordinate, scoprendo una carta per volta. Ogni carta viene controllata e riposizionata in modo da avere un array di carte ordinate. \par
+\begin{algorithm}
+	\caption{Insertion sort iterativo}
+	\label{is}
+	\begin{algorithmic}
+		\Function{insertion\_sort}{$A$}
+		\For{$j \gets 2$ \textbf{to} \Call{length}{A} \textbf{step} $1$}
+		\State $carta \gets A[i]$
+		\While{$A[j] > carta \land j > 0$}
+		\State $A[j + 1] \gets A[j]$
+		\State $j \gets j - 1$
+		\State $A[j + 1] \gets carta$
+		\EndWhile
+		\EndFor
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+Il tempo di esecuzione dipende dal numero di volte in cui $while$ è vero, cioè
+$$4n + 3\sum_{i=2}^{n}t_wi$$
+(con $t_wi$ numero di volte che viene eseguito $while$).
+\begin{enumerate}
+	\item Caso Migliore: array già ordinato, $\Theta(n)$.
+	\item Caso Peggiore: array ordinato al contrario, $O(n^2)$
+	\item Caso Medio: l'ordinamento richiede metà iterazioni di $while$, approssimato a $\Theta(n^2)$
+\end{enumerate}
+
+\subsection{Algoritmi ricorsivi}
+Nonostante selection sort e bubble sort abbiano tempi computazionali generamente minori rispetto a selection sort, essi non sono ancora ottimizzati per input lunghi. \par
+Gli algoritmi ricorsivi contengono funzioni che chiamano loro stesse con un input di dimensione minore rispetto all'originale, continuando a diminuirne le dimensioni fino ad arrivare al caso base (semplice). \par
+\begin{algorithm}
+	\caption{Ricerca del massimo ricorsivo}
+	\label{alg:rmr}
+	\begin{algorithmic}
+		\Function{max\_ric}{$A, i, n$}
+			\If{$i == n$}
+				\State \Return i
+				\Else
+					\State \Call{max\_ric}{A[], i+1, n}
+				\If{$A[i] > A[Rp]$}
+					\State \Return i
+				\Else
+					\State \Return Rp
+				\EndIf
+			\EndIf
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+Il tempo di esecuzione può essere descritto in questo modo:
+$$T(n) = \begin{cases}
+	2 & se\ n = 1 \\
+	3 + T(n - 1) & se\ n > 1
+\end{cases}$$
+L'equazione di ricorrenza viene risolta con tre possibili metodi:
+\begin{enumerate}
+	\item Metodo iterativo (dell'albero);
+	\item Metodo di induzione;
+	\item Metodo dell'esperto.
+\end{enumerate}
+Utilizzando questo metodo è possibile arrivare a un tempo asintotico di $\Theta(n)$. \par
+Un altro algoritmo ricorsivo è la ricerca del $k$-esimo elemento della sequenza di Fibonacci. L'implementazione standard richiama la funzione su $(n - 1)$ e $(n-2)$. Il problema di questo algoritmo è l'elevata complessità computazionale, la quale cresce esponenzialmente (al contrario di altri come il fattoriale). \\
+Il metodo più efficiente per Fibonacci è tramite la programmazione dinamica, salvando i risultati intermedi in memoria. \par
+
+Merge sort è un popolare algoritmo di algoritmi ricorsivo che sfrutta la tecnica del divide-et-impera: divide il problema in uno o più sotto-problemi, usa la ricorsione per risolvere i sotto-problemi e ne combina le soluzioni. \par
+\begin{algorithm}
+	\caption{Merge sort ricorsivo}
+	\label{alg:msr}
+	\begin{algorithmic}
+		\Function{MS}{$A[], I, F$}
+			\State $m \gets (I + F) / 2$
+			\State \Call{MS}{$A[], I, m$}
+			\State \Call{MS}{$A[], m + 1, F$}
+			\State \Call{Merge}{$A[], I, m, F$}
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+Questo algoritmo ha una parte iterativa (divide e combina) e una parte ricorsiva (impera) le quali hanno un tempo computazionale approssimato al tempo della ricorsione, essendo esso maggiore.
+$$T(n) = \Theta(n log n)$$
+
+\subsection{Riassumendo}
+La soluzione a un problema può essere sotto forma di elemento, insieme di elementi o operazioni su un insieme di elementi. Un algoritmo iterativo usa la strategia bottom-up, mentre uno ricorsivo usa top-down. \par 
+
+Un algoritmo iterativo è efficiente per risolvere tutti i problemi per ottenere la soluzione, perché in questo modo si evitano tutte le chiamate sullo stack. \\
+Un algoritmo ricorsivo è più efficiente se può terminare subito non appena la soluzione viene trovata, evitando di risolvere tutti i sottoproblemi.

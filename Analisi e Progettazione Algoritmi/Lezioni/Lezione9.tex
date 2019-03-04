@@ -1,0 +1,167 @@
+\newpage
+\section{Algoritmi su grafi}
+Gli algoritmi su grafi sono rilevanti perché possono risolvere numerose tipologie di problemi, riducendoli appunto a un grafo.
+
+Si ricorda che un grafo è un insieme $G = (V, E)$ dove $V$ sono i vertici, $E$ sono gli archi (edges, lati), ed esiste una funzione peso $w : E \rightarrow \mathcal{R}$. Un cappio viene rappresentato come $e(i,\ i)$. 
+
+Ci sono due modi principali per rappresentare un grafo: 
+\begin{enumerate}
+	\item Liste di adiacenza, array statico con liste dinamiche, utilizzate per grafi sparsi (con pochi lati);
+	\item Matrice di adiacenza, statica, con ogni vertice rappresentato in una rispettiva riga e colonna (per grafi densi).
+\end{enumerate}
+Per decidere quale delle due usare bisogna confrontare $\abs{E}$ con $\abs{V}^2$: se $E$ è molto minore si procede con la lista, altrimenti la matrice.
+
+\subsection{Liste di adiacenza}
+Si ha un array statico $Adj$ di nodi, con un valore numerico univoco assegnato a essi. Ogni vertice è collegato agli altri tramite puntatori: se il grafo non è orientato, può esserci o non esserci il collegamento dall'altro lato (tranne nel caso dei cappi).
+
+Le liste di adiacenza permettono di conoscere quali nodi sono collegati al nodo di partenza, ma non necessariamente ci sono cammini tra più di due di essi. I puntatori $next$, però, sono uno dopo l'altro e ogni singolo vertice ha un solo puntatore (che successivamente punta agli altri).
+
+Tempo peggiore: $O(\abs{V})$, tempo medio: $\Theta(\abs{V}/2)$, tempo migliore: $\Omega(1)$. \\
+Spazio: $O(\abs{V} + \abs{E})$ se il grafo è orientato, $O(\abs{V} + 2\abs{E})$ altrimenti.
+
+Se il grafo è pesato, si aggiunge a ogni valore un'altra casella (due campi, quindi), per rendere veloce la ricerca rimettendoci in termine di spazio. 
+
+\subsection{Matrici di adiacenza}
+Si ha che la matrice di adiacenza, in caso di grafo non orientato, è simmetrica: quindi non è necessario tenere tutta la matrice in memoria. La rappresentazione e l'accesso in questo caso sono più complicate, quindi per convenzione non si divide.
+
+Per indicare il peso è sufficiente mettere nell'incrocio riga-colonna corrispondente il valore, anziché 1; viceversa possono esserci valori NIL oppure (meglio) 0 o -1.
+
+I tempi sono costanti: per accedere alla matrice è sufficiente trovare la casella desiderata, quindi $\Theta(1)$ nonostante lo spazio sia maggiore, $\Theta(\abs{V}^2)$. Questa soluzione è comunque vantaggiosa se il grafo è denso, perché non è necessario scorrere l'array.
+
+\newpage
+\section{Visite di un grafo}
+Ci sono due visite principali: BFS e DFS, rispettivamente in ampiezza e in profondità. 
+
+La scelta cambia a seconda di quello che si vuole ottenere: BFS analizza una sola componente del grafo che è connessa alla sorgente, dando informazioni sulle distanze da tutti i vertici (per trovare quella minima), mentre la DFS analizza tutte le componenti dando informazioni su quali vertici sono collegati e quali no.
+
+\subsection{BFS}
+La BFS si concentra sui vertici adiacenti, mentre vede come infinitamente distanti quelli non direttamente raggiungibili. Per ogni vertice, si ha il valore della distanza minima (intero o infinito). \\ BFS permette di trovare il \textbf{cammino minimo}. 
+
+Un vertice a distanza $d+1$ viene visitato solo dopo tutti quelli a distanza $d$. Un'altra informazione che di solito viene memorizzata è $p(v)$, cioè il nodo precedente nella visita.
+
+Per capire se un vertice è già stato visistato si usa un colore: bianco se non è mai stato toccato, grigio se è stato incontrato ma non visitato in profondità e nero altrimenti.
+
+L'algoritmo inizia segnando tutte le distanze tra ogni coppia di vertice come infinita, ogni parent è NIL e tutti i colori sono bianchi. Partendo dalla sorgente, li visita tutti da sinistra.
+
+Per capire come trovare i vertici, l'algoritmo deve memorizzare gli $n$ nodi da analizzare successivamente: la struttura dati più comoda è la coda, che garantisce la visita a partire dal primo livello.
+
+Se ci sono due o più grafi scollegati, i nodi vengono inizializzati, ma al termine dell'algoritmo essi restano con distanza infinita: BISF può anche indicare se un grafo è connesso. Se il grafo non è orientato, ogni nodo viene visitato due volte.
+
+% algritmo
+
+\begin{algorithm}[H]
+	\caption{BFS}
+	\begin{algorithmic}
+		\Function{BFS}{G, S}
+			\For{$i \gets 1 \textbf{ to } n$}
+				\State $d[v_i] \gets \infty$
+				\State $c[v_i] \gets $ White
+				\State $p[v_i] \gets $ nil
+			\EndFor
+			\State $d[S] \gets 0$
+			\State $c[S] \gets $ Gray
+			\State \Call{Enqueue}{Q, S}
+			\While{$!(\Call{EmptyQueue}{Q})$}
+				\State $u \gets $ \Call{Dequeue}{Q}
+				\For{each $w \in $ Adj$[u]$}
+					\If{$c[w] == $ White}
+						\State $d[w] \gets d[u] + 1$
+						\State $p[w] \gets u$
+						\State $c[w] \gets $ Grey
+						\State \Call{Enqueue}{Q, W}
+					\EndIf
+				\EndFor
+				\State $c[u] = $ Black
+			\EndWhile
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{example}{}{}
+	Dato un grafo $G = (V, E)$, con $x \in V$, stampare i vertici $y$ che hanno la seguente propretà: il numero di archi su un cammino minimo da $x$ a $y$ è pari.
+
+	\begin{algorithm}[H]
+		\caption{Print-Even-Distance}
+		\begin{algorithmic}
+			\Function{Print-Even-Distance}{G, x}
+				\State \Call{BFS}{G, x}
+				\For{$n \in V$}
+					\If{$d[n] \neq \infty $ and $d[n]$ mod $2 == 0$}
+						\State \Call{Print}{n}
+					\EndIf
+				\EndFor
+			\EndFunction
+		\end{algorithmic}
+	\end{algorithm}
+	
+\end{example}
+
+\begin{example}{}{}
+	Modificare l'algoritmo di visita BFS in modo che visiti fino a scoprire i vertici che distano $k$ da $s$, con $k > 0$ (dentro la padella). 
+
+	\begin{algorithm}[H]
+		\caption{BFS}
+		\begin{algorithmic}
+			\Function{BFS}{G, S}
+				\For{$i \gets 1 \textbf{ to } n$}
+					\State $d[v_i] \gets \infty$
+					\State $c[v_i] \gets $ White
+					\State $p[v_i] \gets $ nil
+				\EndFor
+				\State $d[S] \gets 0$
+				\State $C[S] \gets $ Grey
+				\State \Call{Enqueue}{Q, S}
+				\While{$!(\Call{EmptyQueue}{Q})$}
+					\State $u \gets $ \Call{Dequeue}{Q}
+					\For{each $w \in $ Adj$[u]$}
+						\If{$c[w] == $ White}
+							\State $d[w] \gets d[u] + 1$
+							\State $p[w] \gets u$
+							\If{$d[w] < k$}
+								\State $c[w] \gets $ Grey
+								\State \Call{Enqueue}{Q, w}
+							\Else
+								\State $c[w] \gets $ Black
+							\EndIf
+						\EndIf
+					\EndFor
+					\State $c[u] = $ Black
+				\EndWhile
+			\EndFunction
+		\end{algorithmic}
+	\end{algorithm}
+\end{example}
+
+\begin{example}{}{}
+
+	Dato un grafo non orientato $G = (V, E)$, stabilire (true, false) se $G$ è connesso (per ogni coppia di vertici esiste un cammino, relazione di raggiungibilità simmetrica).
+\begin{algorithm}[H]
+	\caption{Is-Connected}
+	\begin{algorithmic}
+		\Function{Is-Connected}{G}
+			\State S $\gets$ \Call{Random}{V}
+			\State \Call{BFS}{G, S}
+			\For{$n \in V$}
+				\If{$c[n] == $ White}
+					\State \Return false
+				\Else
+					\State \Return true
+				\EndIf
+			\EndFor
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+\end{example}
+
+\begin{example}{}{}
+Dato un grafo non orientato $G = (V, E)$, stabilire se $G$ è un albero (grafo connesso senza cicli, oppure $|E| = |V| - 1$). 
+
+Per risolvere il problema è possibile contare il numero di vertici e quello degli archi con variabili globali, e verificare se rispetta la relazione.
+\end{example}
+
+\begin{example}{}{}
+Dato un grafo non orientato $G = (V, E)$ e un nodo $s \in V$, stabilire se $G$ è un albero con radice in $s$.
+
+Il colore del padre del $u$ è nero. I figli non possono mai essere nella coda insieme al padre, quindi se un vertice è destinato a diventare nero, il padre è necessariamente nero (eheh).
+
+\end{example}

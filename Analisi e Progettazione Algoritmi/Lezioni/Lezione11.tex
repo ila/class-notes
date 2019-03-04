@@ -1,0 +1,112 @@
+\section{DFS}
+DFS è un algoritmo che visita un grafo in profondità, al contrario di BFS che visita subito tutti i vertici adiacenti. La struttura dati utilizzata è la pila: ogni elemento viene subito rimosso. 
+
+Un'altra differenza è che DFS permette di ottenere informazioni sui nodi di un grafo come insieme, per esempio il numero di componenti connesse e le loro caratteristiche, mentre BFS è più utile per il cammino minimo o per i singoli vertici.
+
+Similmente, invece, DFS ricorre all'utilizzo dei colori: bianco, grigio e nero, con gli stessi significati di BFS. Se il grafo non è orientato, non è detto che tutti i nodi vengano scoperti; per questo motivo la visita viene lanciata ogni volta che viene trovato un elemento bianco.
+
+Viene settato un clock $d$ per ogni vertice, che indica a quale unità di tempo esso è stato scoperto. Analogamente, $f$ è il tempo relativo alla fine della visita di quel vertice. 
+
+Per capire se gli archi sono in avanti oppure semplicemente di attraversamento (portano a nodi neri), è sufficiente guardare il tempo di fine. Se i segmenti dei tempi sono disgiunti, è un arco di cross: se uno è sottoinsieme dell'altro, sono disgiunti.
+
+La ricorsione è utile per simulare una pila senza doverla gestire direttamente: le chiamate ricorsive vengono eseguite dallo stack. Se necessario, l'algoritmo ricorsivo viene lanciato su ogni nodo.
+
+\subsection{Algoritmo}
+DFS prende in ingresso un grafo $G$ e per ogni vertice inizializza il colore, il predecessore, il tempo di scoperta e di fine visita (implicitamente).
+
+Se il vertice è bianco, chiama l'algoritmo \textit{DFS\_visit} che esegue la visita in profondità vera e propria.
+
+Una volta scoperto il vertice, il tempo di esecuzione viene incrementato e salvato, e il colore diventa grigio. La procedura deve analizzare tutti i nodi sottostanti e, una volta finito, segnare il tempo di fine. 
+
+Tra l'inizio e la fine della scoperta, per ogni vertice della lista di adiacenza viene ricontrollato il colore. Se esso è bianco, viene visitato ricorsivamente il sottografo richiamando \textit{DFS\_visit}. 
+
+% algoritmo DFS
+\begin{algorithm}[H]
+	\caption{DFS}
+	\begin{algorithmic}
+		\Function{DFS}{G}
+			\For{$v \in G$}
+				\State $c[v] \gets $ White
+				\State $p[v] \gets $ nil
+			\EndFor
+			\State $time \gets 0$
+			\For{$v \in G$}
+				\If{$c[v] == $ White}
+					\State \Call{DFS\_visit}{G,v}
+				\EndIf
+			\EndFor
+		\EndFunction
+		\Function{DFS\_visit}{G,v}
+			\State $time \gets time + 1$
+			\State $d[v] \gets time$
+			\State $c[v] \gets $ Gray
+			\For{$a \in Adj[v]$}
+				\If{$c[a] == $ White}
+					\State \Call{DFS\_visit}{G,a}
+				\EndIf
+			\EndFor
+			\State $time \gets time + 1$
+			\State $f[v] \gets time$
+			\State $c[v] = $ Black
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+% DFS_visit
+
+Il caso migliore per l'algoritmo è chiaramente il tempo costante. Il caso peggiore si verifica quando tutti i nodi vengono visitati con \textit{DFS\_visit}. \\
+Tempo medio: $\Theta(\abs{V}+ \abs{E})$.
+
+\subsection{Proprietà}
+Teorema delle parentesi: dati due intervalli $i_1 = (d[u], f[u])$ e $i_2 = (d[v], f[v])$, confrontandoli si possono avere tre casi:
+\begin{enumerate}
+	\item $i_1 \cap i_2 = \emptyset$, nodi disgiunti;
+	\item $i_1 \subseteq i_2$, figlio;
+	\item $i_1 \supseteq i_2$, padre.
+\end{enumerate}
+Non esistono casi in cui gli intervalli siano accavallati.
+
+Un lato si può etichettare in questi modi:
+\begin{itemize}
+	\item Tree-edge, albero di scoperta (senza cicli);
+	\item Back-edge (lato all'indietro), arco che porta a un vertice grigio;
+	\item Forward-edge (lato in avanti), porta a un vertice nero, $d[u] < f[v]$;
+	\item Cross-edge, lato di attraversamento da un grafo all'altro, $d[u] > f[v]$. 
+\end{itemize}
+
+In un grafo non orientato, è possibile avere tree-edge e back-edge, ma non sono mai presenti forward-edge perché ogni arco viene prima esplorato dal lato opposto. 
+
+\subsubsection{Ordinamento topologico}
+L'ordinamento topologico è utile per stabilire un ordine logico su grafi particolari, che rientrano nella categoria dei DAG (grafi diretti senza cicli). 
+
+Si fissa un nodo che deve per forza essere il primo, e poi ci sono delle possibili scelte (che rispettino i vincoli). 
+
+Viene lanciato DFS sul grafo che permette di visitare i nodi nell'ordine richiesto, mettendoli in ordine man mano.
+
+\begin{example}{}{}
+	Modificare DFS affinché ad ogni lato del grafo venga messa l'etichetta corretta e stampata a video
+
+	\begin{algorithm}[H]
+		\caption{DFS}
+		\begin{algorithmic}
+			\Function{DFS\_visit}{G,v}
+				\State $time \gets time + 1$
+				\State $d[v] \gets time$
+				\State $c[v] \gets $ Gray
+				\For{$a \in Adj[v] \backslash P[v] $} \Comment{Si rimuove $P[v]$ solo se il grafo non è orientato}
+					\If{$c[a] == $ White}
+						\State \Call{Print}{``(v,a), Tree''}
+						\State \Call{DFS\_visit}{G,a}
+					\ElsIf{$c[a] == $ Gray}
+						\State \Call{Print}{``(v,a), Back''}
+					\ElsIf{$c[a] == $ Black} \Comment{Solo se il grafo è orientato}
+						\If{$d[a] < f[a]$}
+							\State \Call{Print}{``Forward''}
+						\Else
+							\State \Call{Print}{``Cross''}
+						\EndIf
+					\EndIf
+				\EndFor
+			\EndFunction
+		\end{algorithmic}
+	\end{algorithm}
+\end{example}

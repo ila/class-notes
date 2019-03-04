@@ -1,0 +1,133 @@
+\documentclass{article}
+\input{../../packages.tex}
+
+\title{Elementi di Bioinformatica - Algoritmi}
+\author{Adrian Castro, Ilaria Battiston}
+\date{Anno scolastico 2018-2019}
+\pagestyle{fancy}
+
+\input{../../commons.tex}
+
+\begin{document}
+
+\maketitle
+
+\lfoot{}
+\cfoot{}
+\rfoot{\thepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Classificazione Algoritmi Probabilistici}
+
+Gli algoritmi che trattiamo saranno di due tipi, ed  entrambi prevedono l'utilizzo di un numero pseudo-randomico per il calcolo del risultato:
+\begin{itemize}
+    \item Monte Carlo: sempre veloci, ma forse non corretti. Il fattore probabilistico è quindi l'errore, che è determinato dalla scelta del numero randomico (es. \textit{Karb Rabin})
+    \item Las Vegas: sempre corretti, ma non sempre veloci. La loro velocità dipende dalla scelta del numero randomico iniziale (es. \textit{Quick Sort})
+\end{itemize}
+
+\newpage
+\section{Pattern Matching}
+
+Di seguito vengono presentati gli algoritmi di pattern matching su stringhe affrontati a lezione.
+
+\subsection{Shift-And}
+Algoritmo di string matching che si concentra sul velocizzare il pattern matching effettuando operazioni \textit{bit-a-bit}, mantenendo comunque il numero di operazioni.
+
+\subsubsection{Tempi e spazi}
+Il tempo di esecuzione dell'algoritmo è di $O(nm)$, mentre lo spazio occupato è di $\theta (m \times n)$
+
+\subsubsection{Algoritmo}
+Definiamo la stringa $T$ di lunghezza $n$ ed il pattern $P$ di lunghezza $m$. Ipotizziamo quindi di avere una matrice $M$ di dimensione $m \times n$ ($m$ righe per le lettere del pattern $P$ e $n$ righe per le lettere della stringa $T$), due indici $i, j$ rispettivamente di $P$ e $T$.
+
+Vale quindi la seguente definizione:
+\begin{equation*}
+    \texttt{M[i,j] = 1 $\Leftrightarrow$ P[0,i] = T[j-i+1, j]}
+\end{equation*}
+
+Tradotto, nella matrice avremo $1$ se e solo se il prefisso di lunghezza $i$ è uguale alla sottostringa di lunghezza $i$ alla posizione $j-i + 1$.
+
+\begin{example}{}{}
+    Usiamo $T = AGCAGBGCA, n = 9 \qquad P = GCA, m = 3$
+    \begin{center}
+    M = \begin{tabular}{l c | *{9}{c} }
+        ~ & ~ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+        ~ & ~ & A & G & C & A & G & B & G & C & A \\
+        \hline
+        1 & G & 0 & 1 & 0 & 0 & 1 & 0 & 1 & 0 & 0 \\
+        2 & C & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 0 \\
+        3 & A & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 1
+    \end{tabular}
+    \end{center}
+\end{example}
+L'ultima riga ci indica se il pattern è presente o meno nel testo, ed in che posizione termina il match.
+
+\subsection{Karp-Rabin}
+
+Si basa sulle moltiplicazioni come operazioni sui bit. Come lo \textbf{Shift-And}, il numero di operazioni rimane invariato, ma si punta a velocizzare le operazioni agendo sui bit.
+
+\subsubsection{Tempi e spazi}
+
+L'algoritmo viene eseguito in un tempo lineare $O(n + m)$, mentre il tempo peggiore è di $O(n \cdot m)$, che accade quando il pattern viene trovato su tutta la stringa.
+
+Per gli hash vengono utilizzati $p^m$, dove $p$ è il numero di simboli presenti nell'alfabeto.
+
+\subsubsection{Algoritmo}
+
+Data una stringa $T$ di lunghezza $m$, un pattern $P$ di lunghezza $n$, e definito l'alfabeto come $\sum = \{0,1\}$, il principio base dell'algoritmo si basa su una \textbf{sliding-window}, di lunghezza $n$, che scorre verso la fine della stringa un carattere per volta, e la funzione \textbf{hash} \texttt{H} che calcola il valore della sliding-window e del pattern che vogliamo riconoscere. Se essi coincidono, allora il pattern è stato trovato alla posizione attuale della sliding-window.
+
+Si riesce a rendere il calcolo dell'hash più veloce a partire dall'hash precedente? Certo che si, usando una tecnica chiamata \textit{rolling hash}:
+
+\begin{equation*}
+    \texttt{H(T[i + 1 : i + m]) = (H(T[i : i + m - 1]) - T[i]) / 2 + 2$^m$ $\cdot$ T[i + m]}
+\end{equation*}
+
+Tradotto, l'hash della sliding window corrente viene calcolata in base a quella precedente.
+
+In termini di spazio, il primo carattere è quello che pesa di meno ($1$), l'ultimo ha il peso più elevato ($2^{m-1}$) a causa del fattore moltiplicativo. Ad ogni spostamento della sliding-window il primo carattere viene rimosso, il numero viene diviso in due e viene aggiunto l'n-esimo carattere della finestra elevato alla $m$.
+
+Se si vuole cambiare l'alfabeto con $p$ simboli per rendere più veloci le operazioni, bisogna tenere in mente che il peso ne risente ($p^m$), così come l'univocità della stringa associata ad un hash.
+
+\subsection{Pattern Matching con Suffix-Tree}
+
+Questo algoritmo utilizza il concetto dei \textbf{Suffix Tree}, una struttura dati ad albero con archi etichettati. Questa può essere rappresentata come un \textbf{array}, un \textbf{Binary Search Tree} ed una \textbf{tabella hash}.
+
+\subsubsection{Tempi e spazi}
+
+L'algoritmo prima deve costruire l'albero a partire da $T$, impiegando $O(m)$ (se si usa un \textit{array} per immagazzinare l'albero). In seguito, per trovare tutti i match impiega $O(n + k)$, dove $k$ è il numero di occorrenze. Lo spazio occupato è di $O(n^2)$, derivante dalla lunghezza delle etichette. Si riesce ad ottenere approssimativamente $O(n)$ se si utilizzano i puntatori.
+
+\subsubsection{Algoritmo}
+
+Si ragiona definendo la sottostringa da trovare in termini di \textbf{suffisso}. Un suffisso è sicuramente una sottostringa, ed ogni sottostringa è il prefisso di un suffisso. Ogni suffisso corrisponde ad un percorso radice-foglia, di conseguenza si devono cercare i percorsi iniziali.
+
+I passaggi sono i seguenti:
+\begin{enumerate}
+    \item Per il carattere corrente del pattern, se c'è una corrispondenza con la stringa dell'arco, allora si prosegue verso la direzione dell'arco stesso
+    \item Se il pattern non esiste nell'arco corrente, allora esso \textit{non può esistere in tutto l'albero}
+    \item Si continua fino ad una o più foglie dell'albero. Il valore delle foglie trovate indicheranno l'\textit{indice al quale si trovano le corrispondenze}.
+\end{enumerate}
+
+\subsection{Sottostringa comune di $k$ stringhe}
+
+\section{Minimo tra due intervalli}
+
+\section{Allineamento di sequenze}
+
+\subsection{Allineamento di due sequenze}
+
+\subsection{Allineamento locale}
+
+\subsection{Allineamento globale ottimo}
+
+\section{Gap}
+
+\subsection{Gap arbitrario}
+
+\subsection{Gap lineare}
+
+\section{Matrici di sostituzione}
+
+\section{Allineamento multiplo}
+\end{document}

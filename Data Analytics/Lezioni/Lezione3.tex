@@ -1,0 +1,53 @@
+\section{Unbalanced data}
+Una delle problematiche che riguardano modelli di apprendimento predittivi e prescrittivi si verifica quando la distribuzione dei campioni di una determinata classe sono molto più frequenti rispetto a un'altra (es. contesto medico). La maggior parte dei campioni sono corretti, ma inutili: non è necessario fare analisi sulla maggioranza, sapendone già il comportamento. 
+
+Per bilanciare i dati si usano due tecniche:
+\begin{itemize}
+	\item Oversampling: costruzione di un dataset con un numero desiderato di campioni dalla classe di minoranza e uno uguale dalle altre;
+	\item Undersampling: eliminazione di un numero arbitrario di campioni dalla classe di maggioranza, in modo da avere lo stesso numero rispetto alla classe di minoranza. 
+\end{itemize}
+Questi metodi sono applicabili con due classi, ma anche con un maggior numero. Ci sono algoritmi che si focalizzano su uno o sull'altro, e approcci ibridi che li combinano. Si assume che i dati siano corretti, rappresentativi e in assenza di rumore.
+
+\subsection{SMOTE}
+SMOTE (Synthetic Minority Oversampling Technique) è un algoritmo iterativo di oversampling:
+\begin{enumerate}
+	\item Per ogni campione di minoranza, trova i suoi $k$ elementi di minoranza più vicini;
+	\item Di queste ne sceglie $n$ in modo casuale;
+	\item Calcola il punto medio tra quello iniziale e ciascuno degli $n$ (Generated Synthetic Instance);
+	\item Il GSI viene aggiunto al dataset.
+\end{enumerate}
+
+\subsection{Tomek Link Method}
+Tomek Link è un algoritmo che si basa sulla frontiera della classe. Un Tomek Link è una coppia di istanze $<E_1, E_2>$ tale che $E_1, E_2$ appartengano a una classe diversa e non esistano altri esempi $E_k$ più vicini a ognuno di essi.
+
+L'undersampling viene effettuato sui campioni della classe di maggioranza che non sono parte di Tomek Link. 
+
+\subsection{Feature reduction}
+La riduzione e la modifica dello spazio di input è indispensabile, soprattutto per i modelli predittivi, per permettere una mappatura dall'input all'output (durante l'apprendimento): il target eredita delle caratteristiche, che non devono essere irrilevanti e ridondanti.
+
+Le risorse computazionali sono ridotte (crescono esponenzialmente al numero delle variabili), e può essere complesso trovare le distribuzioni di probabilità dei campioni, quindi è meglio rimuovere alcuni attributi.
+
+Riducendo le features, si riduce la dimensionalità dello spazio: gli attributi scelti devono essere sufficienti per distinguere i campioni tramite alberi di decisione (valori booleani). 
+
+\subsubsection{Feature extraction}
+La feature selection trasforma attributi esistenti in uno spazio dimensionale minore. Dato un insieme di attributi $x = \{x_i | i = 1 \dots N\}$, si trova una mappatura $y = f(x) : R^N \rightarrow R^N$ con $M < N$ tale che il vettore trasformato preservi la maggior parte delle informazioni o della struttura.
+
+Un mapping ottimale $y = f(x)$ risulterà in una minima probabilità di errori non incrementata, ma non esiste un modo sistematico per generare trasformazioni non lineari. 
+
+\subsubsection{Feature selection}
+La feature selection seleziona un sottoinsieme degli attributi esistenti. Dato un insieme di attributi $x = \{x_i | i = 1 \dots N\}$, si trova un sottoinsieme $x_m = \{x_{i1}, x_{i2}, \dots, x_{iM}\}$ con $M < N$, che ottimizza una funzione obiettivo $J(Y)$.
+
+Questo è necessario nei casi in cui le features siano difficili da ottenere o si voglia estrarre regole significative; è utile quando le unità di misura vengono perse o i dati non sono numerici.
+
+Per trovare i candidati ottimali e i potenziali sottoinsiemi si ricorre al filtering: una ricerca esaustiva implica $\binom{n}{m}$ combinazioni, quindi si utilizzano metaeuristiche. 
+
+Criteri di ranking:
+\begin{itemize}
+	\item Ranking variabile, ordinamento delle features in base a una funzione di scoring che misura la rilevanza e risulta in una permutazione ordinata;
+	\item Correlazione, usando il coefficiente $R$ di Pearson per $m$ campioni, che misura la similarità e l'approssimazione a una funzione lineare; \\
+	$R(f_i, y) = \frac{cov(f_i, y)}{\sqrt{var(f_i)var(y)}} \in [-1, 1]$
+	\item Information Gain: classificazione in base all'informazione (entropia) guadagnata da ogni feature e alla sua contribuzione alla riduzione dell'incertezza della classe; \\
+	$IG(C, A) = H(C) - H(C | A)$
+	\item Subset evaluation tramite CFS (Correlation-based Feature Selection), selezione di $g$ attributi altamente correlati tra loro ma incorrelati con le altre classi; \\
+	$M_s = \frac{k\overline{r_{cf}}}{\sqrt{k + k(k + 1)\overline{r_{ff}}}}$ con $k$ features, $r_{cf}$ media della correlazione tra classi, $r_{ff}$ la media dell'intercorrelazione tra features.
+	\end{itemize}

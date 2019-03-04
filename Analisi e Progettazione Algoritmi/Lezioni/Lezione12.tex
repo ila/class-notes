@@ -1,0 +1,128 @@
+\section{Algoritmo di Floyd-Warshall}
+Dato un grafo pesato $G = (V, E, w)$, l'algoritmo determina il \textit{cammino minimo tra due nodi}. Esiste anche l'alternativa per ogni vertice a partire da una data sorgente.
+
+Un algoritmo greedy in questo caso non funziona: il numero di possibilità è troppo elevato, e il cammino con il minor numero di archi potrebbe non essere il meno pesante. Un'alternativa è il calcolo della distanza senza vertici intermedi, e il miglioramento dei valori conoscendo tutte le distanze.
+
+Se due nodi non sono direttamente collegati da un arco, inizialmente la distanza è infinita; in seguito, l'algoritmo prova a trovare percorsi con il minimo peso attraversando altri nodi.
+
+Il calcolo iniziale delle distanze viene effettuato usando una matrice quadrata di dimensione $n \times n$, che indica quanto pesa il cammino minimo che collega ogni coppia di vertici con un \textbf{collegamento diretto}. Sulla diagonale ci sono solo 0 (la distanza minima tra un nodo e se stesso è ovviamente 0); se una coppia non è collegata, viene inserito $\infty$.
+
+$$D_{i, j}  [0] = \begin{cases}
+0 & se\ i = j \\
+w_{ij} & se\ i \neq j \land (i, j) \in E \\
+\infty & altrimenti
+\end{cases}$$
+
+Questa procedura viene estesa con la possibilità di attraversare un vertice arbitrario, per esempio 1. Se ciò è conveniente, le entrate corrispondenti nella matrice vengono modificate con il nuovo peso minimo ottenuto.
+
+Alcuni percorsi intermedi ottimali possono essere riutilizzati per le caselle successive: se è già stato calcolato un valore minimo per un percorso, quest'ultimo può servire come percorso intermedio tra altri due nodi. 
+
+La domanda è: come costruire la matrice $D(k)$ a partire dalla matrice precedente $D(k-1)$? Si ha:
+
+$$D_{i, j}  [k] = min \begin{cases}
+d_{i, j}[K-1] \\
+d_{i, k}[K-1] + d_{k, j}[K+1]
+\end{cases}$$
+
+La costruzione di tutte le matrici avviene in $\Theta(n^3)$, cioè il tempo di costruzione di una singola matrice moltiplicato per il tempo del confronto, che viene effettuato $(n + 1)$ volte. 
+
+Lo spazio utilizzato è $\Theta(n^3)$, che può essere ottimizzato a $\Theta(n^2)$ considerando che una matrice una volta usata viene eliminata. Se il grafo non è orientato, tutte le matrici sono simmetriche, il che permette di ridurre ulteriormente lo spazio. 
+
+Esiste anche la versione esistenziale di questo algoritmo, i cui valori sono rappresentati da 0 e 1 (\textit{true} e \textit{false}). Al posto del minimo viene usato un $or$ logico, dato che è sufficiente garantire l'esistenza del cammino minimo.
+
+\subsection{Algoritmo}
+
+\begin{algorithm}[H]
+    \caption{Floyd-Warshall}
+    \begin{algorithmic}
+        \Function{FL-WA}{}
+            \For{$i \gets 1$ \textbf{to} $n$}
+                \For{$j \gets 1$ \textbf{to} $n$}
+                    \If{$(i,j) \notin E$}
+                        \State $d_{i,j} \gets \infty$
+                    \Else
+                        \If{$i == j$}
+                            \State $d_{0,i,j} \gets 0$
+                        \Else
+                            \State $d_{0,i,j} \gets \omega_{i,j}$
+                        \EndIf
+                    \EndIf
+                \EndFor
+            \EndFor
+
+            \For{$k \gets 1$ \textbf{to} $n$}
+                \For{$i \gets 1$ \textbf{to} $n$}
+                    \For{$k \gets 1$ \textbf{to} $n$}
+                        \State $d_{k,i,j} = \Call{min}{d_{k-1,i,j}, d_{k-1,i,k} + d_{k - 1,k,j}}$
+                    \EndFor
+                \EndFor
+            \EndFor
+            \State \Return $D^{(n)}$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Esercizio}
+
+\begin{example}{}{}
+    Dato un grafo $G = (V, E, W), col: V \rightarrow C$:
+
+    \textbf{Problema}: \textit{Calcolare $\forall (i, j) \in V^2$ il peso di un cammino minimo da $i$ a $j$ che contiene al massimo $N = 2$ coppie di vertici consecutivi di ugual colore.}
+
+    \textbf{Sottoproblema}: \textit{calcolare $\forall (i, j) \in V^2$ il peso del camminimo minimo da $i$ a $j$ che contiene al massimo $m$ coppie di vertici consecutivi di ugual colore, con vertici intermedi $\in \{1, \dots, k\}$}
+
+    Si introduce la variabile associata al problema:
+
+    $D^{k,m}$ i cui elementi sono $\forall (i, j) \in V^2$
+
+    $d_{i,j}^{k, m}$ è il peso di un cammino da $i$ a $j$ \textit{che contiene al massimo $m$ coppie di vertici consecutivi di ugual colore, con vertici intermedi $\in \{1, \dots, k\}$} \\
+
+    \textbf{Caso Base}: $(k, m)$ con $k = 0 \rightarrow \{1, \dots, k\} = \emptyset$
+
+    \begin{align*}
+    d_{i,j}^{(k, 0)} &= \begin{cases}
+        0 & \text{se }i = j \\
+        w_{i,j} & \text{se } i \neq j \land (i, j) \in E \land (col(i) \neq col(j)) \\
+        \infty & \text{altrimenti}
+    \end{cases} \\
+    d_{i,j}^{(k, 1)} &= \begin{cases}
+        0 & \text{se }i = j \\
+        w_{i,j} & \text{se } i \neq j\\
+        \infty & \text{altrimenti}
+    \end{cases} \\
+    d_{i,j}^{(k, 2)} &= \begin{cases}
+        0 & \text{se }i = j \\
+        w_{i,j} & \text{se } i \neq j \land (i, j) \in E \\
+        \infty & \text{altrimenti}
+    \end{cases}
+    \end{align*}
+
+    \textbf{Passo Ricorsivo}: $(k, m)$ con $k > 0$ e qualunque $k \in \{0, 1, 2\}$.
+
+    \textbf{Sottocaso}: $k \notin $ cammino
+    
+    $d_{i, k}^{k, m} = d_{i, j}^{k-1, m}$
+
+    \begin{center}
+        \begin{tikzpicture}
+            \graph[no placement,nodes={draw,circle},edges={>=latex}] {
+                i [at={(0,0)}] -> [decoration={coil}]
+                j [at={(2,0)}] 
+            };
+        \end{tikzpicture}
+    \end{center}
+    
+    \textbf{Sottocaso}: $k \in$ cammino
+
+    \begin{center}
+        \begin{tikzpicture}
+            \graph[no placement,nodes={draw,circle},edges={>=latex}] {
+                i [at={(0,0)}]
+                -> [snake=snake]
+                k [at={(1,1)}]
+                -> [snake=snake]
+                j [at={(2,0)}]
+            };
+        \end{tikzpicture}
+    \end{center}
+\end{example}

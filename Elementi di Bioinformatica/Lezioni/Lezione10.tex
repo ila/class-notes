@@ -1,0 +1,185 @@
+\section{Gap}
+Il problema principale degli algoritmi trattati finora consiste nella presenza degli indel. Ogni problema computazionale, così come ogni matrice di score, corrisponde a un determinato modello: la probabilità di inserimento o cancellazione di un determinato carattere è identica.
+
+Un altro aspetto fondamentale da considerare, però, è la presenza di indel nell'allineamento globale.
+
+\begin{example}{}{}
+	\begin{tabular}{l *{10}{c}}
+		$s_1 =$ & A & C & G & T & T & A & T & A & C & G \\
+		$s_2 =$ & - & - & G & T & - & A & T & C & G & - \\
+		$s_3 =$ & - & - & G & T & \textit{\textbf{A}} & T & C & G & - & -
+	\end{tabular}
+
+	Le sequenze $s_2$ e $s_3$ differiscono soltanto di un carattere, che nel primo caso è un indel nel mezzo. Se $s_1$ è il genoma di riferimento, l'indel in $s_2$ (un carattere ignoto) potrebbe cambiare in modo drastico il significato della sequenza, o frame di lettura.
+\end{example}
+Un gap è una sequenza contigua di indel in un allineamento. Un gap sposta il frame di lettura, quindi l'aggiunta di un indel può essere un'operazione costosa e rilevante, ma tutti gli indel successivi sono meno significativi. 
+
+Il gap dev'essere in funzione della lunghezza $l$, senza considerare le lettere associate agli indel. In input ci sono la matrice di score, le stringhe da allineare e un valore che corrisponde alla penalità $P$. 
+
+Quest'ultima è definita come $P : \mathbb{N} \rightarrow \mathbb{Q}^+$ e ha le seguenti proprietà:
+\begin{itemize}
+	\item La funzione è monotona crescente;
+	\item Il costo dell'elemento $n+1$ è sempre minore (o uguale) di quello di $n$: la derivata prima non è crescente, quindi la derivata seconda non è strettamente positiva. Il costo del gap tende a essere sempre uguale dopo $n$ indel, quindi la funzione tende a una retta dopo il primo costo.
+\end{itemize}
+
+L'obiettivo è la risoluzione delle due varianti:
+\begin{enumerate}
+	\item Gap arbitrario, in cui la funzione è sconosciuta ma rispetta le proprietà precedenti;
+	\item Gap lineare (affine), con funzione lineare.
+\end{enumerate}
+
+\subsection{Gap arbitrario}
+Il gap arbitrario è un problema risolvibile con programmazione dinamica. Si ha che il costo di un gap lungo $l$ è definito da $P(l)$.
+
+L'ultima componente dell'allineamento ottimo, cioè l'ultima colonna, può essere composta da una coppia carattere-carattere oppure carattere-indel, ma bisogna considerare anche il contenuto delle colonne precedenti, altrimenti non si può capire quanto è lungo un gap.
+
+Nel caso di due indel vicini, la somma dei valori presi separatamente è diversa da quella dei valori consecutivi (il gap lungo 2 è meno costoso), di conseguenza è essenziale che ci sia una somma ma che essa sia accurata.
+
+In $M[i, j]$ si vuole avere l'allineamento ottimale dei primi $i$ caratteri di $s_1$ e i primi $j$ caratteri di $s_2$. Non viene considerata una colonna per volta, ma un intero gap: è necessario controllarne la lunghezza.
+
+Il caso peggiore è un gap lungo $i$, cioè tutta la lunghezza della parte a sinistra della stringa fino a $i$ quando ci sono solo indel.
+
+L'equazione di ricorrenza (dove $\phi$ rappresenta il valore nella matrice di score) è rappresentata come:
+$$M[i, j] = max\begin{cases}
+	M[i-1, j-1] + \phi(s_1[i], s_2[j]) & \text{con carattere-carattere} \\
+	max_{\ l > 0}\ M[i, j-l] + P(l) & \text{gap in } s_1 \\
+	max_{\ l > 0}\ M[i-l, j] + P(l) & \text{gap in } s_2
+\end{cases}$$
+
+Il numero dei casi dipende dalla lunghezza del gap, perché esse vanno valutate tutte.
+
+Il tempo computazionale totale è $O(nm(n+m))$, dove $nm$ sono il numero delle caselle e $n+m$ il costo del calcolo di ogni casella.
+
+\subsection{Implementazione}
+L'implementazione di questo algoritmo è simile a quella di Needleman-Wunsch, essendo entrambi risolti con la programmazione dinamica. L'allineamento locale, infatti, può essere visto come allineamento globale con gap di costo 0 ai lati. 
+
+La matrice di score viene data in input, insieme alle sue dimensioni ed eventualmente un puntatore a essa. La parte più pesante è il riempimento delle matrici, che utilizza funzioni di appoggio $min$ e $max$. Dato che una matrice in C viene gestita come array di array, per effettuare i calcoli senza errori si converte ogni riga e colonna in un array unidimensionale, mappando anche le caselle limitrofe. 
+
+
+
+\subsection{Gap lineare}
+In questo caso, il costo di un gap lungo $l$ è $P_o + lP_e$ (eventualmente $l-1$), dove $P_o$ è il costo dell'apertura del gap e $P_e$ è il costo dell'estensione (strettamente positivi).
+
+$M[i, j]$ è l'allineamento ottimo di $s_1[:i]$ e $s_2[:j]$. Questo algoritmo è una via di mezzo tra Needleman-Wunsch e il gap arbitrario, ma i casi si restringono a due: apertura o estensione.
+
+Bisogna conoscere il contributo dell'ultima colonna, e questo permette di arrivare ai seguenti casi:
+\begin{enumerate}
+	\item Nessun indel;
+	\item Indel all'inizio di un gap, allineato con un carattere;
+	\item Indel che estende un gap, allineato con un carattere;
+	\item Carattere, allineato con un indel all'inizio di un gap;
+	\item Carattere, allineato con un indel che estende un gap. 
+\end{enumerate}
+
+L'apertura di un gap è semplice, perché non ci sono restrizioni a sinistra. L'estensione implica che ci sia un indel precedentemente, quindi è necessario eseguire un controllo: c'è bisogno di un modo per rappresentare l'allineamento ottimo sotto il vincolo che nell'ultima colonna ci sia un indel. Questo viene rappresentato tramite un'altra matrice.
+
+In totale ci sono 5 matrici:
+\begin{enumerate}
+	\item $M$, con $M[i, j]$ allineamento ottimo di $s_1[:i]$, $s_2[:j]$;
+	\item $N_1$, con $M[i, j]$ allineamento ottimo di $s_1[:i]$, $s_2[:j]$ e apertura di gap in $s_1$;
+	\item $N_2$, con $M[i, j]$ allineamento ottimo di $s_1[:i]$, $s_2[:j]$ e apertura di gap in $s_2$;
+	\item $E_1$, con $M[i, j]$ allineamento ottimo di $s_1[:i]$, $s_2[:j]$ e estensione di gap in $s_1$;
+	\item $E_2$, con $M[i, j]$ allineamento ottimo di $s_1[:i]$, $s_2[:j]$ e estensione di gap in $s_2$.
+\end{enumerate}
+
+Esse sono strettamente collegate, e permettono di ottimizzare tempo e spazio grazie alla costante moltiplicativa della notazione O-grande.
+
+\begin{align*}
+M[i, j] &= max\begin{cases}
+M[i-1, j-1] + \phi(s_1[i], s_2[j]) \\
+E_1[i, j], E_2[i, j] \\
+N_1[i, j], N_2[i, j]
+\end{cases}
+\\
+E_1[i, j] &= max\begin{cases}
+E_1[i, j-1] + P_e \\
+N_1[i, j-1] + P_e
+\end{cases}
+\\
+E_2[i, j] &= max\begin{cases}
+E_2[i-1, j] + P_e \\
+N_2[i-1, j] + P_e
+\end{cases}
+\\
+N_1[i, j] &= M[i, j-1] + P_o + P_e \\
+N_2[i, j] &= M[i-1, j] + P_o + P_e
+\end{align*}
+
+L'equazione di ricorrenza finale è:
+$$M[i, j] = max\begin{cases}
+M[i-1, j-1] + \phi(s_1[i], s_2[j]) & \text{ultima colonna senza indel} \\
+M[i-1, j] + P_o & \text{apertura gap in } s_1 \\
+ + P_e & \text{estensione gap in } s_1
+\end{cases}$$
+
+$N$ ed $E$ vengono calcolate con cicli innestati, e i loro risultati sono utilizzati per trovare il valore di $M$. L'algoritmo è più complicato, ma i casi sono legati fra di loro tramite le formule precedenti.
+
+Il tempo computazionale è $O(nm)$ (così come lo spazio): ognuna delle matrici occupa $O(nm)$ caselle, ed essendo i casi un numero costante non è necessario aumentare il tempo con calcoli aggiuntivi.
+
+\newpage
+\section{Matrici di sostituzione}
+Le matrici di sostituzione (score) vengono usate per valutare un allineamento (proteine, in campo bioinformatico), e implicitamente misurano la probabilità di transizione (mutazione da un carattere all'altro). Il valore aumenterà se un cambiamento è probabile. 
+
+Tanto maggiore è la lunghezza temporale tra due sequenze, tanto maggiore è la probabilità di mutazione (es. i virus che cambiano nel corso degli anni) per selezione naturale, quindi questo è un fattore importante da considerare.
+
+\subsection{PAM}
+PAM (Point/percent Accepted Mutation) serve per capire quanto due sequenze siano distanti utilizzando la quantità di mutazioni. Si utilizza per esempio quando un singolo aminoacido nella struttura di una proteina viene rimpiazzato.
+
+1PAM è appunto il \textit{numero di mutazioni}: $\frac{1}{100}|s_1|$, con 100 variabile in base al peso che si vuole dare a ogni mutazione. In assenza di indel, questo valore è semplice da calcolare, ma quando le mutazioni diventano ricorrenti il metodo perde affidabilità.
+
+\begin{example}{}{}
+Se $s_1$ e $s_2$ sono distanti 100PAM, una singola base ha il 36\% di probabilità di non essere mutata.
+\end{example}
+Quindi, l'accuratezza dipende dalla distanza attesa: per coprire parzialmente questo problema, ci sono diverse matrici (PAM250, PAM200, PAM1).
+
+La costruzione di ogni matrice PAM$k$ è eseguita matematicamente: si prendono varie sequenze distanti $k$PAM e le si allineano, poi si calcolano le frequenze $f(i)$, $f(i, j)$ di tutti i singoli caratteri e tutte le coppie di caratteri.
+
+Ogni casella, quindi, indica la probabilità che l'aminoacido di quella riga sia stato sostituito con l'aminoacido di quella colonna attraverso il tempo.
+
+La formula finale è:
+\begin{align*}
+\text{PAM}_k(i, j) = \log \frac{f(i, j)}{f(i)f(j)} \\
+f(i) \text{ frequenza della mutazione misurata} \\
+f(i)f(j) \text{ ipotesi nulla (caratteri indipendenti)}
+\end{align*}
+
+Il valore ottenuto dalla formula è chiamato \textbf{Log odds ratio} ed è definito generalmente come $\frac{p}{1-p}$ dove $p$ è la probabiltà dell'evento interessante (target).
+
+Sono state allineate sequenze molto simili, con distanza temporale breve, e poi è stato applicato il ragionamento matematico: questo però ha comportato una perdita di affidabilità se le sequenze sono lontane.
+
+Come allineare se non si conosce la matrice PAM? Essa viene costruita tramite catene di Markov, a partire da PAM1. \\
+Senza la presenza di indel, si ha che:
+\begin{equation*}
+	PAM_{k}(i, j) = \log\frac{f(i)M_{1}^{k}(i, j)}{f(i)f(j)} = \log\frac{M_{1}^{k}(i, j)}{f(j)}
+\end{equation*}
+
+I valori vengono poi moltiplicati per 10 e arrotondati all'intero più vicino, e si somma un intero a tutti i valori.
+
+\subsection{BLOSUM}
+Le matrici BLOSUM (BLock SUbstitution Matrix) sono state introdotte per rimediare al problema di PAM: esso infatti viene utilizzato per allineare sequenze lontane, ma è stato studiato per le sequenze vicine (distanza temporale). Inoltre, le regioni conservate e quelle non conservate hanno la stessa importanza.
+
+BLOSUM, invece, divide i blocchi di regioni conservate da quelle mutate, scegliendole manualmente. Il cambiamento più probabile ha valore maggiore, sempre secondo il concetto di Log odds ratio: si ha che $B[i, j] = \log \frac{f(i, j)}{f(i)f(j)}$.
+
+Esistono diverse versioni di BLOSUM, generalizzate con BLOSUM$x$. In ogni caso, le sequenze che sono simili più di $x\%$ vengono clusterizzate: sono rimosse tutte tranne una, per evitare di sovrappesare parti ripetute nel campione. La matrice più usata per gli allineamenti è BLOSUM62.
+
+\section{Karlin-Altschul e BLAST}
+BLAST (Basic Local Alignment Search Tool) è uno strumento per il confronto di sequenze in un database che si basa sui seed. Un \textit{seed} è un pattern matching con una sottostringa di lunghezza 3.
+
+L'algoritmo si basa sulla costruzione di HSP, High-scoring Segment Pair, cioè un'estensione di un seed che massimizzi il valore dell'allineamento. Gli HSP vengono poi filtrati e tenuti solo quelli con alta significatività, mentre gli HSP vicini vengono fusi.
+
+Per allineare le regioni, BLAST utilizza Smith-Waterman.
+
+Le statistiche Karlin-Altschul servono per verificare le probabilità di una ricerca in un database tramite BLAST. Alle query viene assegnato un punteggio, che possibilmente è positivo ma in media è negativo. Queste statistiche tengono conto di simboli indipendenti ed equiprobabili, sequenze infinitamente lunghe e allineamenti senza gap.
+
+Gli HSP con massimo score sono distribuiti casualmente, e si può considerare che la probabilità che questi punteggi superino una determinata soglia segua una distribuzione di Poisson.
+
+Si ha che $E = kmne^{-\lambda S}$, dove:
+\begin{itemize}
+	\item $E$ è il numero degli allineamenti senza gap;
+	\item $k$ è una costante che dipende dallo score $S$;
+	\item $n$ è il numero dei caratteri nel database;
+	\item $m$ è la lunghezza della stringa nella query;
+	\item $\lambda S$ è il punteggio normalizzato (Poisson).
+\end{itemize}
+
+$E$ è proporzionale alla dimensione dello spazio di ricerca ($mn$) e diminuisce esponenzialmente con lo score $S$.

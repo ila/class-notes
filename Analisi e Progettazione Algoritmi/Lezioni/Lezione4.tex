@@ -1,0 +1,139 @@
+\newpage
+\section{Weighted Interval Scheduling}
+
+\begin{center}
+\begin{ganttchart}[vgrid,hgrid]{0}{12}
+    \gantttitlelist{0,...,12}{1} \\
+    \ganttbar[bar/.append style={fill=arancione}]{a}{0}{6} \\
+    \ganttbar[bar/.append style={fill=verde}]{b}{1}{4} \\
+    \ganttbar[bar/.append style={fill=azzurro}]{c}{3}{5} \\
+    \ganttbar[bar/.append style={fill=arancione}]{d}{3}{8} \\
+    \ganttbar[bar/.append style={fill=verde}]{e}{4}{7} \\
+    \ganttbar[bar/.append style={fill=azzurro}]{f}{5}{9} \\
+    \ganttbar[bar/.append style={fill=arancione}]{g}{6}{10} \\
+    \ganttbar[bar/.append style={fill=verde}]{h}{8}{11}
+\end{ganttchart}
+\end{center}
+
+\subsection{Il problema}
+Ci sono $n$ attività, con $n \in \mathbb{N},\ n \geq 1$. Ogni attività (job) $i \in \{1,\ \dots,\ n\}$ ha le seguenti proprietà:
+    \begin{enumerate}
+        \item Un job $i$ inizia ad $s_i$, finisce a $f_i$, ed ha un peso (o valore) $v_j$;
+        \item Due jobs sono \textbf{compatibili} se non si sovrappongono: $[s_i, f_i) \cap [s_j, f_j) = \emptyset$.
+    \end{enumerate}
+
+Scopo: trovare il massimo subset di \textbf{peso} di jobs mutualmente compatibili, $A \subseteq \{1,\ \dots,\ n\}$ per cui $\forall i,\ j \in A\ con\ i \neq j\, [s_i, f_i) \cap [s_j, f_j) = \emptyset$.
+
+Ciò significa semplicemente: trovare la sequenza di jobs mutualmente compatibili (cioè una lista di jobs che non si sovrappongono), la cui \textbf{somma combinata} del peso (o valore) è la massima possibile. 
+La compatibilità viene espressa tramite la seguente formula: 
+$$comp : \mathcal{P}(\{1, \ \dots, \ n\}) \rightarrow \{true,\ false\}\ \forall \ A \subseteq \{1, \ \dots, \ n\}$$
+
+In altre parole:
+$$comp(A) = 
+\begin{cases}
+	true & se\ A\ contiene\ attivit\grave{a}\ mutualmente\ compatibili \\
+	false & altrimenti
+	\end{cases}$$	
+	
+Definendo la funzione in base al peso $v$, si ha
+$$v : \mathcal{P}(\{1, \ \dots, \ n\}) \rightarrow \R\ \forall \ A\ \in\ \mathcal{P}(\{1, \ \dots, \ n\}),\ A \subseteq \{1, \ \dots, \ n\}$$
+$$v(A) = 
+\begin{cases}
+\sum_{i \in A}& se\ A \neq \emptyset \\
+0 & se\ A = \emptyset
+\end{cases}$$	
+
+Si ricorda che usare un algoritmo di tipo \textbf{greedy} non è la scelta più saggia, poichè i jobs hanno tutti peso (o valore) differenti. \\
+Esempio: 
+\begin{center}
+\begin{ganttchart}[vgrid,hgrid]{0}{12}
+    \gantttitlelist{0,...,12}{1} \\
+    \ganttbar[bar/.append style={fill=arancione}]{peso = 999}{0}{10} \\
+    \ganttbar[bar/.append style={fill=verde}]{peso = 1}{0}{3}
+\end{ganttchart}
+\end{center}
+
+\subsection{Approccio}
+Il problema consiste nel trovare un sottoinsieme di $\{1,\ \dots,\ n\}$ composto di attività mutualmente compatibili e di valore massimo. \\
+Quindi, un'istanza $n \in \mathbb{N}$ con $n \geq 1$ tale che $\forall i \in \{1,\ \dots,\ n\}$ si ha $s_i$, $f_i$, $v_i$ massimi.
+
+La soluzione più ovvia sarebbe il brute-force, che ha una complessità di $2^n$. 
+La programmazione dinamica risolve il problema dividendolo in sottoproblemi, e applicando $comp$ ai sottoinsiemi fino ad arrivare al caso base (insieme vuoto). A ogni step si riduce l'insieme delle posizioni di 1.
+
+Si ha che, se l'insieme ha una sola attività, $s_1 = \{1\}$ (caso base). \\
+Se l'insieme è vuoto, $s_0 = \{\emptyset\}$ (caso base). \\
+Si suppone di aver già risolto i problemi $\{0,\ 1,\ \dots,\ i-1\}$ per poi risolvere il sottoproblema $i$ (ci sono $n + 1$ sottoproblemi).
+
+La soluzione dell'algoritmo è $S \subseteq \{1,\ \dots,\ n\}$ tale che:
+\begin{enumerate}
+\item $comp(S) = true$;
+\item $v(S) = max\{v(A)\}$ con $\subseteq \{1,\ \dots,\ n\},\ comp(A) = true$.
+\end{enumerate}
+
+Si potrebbe ordinare i jobs secondo il loro tempo di fine: \\
+$f_1 \leq f_2 \leq \dots \leq f_n$. \\
+$\forall i \in (\{1, \ \dots, \ n\}),\ p(i) = max\{j | j < i, j\ \grave{e}\ compatibile\ con\ i\}$.
+
+\begin{minipage}{\textwidth}
+    \begin{minipage}{0.75 \textwidth}
+        \begin{ganttchart}[vgrid,hgrid]{0}{12}
+            \gantttitlelist{0,...,12}{1} \\
+            \ganttbar[inline,bar/.append style={fill=arancione}]{1}{1}{3} \\
+            \ganttbar[inline,bar/.append style={fill=verde}]{2}{3}{4} \\
+            \ganttbar[inline,bar/.append style={fill=azzurro}]{3}{0}{5} \\
+            \ganttbar[inline,bar/.append style={fill=arancione}]{4}{4}{6} \\
+            \ganttbar[inline,bar/.append style={fill=verde}]{5}{3}{7} \\
+            \ganttbar[inline,bar/.append style={fill=azzurro}]{6}{5}{8} \\
+            \ganttbar[inline,bar/.append style={fill=arancione}]{7}{6}{9} \\
+            \ganttbar[inline,bar/.append style={fill=verde}]{8}{8}{10}
+        \end{ganttchart}
+    \end{minipage}
+    \begin{minipage}{0.2 \textwidth}
+        \begin{table}[H]
+        \begin{tabular}{|l|l|}
+        \hline
+        j & $p(j)$ \\ \hline
+        0 & -      \\ \hline
+        1 & 0      \\ \hline
+        2 & 0      \\ \hline
+        3 & 0      \\ \hline
+        4 & 1      \\ \hline
+        5 & 0      \\ \hline
+        6 & 2      \\ \hline
+        7 & 3      \\ \hline
+        8 & 5      \\ \hline
+        \end{tabular}
+        \end{table}
+    \end{minipage}
+\end{minipage}
+
+
+Ci sono due possibilità:
+\begin{enumerate}
+	\item $i \in S_i$, allora $S_i = S_{p(i)} \cup \{i\}$ e $v(S_i) = v(S_{p(i)}) + v_i$;
+	\item $i \notin S_i$, allora la soluzione coincide con il sottoproblema precedente e $v(S_i) = v(S_{i-1})$.
+	\end{enumerate}
+La condizione del controllo è
+$$v(S_i) = max\{v(S_{i-1}),\:v(S_{p(i)}) + 1\}$$
+La tabella rappresenta con $p(i)$ il primo indice a ritroso di job compatibile con l'attività $i$. 
+
+\subsection{Algoritmo}
+
+\begin{algorithm}[H]
+	\caption{Weighted Interval Scheduling}
+	\begin{algorithmic}
+		\Function{WIS-PD}{$n$}
+			\State $M[0] \gets 0$
+			\State $M[1] \gets v_1$
+			\For{$i \gets 2$ \textbf{to} $n$ \textbf{step} $1$}
+				\If{$M[p_i] + v_1 > M[i-1]$}
+					\State $M[i] \gets M[p(i)] + v_i$
+				\Else
+					\State $M[i] \gets M[i-1]$
+				\EndIf
+			\EndFor
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+Le soluzioni dei sottoproblemi vegono memorizzate in un array $M$ per evitare il tempo esponenziale di un algoritmo ricorsivo.

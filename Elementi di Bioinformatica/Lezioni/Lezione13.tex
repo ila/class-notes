@@ -1,0 +1,113 @@
+\newpage
+\section{Ricostruzione della storia evolutiva}
+Con il passare del tempo, nella storia evolutiva umana, ci sono stati cambiamenti attraverso le generazioni. Questi sono probabilmente casuali, ma secondo la teoria della sopravvivenza del più adatto solo alcuni sono rimasti nel futuro.
+
+Il processo di sviluppo nell'ambiente (di qualsiasi tipo) è definito \textit{pressione selettiva}: le mutazioni dominanti sono quelle che hanno garantito un vantaggio sul numero di figli sani. Riconoscere i cambiamenti è utile per ricostruire la storia evolutiva.
+
+Ci sono numerosissime tipologie di mutazioni: traslazione di DNA, replicazione di genoma eccetera, ma molte di esse non avranno effetti concreti. Per esempio, i pesci nella loro storia hanno avuto la duplicazione del loro intero DNA.
+
+Se tanti fenomeni avvengono rapidamente in un intervallo di tempo breve, ci sarà rumore. Le mutazioni interessanti sono quelle che avvengono lentamente.
+
+\subsection{Evoluzione individuale}
+L'evoluzione individuale avviene in ogni individuo nel corso della sua vita: le cellule accumulano mutazioni, come nei tumori. Buona parte di esse sono comunque completamente innocue.
+
+L'aspetto importante è che le cellule proliferano in modo casuale, in un ambiente avverso (a causa degli anticorpi e delle condizioni di pochissimo ossigeno), e di fatto per adattarsi c'è un'esplosione del numero di mutazioni. 
+
+\subsection{Evoluzione basata sul carattere}
+\textit{Carattere} può riferirsi a due tipologie: genetico, cioè la presenza di una specifica mutazione o meno nel DNA, oppure fenotipico, cioè visibile esteriormente (morfologico).
+
+Essendo l'evoluzione un processo così complesso, sono state introdotte delle semplificazioni per classificare i caratteri ed essere in grado di ricostruire la storia delle specie, assumendo il modello binario più semplice possibile: \textbf{ogni carattere è stato acquisito esattamente una volta in tutta la storia, e una volta acquisito non viene mai perso} (avere quel carattere risulta vantaggioso).
+
+Questo nella pratica non succede, ma è necessario un algoritmo che risolva il modello elementare per poi passare a quelli più complessi.
+
+\newpage
+\section{Filogenesi su caratteri}
+Il problema della filogenesi è definito con una matrice le cui righe rappresentano gli individui, e le colonne rappresentano i caratteri. Un 1 indica che quella determinata specie ha un determinato carattere, e viceversa (es. la tartaruga non ha il pelo).
+
+Si vuole trovare un albero che, data la matrice binaria $M$, la rappresenti. L'algoritmo è in tempo lineare, e consiste nel radix sort delle colonne decrementando il numero di 1 e inserendo le specie una alla volta. 
+
+L'albero $T$ ha le seguenti proprietà:
+\begin{itemize}
+	\item Ognuno degli $n$ oggetti (specie) corrisponde a una foglia di $T$;
+	\item Ognuno degli $m$ caratteri etichetta esattamente un arco di $T$ (ogni etichetta indica l'acquisizione di un carattere);
+	\item Per ogni oggetto $p$, i caratteri che etichettano gli archi nel percorso dalla radice alla foglia hanno come stato 1.
+\end{itemize}
+
+Se si ammette la possibilità di avere archi che non sono necessariamente etichettati da un carattere, i nodi interni possono essere trasformati in foglie: per questo motivo si usano solo foglie della matrice $M$, che hanno la stessa etichetta dei genitori (interni), senza corrispondenza $1 : 1$.
+
+La radice non ha nessuno degli $m$ caratteri; ogni carattere cambia stato da 0 a 1 esattamente una volta e il contrario non avviene mai.
+
+Non è detto che per ogni matrice esista un albero, quindi la verifica è il primo problema. Se è possibile costruire un albero, esso è unico, e si parla di \textbf{filogenesi perfetta}.
+
+In altre parole, il problema della filogenesi perfetta consiste nel determinare se esiste un albero filogenetico per una matrice 0-1 $M$ di dimensioni $n\times m$.
+\begin{figure}[H]
+	\begin{center}
+		\begin{tabular}{l | c | c}
+			~	& A & B \\ \hline
+			$s_1$ & 0 & 0 \\
+			$s_2$ & 0 & 1 \\
+			$s_3$ & 1 & 0 \\
+			$s_4$ & 1 & 1
+		\end{tabular}
+	\end{center}
+\caption{Filogenesi perfetta non ammissibile (sottomatrice).}
+\end{figure}
+Un carattere $X$ è trasmesso da un nodo padre ai figli tramite un arco: solo i figli lo possiedono. Dato un altro carattere $Y$, la relazione tra i due insiemi può essere:
+\begin{itemize}
+	\item $X$, $Y$ disgiunti;
+	\item $X$ sottoinsieme di $Y$;
+	\item $X$ superinsieme di $Y$. 
+\end{itemize}
+Data la matrice $M$, $1(c)$ è l'insieme di specie che hanno il carattere $c$, cioè $1(c) = \{s : M[s, c] = 1\}$. Questo ha di conseguenza il lemma definito in seguito.
+
+\begin{lemma}
+	Sia M una matrice che ammette filogenesi perfetta T, e siano $c_1$, $c_2$ due suoi caratteri. Allora (se e solo se) uno dei seguenti casi è vero:
+\begin{enumerate}
+	\item $1(c_1) \cap 1(c_2) = \emptyset$;
+	\item $1(c_1) \subseteq 1(c_2)$;
+	\item $1(c_1) \supseteq 1(c_2)$.
+\end{enumerate}
+\end{lemma}
+
+Se non esiste una sottomatrice come quella sopra, è possibile costruire l'albero (condizione necessaria e sufficiente). Bisogna notare che molti caratteri ne includono altri, quindi una volta ricostruiti gli insiemi e capite le relazioni tra di essi, la costruzione diventa banale.
+
+\subsection{Algoritmo}
+L'algoritmo è semplice, e impiega un tempo computazionale di $O(nm)$, considerando che i confronti sono effettuati in tempo costante. Esso si basa sull'ordinamento di $M$.
+
+Si cerca di ordinare le colonne in modo tale che quelle che ne includano altre vengano prima: questo è possibile grazie al fatto che un carattere non viene mai perso. Le colonne vengono interpretate come numeri interi binari, decrescenti.
+
+La matrice $M$ ha un albero filogenetico se e solo se per ogni coppia di colonne $i$, $j$, gli insiemi delle caratteristiche corrispondenti sono disgiunti o uno un sottoinsieme dell'altro.
+
+Ogni carattere è un arco, e ogni specie viene collegata subito sotto l'ultimo carattere che possiede. Se un carattere ne include un altro, viene collocato a sinistra. Questo è il principio del radix sort.
+
+\begin{enumerate}
+	\item Ogni colonna di $M$ viene ordinata con radix sort decrescente;
+	\item Per ogni riga $p$ della matrice ottenuta, viene costruita la stringa dei caratteri che $p$ possiede, in ordine crescente;
+	\item Viene costruito l'albero $T$ per le $n$ stringhe ottenute nello step precedente, inserendole una per una;
+	\item Si controlla se $T$ è una filogenesi perfetta.
+\end{enumerate}
+
+\subsubsection{Radix sort}
+Il radix sort ha una proprietà fondamentale: richiede tempo lineare. Non è in grado di ordinare elementi arbitrari, è pensato per numeri di $b$ bit. 
+
+Dato che esso lavora sulle righe, è sufficiente trasporre la matrice. Alla fine, le colonne saranno in ordine decrescente: se non ci sono sovrapposizioni, ogni colonna è superinsieme della successiva. 
+
+Il tempo computazionale è $\Theta(nk)$, dove $n$ è il numero di stringhe e $k$ è il numero di caratteri ($m$ nel caso dell'algoritmo originario).
+
+\subsection{Altri casi}
+I modelli sono sempre basati sui caratteri, che sono posseduti o meno da una specie. Il caso in cui una mutazione viene persa è più complesso: si parla di \textbf{backmutation}, cioè il cambiamento di stato di un arco da 1 a 0. 
+
+Si ricorda che la filogenesi perfetta è il caso più semplice, risolvibile in tempo lineare. 
+
+\begin{itemize}
+	\item Filogenesi perfetta: non ci sono cambiamenti all'indietro;
+	\item Filogenesi persistente, rappresentabile con un modello 012 (intermedio ma più complicato da implementare), in cui ogni carattere viene acquisito una sola volta e perso al più una volta nell'albero;
+	\item Parsimonia di Dollo, senza limitazioni sul numero di perdite ma ogni carattere è sempre acquisito una volta sola;
+	\item Camin-Sokal, ogni carattere può essere acquisito più volte e non viene mai perso.
+\end{itemize}
+
+In queste tipologie, l'albero associato alla matrice può non essere unico, tranne nella soluzione banale. Una filogenesi Camin-Sokal o Dollo, però, garantisce l'esistenza dell'albero: è molto più generale, quindi i problemi sono più facilmente adattabili.
+
+Il tumore è anch'esso un caso a parte: è formato da più popolazioni diverse, cellule sane e cancerogene (eterogeneità intratumorale). Ogni cellula reagisce in modo differente ai trattamenti.
+
+Le tipologie sono rappresentabili con matrici di frequenza, che indicano la percentuale delle cellule con ogni determinata mutazione. Le matrici di frequenza vengono poi trasformate in binarie.

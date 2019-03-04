@@ -1,0 +1,94 @@
+\newpage
+\section{Allineamento di 2 sequenze}
+Un problema fondamentale in bioinformatica è quello del confronto di due sequenze biologiche (proteine, genomi, geni...) per capire quante esse siano simili. Un possibile alfabeto in questo caso è $\Sigma = \{A,\ C,\ T,\ G\}$.
+
+Il dogma centrale della biologia molecolare enuncia che se due sequenze sono simili (come struttura), hanno anche una funzione simile. Questo è il motivo per cui è molto utile capire le omologie. Un altro ambito in cui ciò viene applicato è il confronto di specie dal punto di vista evolutivo.
+
+Il problema computazionale relativo è definito allineamento: il pattern matching non è sufficiente, perché in questo caso si vuole riconoscere la somiglianza.
+
+Si introduce il concetto di \textbf{distanza di Hamming} (numero di caratteri differenti nella stessa posizione tra due stringhe): per ``distanza" si intende una funzione $d : S \times S \rightarrow \R^+$, con $S \times S$ insieme delle coppie di stringhe. Il calcolo di $d$ è molto semplice, ed è possibile utilizzarla per confrontare delle sequenze. 
+
+Esempio: al\textbf{b}ero, al\textbf{t}ero, distanza di Hamming = $1$.
+
+Proprietà: 
+\begin{enumerate}
+	\item Riflessività: $d(x, y) = 0 \Leftrightarrow x = y, \forall\ x, y \in S$;
+	\item Simmetria: $d(x, y) = d(y, x), \forall\ x, y \in S$;
+	\item Disuguaglianza triangolare: $d(x, y) + d(y, z) \leq d(x, z), \forall\ x, y \in S$.
+\end{enumerate}
+
+La distanza di Hamming ha un difetto: è definita solamente su stringhe di \textbf{uguale lunghezza}, un problema in bioinformatica quando si vorrebbe poter confrontare stringhe di lunghezza diversa. È quindi un modello estremamente semplificato, ridotto, del concetto di confronto di sequenze.
+
+\subsection{Allineamento}
+Anche chiamato problema di allineamento ottimo \textbf{globale}, perché le stringhe vengono analizzate nella loro interezza.
+
+Se le due stringhe avessero la stessa lunghezza (come nella Distanza di Hamming), si potrebbe fare un confronto colonna per colonna: ma non è così, quindi si cerca un algoritmo per ricondursi a questo caso.
+
+Per riempire i buchi vengono inseriti degli spazi, (\textbf{indel}, dove \textbf{del} indica un carattere cancellato; \textbf{in}, un carattere inserito). Gli indel devono rispettare le seguenti proprietà: \begin{itemize}
+    \item Non possono esistere colonne solo di \textbf{indel};
+    \item Le stringhe estese devono avere la stessa lunghezza.
+\end{itemize}
+
+\newpage
+\begin{example}{}{}
+$s_1$ = $ABRACADBRA, s_2$ = $BANANA$.
+
+Alcuni possibili allineamenti con indel sono:
+\begin{center}
+\begin{tabular}{l *{11}{c}}
+	A & B & R & A & C & A & D & A & B & R & A \\
+	- & B & - & A & N & A & - & - & - & N & A \\
+	\hline
+	A & B & R & A & C & A & D & A & B & R & A \\
+	- & - & - & B & - & A & N & A & - & N & A \\
+	\hline
+	A & B & R & A & C & A & D & A & B & R & A \\
+	- & B & A & N & A & - & - & - & - & N & A
+\end{tabular}
+\end{center}
+
+Esistono innumerevoli modi per inserire questi spazi, tutti validi perché rispettano le proprietà definite prima.
+Il fatto che siano tutti e 3 allineamenti validi, non vuol dire che siano equamente \textit{buoni}.
+\end{example}
+
+\subsection{Problema di ottimizzazione}
+Formalmente si definisce problema di ottimizzazione: \begin{itemize}
+    \item Insieme delle istanze (una coppia per esempio è un'istanza), un numero infinito di casi;
+    \item Soluzioni ammissibili: ammissibilità verificabile in tempo \textbf{polinomiale};
+    \item Funzione obiettivo: Istanza $\rightarrow \R^+$;
+    \item Soluzione che \textit{massimizza} (\textbf{valore}) o \textit{minimizza} (\textbf{costo})  la funzione obiettivo.
+\end{itemize}
+
+Avendo l'istanza e l'insieme delle soluzioni ammissibili, è necessario definire il valore dell'allineamento delle sequenze incolonnate, che andrà massimizzato. Esso è la somma dei valori delle singole colonne, e dev'essere una buona misura dell'omologia.
+
+Il valore di una colonna viene calcolato ricevendo in ingresso una matrice, e associando a ogni coppia di elementi un numero. Esistono delle matrici (es. BLOSUM62) di \textit{scoring} con valori predefiniti per ogni singola colonna possibile.
+
+Tecnicamente quindi, se si confrontano due stringhe random, si otterrà un valore negativo (a seconda di come è costruita la matrice in ingresso). Con due stringhe simili tra di loro, o tante colonne con caratteri uguali, ci saranno dei valori positivi. Tanto più è alto il valore dell'allineamento, tanto meno è probabile che le due stringhe siano incorrelate o casuali.
+
+Il problema quindi diventa: per ogni allineamento possibile, scegliere quello con il massimo valore. Se le stringhe sono effettivamente simili e l'allineamento è ottimale, ci saranno tanti contributi positivi. I caratteri uguali devono essere sempre allineati.
+
+La soluzione sfrutta il concetto di \textbf{Programmazione Dinamica}.
+
+\newpage
+\subsection{Needleman-Wunsch: equazione di ricorrenza}
+L'algoritmo usa le soluzioni dei sottoproblemi per trovare la soluzione del problema corrente. Ci sono 3 casi da confrontare: indel in $s_1$, indel in $s_2$ e nessun indel (quando i caratteri sono uguali). 
+\begin{align*}
+    M[i, j] &= \text{ottimo su } s_1[:i], s_2[:j] \\
+    M[i, j] &= max \begin{cases}
+        M[i - 1, j - 1] + d(s_1[i], s_2[j]) & \text{nessun indel} \\
+        M[i, j - 1] + d(-, s_2[j]) & \text{indel solo in $s_1$} \\
+        M[i - 1, j] + d(s_1[i], -) & \text{indel solo in $s_2$}
+    \end{cases}
+\end{align*}
+
+Si ricorda che non può esistere il caso di due indel sulla stessa colonna.
+
+Condizioni di contorno: \begin{itemize}
+    \item $M[0, 0] = 0$;
+    \item $M[i, 0] = M[i - 1, 0] + d(s_1[i], -)$;
+    \item $M[0, j] = M[0, j - 1] + d(-, s_2[j])$.
+\end{itemize}
+
+Una volta trovato il valore ottimo, per trovare l'allineamento corrispondente è sufficiente memorizzare lo step per arrivare alla casella successiva e tornare indietro a partire dall'ultima.
+
+Per costruire questa matrice $M$ bastano due cicli for innestati banali. Il tempo computazionale è pertanto $O(nm)$. 

@@ -1,0 +1,69 @@
+\section{Algoritmi NP-completi}
+Lo studio della NP-completezza formalizza il concetto di problemi risolvibili in tempo polinomiale, e le proprietà di chiusura del loro insieme.
+
+Ci sono due questioni che vanno affrontate: l'esistenza di una soluzione in termini di algoritmo (problemi indecidibili), e i tempi di calcolo accettabili (problemi intrattabili, non risolvibili rapidamente).
+
+In base alla complessità, i problemi vengono divisi in classe: una classe è quindi l'insieme di problemi che, se esiste una soluzione, possono essere risolti da una macchina $M$ usando $O(f(n))$ della risorsa $R$, con dimensione dell'input $n$.
+
+Esempio di problema indecidibile: halting problem. \\
+Esempio di problema intrattabile: qualsiasi algoritmo che richieda $2^n$. 
+
+Un problema di decisione ha solo due possibili risposte: sì o no (al contrario dei problemi computazionali). Alcuni problemi di decisione sono NP-completi.
+
+La classe P ha come istanze linguaggi, e si può descrivere come i problemi di decisioni prese in tempo polinomiale da una macchina di Turing. $P$ rappresenta la classe problemi risolti da $T_M$ in tempo $P(n)$, cioè $T_M(n) = O(P(n))$ dove $P(n)$ è un polinomio in $n$.
+
+Le categorie di algoritmi, quindi, si dividono in:
+\begin{itemize}
+	\item Risolvibili in tempo polinomiale, rappresentati da P;
+	\begin{itemize}
+		\item Esempio: trovare un arco di peso minimo in un grafo;
+	\end{itemize}
+	\item NP, non deterministici, per le quali le istanze che rispondono in modo affermativo al problema di decisione possono essere verificate in tempo polinomiale;
+	\begin{itemize}
+		\item Esempio 1: esistenza di un cammino provando tutte le combinazioni. Questo non implica che non esista un algoritmo migliore, ma se non esiste va dimostrato (da qui $P \subseteq NP$);
+		\item Esempio 2: i test di primalità, fino a qualche decennio fa era NP, ma ora ci sono modi per risolverlo in tempo polinomiale;
+		\item Esempio 3: decifratura della crittografia;
+	\end{itemize}
+	\item NP-completi, sottoinsieme di NP con problemi che hanno tutte le stesse caratteristiche, in cui ogni problema è riducibile a tutti gli altri in tempo polinomiale:
+	\begin{itemize}
+		\item Se si risolve un singolo algoritmo NP-completo, si ha il modo per risolvere tutti gli altri;
+		\item Se anche solo un NP non ha soluzione in tempo polinomiale, sicuramente nessun NP-completo avrà soluzione;
+		\item Ogni problema NP-completo appartiene a NP, e può essere ridotto a P; 
+		\begin{itemize}
+			\item Esempio: Traveling Salesman Problem;
+		\end{itemize}
+	\end{itemize}
+	\item NP-hard, che rappresenta i problemi NP-completi riducibili uno all'altro in tempo polinomiale;
+	\begin{itemize}
+		\item Sono i problemi che sono almeno difficili quanto gli NP-completi, non necessariamente di decisione;
+		\item Tutti i problemi NP possono essere ridotti a NP-hard in tempo polinomiale.
+	\end{itemize}
+\end{itemize}
+
+$P \subseteq NP$ è uno dei principali quesiti in ambito informatico, e consiste nel capire se per ogni problema la cui soluzione è verificata in tempo polinomiale, esiste anche un modo per risolverlo in tempo polinomiale. 
+
+Un problema in P ha come limite superiore un tempo esponenziale, così come gli NP, ma esistono problemi al di fuori da questi insiemi che comunque hanno la stessa complessità computazionale: quest'ultima classe è definita \textbf{exp}.
+
+\subsection{Macchine di Turing}
+Per stabilire il tempo di computazione si utilizza una \textbf{funzione di complessità}: \\
+$T_M(n) = max\{t_M(x)\ |\ |x| = n\}$, dove $T_M$ è una macchina di Turing.
+
+NB: è importante ricordare che una $T_M$ può entrare in loop infinito. In generale, una macchina di Turing computa funzioni su stringhe oppure decide e accetta linguaggi, cioé risponde all'accettazione di un determinato input.
+
+Alcuni algoritmi non hanno una collocazione precisa negli insiemi: non esiste un modo per risolverli in tempo polinomiale, ma non è stato dimostrato che serve un tempo esponenziale. 
+
+I problemi in P vengono rappresentati con una macchina di Turing che può essere deterministica o non deterministica: la classe di linguaggi accettata e la potenza è la stessa.
+
+Esempio di linguaggio con $T_M$ deterministica: $\{a^nb^n\}$, con il relativo problema di decisione. \\
+Esempio di linguaggio con $T_M$ non deterministica: $\{a^nb^n\} \cup \{a^nb^{2n}\}$, in cui all'inizio c'è la scelta tra quale dei due insiemi contiene la stringa. 
+
+Una $T_M$ non deterministica è più veloce, perché il suo tempo di calcolo è: \\
+$t_n(x) = \{|B| \mid \text{B è ramo più breve accettante se } X \in L\ \lor\ \text{B è ramo più lungo rifiutante se } X \notin L\}$.
+
+
+% todo hamilton
+
+
+
+
+

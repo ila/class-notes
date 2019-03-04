@@ -1,0 +1,39 @@
+\section{Allineamento multiplo}
+Il problema di allineamento viene esteso, con $k$ stringhe in input. Le sequenze quindi sono un insieme $\{s_1,\ s_2,\ \dots,\ s_k\}$.
+
+\begin{example}{}{}
+\begin{tabular}{l *{8}{c}}
+	$s_1 = $ & A & C & T & G & G & A & T & ~ \\
+	$s_2 = $ & T & G & G & A & T & ~ & ~ & ~ \\
+	$s_3 = $ & A & C & G & G & G & A & T & T
+\end{tabular}
+
+Un possibile allineamento è:
+
+\begin{tabular}{l *{9}{c}}
+	$s_1 = $ & A & - & C & T & G & G & - & A & T \\
+	$s_2 = $ & - & - & T & G & G & - & A & - & T \\
+	$s_3 = $ & A & C & G & G & - & G & A & T & T
+\end{tabular}
+
+In questo caso, è necessario considerare la presenza di più di un indel sulla stessa colonna: è accettabile? Sicuramente non potranno esserci colonne formate unicamente da indel, ma è possibile aggiungerne fino a $k - 1$.
+\end{example}
+
+La soluzione ammissibile di questo problema è l'allineamento ottimo che rispetta le seguenti proprietà:
+\begin{enumerate}
+	\item Le sequenze estese devono avere tutte la stessa lunghezza;
+	\item Non devono esserci colonne in cui sono presenti tutti indel.
+\end{enumerate}
+
+La matrice dev'essere bidimensionale, per poterla confrontare con PAM e BLOSUM. Per questo motivo si introduce la funzione SP, Sum of Pairs: tutte le coppie di righe sono considerate come sequenze da allineare, ed esse vengono sommate. 
+
+Si usa la somma delle coppie di tutte le sequenze per ottenere uno score complessivo. \\
+Si ha $\{s_1,\ s_2,\ \dots,\ s_k\} \rightarrow \{s^{*}_1,\ s^{*}_2,\ \dots,\ s^{*}_k\}$ allineamento ottimo, con valore $\{s^{*}_1[h],\ s^{*}_2[h],\ \dots,\ s^{*}_k[h]\}$. \\
+$\sum_{i<j}d(s^*_1[i],\ s^*_k[j])$.
+
+Il problema di ciò è ancora l'inserimento di indel, è permesso averne due finché non sono $k$ ma l'allineamento globale di due sequenze questo non lo prevede.
+
+L'algoritmo sfrutta la programmazione dinamica: viene individuato l'ultimo componente della soluzione ottimale, e per ogni caso sfruttate le soluzioni dei sottoproblemi. L'ultima colonna può trovarsi in $2^k - 1$ casi: ogni sottoinsieme delle stringhe in ingresso potrebbe avere un indel. 
+
+Se $k$ è arbitrario, l'algoritmo è NP-completo. Altrimenti, il tempo computazionale è $O(n^k)$ (dove $n$ è la lunghezza maggiore), con $n^k$ caselle nella matrice, il che è molto elevato. 
+	

@@ -1,0 +1,66 @@
+\section{Distanza di edit}
+La distanza di edit è la trasformazione di una stringa in un'altra tramite inserimento di un nuovo carattere, cancellazione o modifica.
+
+Esempio: $s_1 = ABRACADABRA$, $s_2 = ABRABANANA$, l'obiettivo è trovare il minimo numero di operazioni che trasformano $s_1$ in $s_2$. 
+
+In questo caso, al contrario rispetto all'allineamento, la funzione obiettivo riguarda la minimizzazione: questo è un classico esempio di problema con distanza, utilizzato negli algoritmi di clusterizzazione. 
+
+Il problema è semplice da definire ma non da calcolare, quindi è necessario ricorrere alla programmazione dinamica. 
+
+\subsection{Equazione di ricorrenza}
+L'equazione di ricorrenza è simile a quella dell'allineamento. La soluzione ottima è contenuta in una matrice: $M[i, j]$ rappresenta la minima distanza di edit fra i primi $i$ caratteri di $s_1$ e i primi $j$ di $s_2$. 
+$$M[i, j] = min \begin{cases}
+M[i-1, j-1] & \textrm{se } s_1[i] = s_2[j] \textrm{, cioè nessuna operazione} \\
+M[i-1, j] + 1 & \textrm{se viene cancellato un carattere} \\
+M[i, j-1] + 1 & \textrm{se viene aggiunto un carattere} \\
+M[i-1, j-1] + 1 & \textrm{se viene modificato un carattere}
+\end{cases}$$
+
+$$\textrm{Casi limite = }\begin{cases}
+	M[0, 0] = 0 \\
+	M[i, 0] = 0 \\
+	M[0, j] = 0 \\
+\end{cases}$$
+
+Per rendere più semplice l'algoritmo, si considera anche l'opzione in cui un'operazione avviene con una coppia di caratteri uguali (che poi non verrà effettuata in pratica, perché sconveniente).
+
+L'ultima componente della soluzione ottima riguarda l'ordine: prima viene modificato il carattere a sinistra, poi quello di destra. 
+
+Considerando anche le no-op, ci saranno caratteri che non vengono mai coinvolti? La risposta è no: al contrario, ogni carattere sarà soggetto a esattamente un'operazione (l'uguaglianza). 
+
+Paragonando questo algoritmo all'allineamento, si ha che l'indel corrisponde a un inserimento o una cancellazione. La distana di edit, quindi, è una versione semplificata della minimizzazione dell'allineamento globale, dove il costo di ogni mismatch è sempre uguale a 1. 
+
+Questo procedimento ha un tempo di $O(nm)$. In bioinformatica, la distanza di edit non è solitamente utilizzata.
+
+\section{Allineamento globale ottimo}
+L'allineamento globale richiede tempo e spazio di $O(nm)$. L'occupazione in spazio è più limitante in pratica di quella in tempo: la creazione della matrice è più dispendiosa, ma l'algoritmo funziona sempre qualsiasi siano le stringhe. 
+
+\begin{example}{}{}
+	\begin{tabular}{l *{13}{c}}
+	$s_1 =$ & A & B & R & A & C & A & D & A & B & R & A \\
+	$s_2 =$ & A & B & R & A & B & A & N & A & N & A \\
+	$s_3 =$ & A & C & G & T & C & G & G & T & C & C & T & A \\
+	$s_4 =$ & C & G & T & G & G & A & A & T & C & A & T & T & T
+	\end{tabular}
+
+	L'algoritmo in entrambi i casi ci mette lo stesso tempo perché non è in grado di capire che le prime metà di $s_1$ e $s_2$ sono uguali.
+\end{example}
+
+Si vuole considerare l'allineamento globale sotto il vincolo di avere al massimo $k$ colonne con indel o mismatch. 
+
+La programmazione dinamica risolve questo problema con un percorso nella matrice che sarà sempre diagonale tranne al più $k$ volte.
+
+Il percorso contiene al massimo $k$ spostamenti in orizzontale o verticale, questo vale se ci sono $k$ indel. Per accelerare questo processo, è possibile sfruttare il fatto che alcune celle possono non essere calcolate. Il massimo numero di mismatch in una casella $[i, j]$ è $|i-j|$, che dovrà essere strettamente minore di $k$.
+
+Viene considerata solo una banda della matrice, la cui ampiezza sarà al più $2k$. Solo i valori che rientrano in essa vengono calcolati: al massimo ci saranno $2kn$ caselle, mentre il tempo e lo spazio diventano $O(kn)$.
+
+Il problema principale è la decisione del valore di $k$. Il test, fondamentalmente, è: il percorso ottimale con l'allineamento globale è contenuto nella banda? Non ha senso confrontare la matrice ottenuta con quella originaria dell'allineamento, perché troppo dispendioso. 
+
+La stima iniziale più sensata di $k$ corrisponde alla differenza tra le lunghezze delle due stringhe. In seguito, però, bisogna controllare che esso sia ottimale e in caso contrario ridefinire il valore.
+
+Un modo semplice è l'estensione della banda di 1 a destra e 1 a sinistra, calcolare l'allineamento ottimale e verificare che i due siano uguali. In caso contrario, $k$ non è ottimale. Il tempo del controllo è simile.
+
+Quando la stima è sbagliata, la banda può aumentare di ampiezza di una posizione (da entrambi i lati). Il tempo di ciò è $\sum_{i=0}^{k} (2i+n)n = O(k^2n)$, che è troppo. 
+
+Raddoppiando l'ampiezza della banda, $\sum_{i=0}^{\lceil log_2k\rceil} (2^i+1)n \leq \sum_{i=0}^{\lceil log_2k \rceil} 2^{i+1}n = O(kn)$.
+

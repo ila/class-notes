@@ -1,0 +1,85 @@
+\section{Strutture dati per elementi disgiunti}
+Si ha un insieme $X = \{x_1,\ x_2,\ \dots,\ x_n\}$, tale che $\bar{X}_i \cap \bar{X}_j = \emptyset$. Ogni insieme ha un elemento $x$ come rappresentante, che lo identifica.
+
+Le operazioni fondamentali su questa struttura sono: 
+\begin{itemize}
+	\item \textit{make\_set(x)} che crea un insieme che ha un solo elemento: $x$, il suo rappresentante. Questo consente di inizializzare la struttura dati e da un singolo elemento creare un sottoinsieme a sé stante;
+	\item \textit{union(x, y)} che unisce due partizioni a partire da due elementi generici (non necessariamente i rappresentanti). Il risultato sarà l'unione delle partizioni a cui appartengono $x, y$. Il nuovo rappresentante non viene scelto secondo una regola precisa: qualsiasi va bene, anche se comunemente è uno dei due rappresentanti. \\
+	$R = part(x) \cup part(y)$;
+	\item \textit{find\_set(x)}, che restituisce il rappresentante dell'insieme a cui appartiene l'elemento $x$.
+\end{itemize}
+
+In un grafo, per capire quali componenti sono disgiunte, è sufficiente classificare ogni singolo elemento come parte di una componente connessa.
+
+Dato $G = (V, E)$, $\forall\ v \in V$ viene chiamata \textit{make\_set(v}); $\forall\ (u, v) \in E$, viene chiamata \textit{union(u, v)}. Per trovare le diverse coppie (in cui $u \neq v$) si usa \textit{find\_set}. Se esse hanno lo stesso rappresentante, sono già nello stesso insieme.
+
+In pratica, c'è una matrice con come righe i vertici e come colonne gli archi (non orientati): se due elementi non sono parte della stessa partizione, ne viene creata una nuova, altrimenti le due vengono unite. 
+
+Il tempo richiesto dalle operazioni dipende da come le informazioni sono memorizzate. 
+
+\subsection{Liste di adiacenza}
+Se l'insieme non è un grafo, si utilizzano le liste di adiacenza che per ogni elemento indicano quelli vicini. Non è possibile unire direttamente una lista all'altra, quindi viene creata una lista di liste in tempo totale $\Theta(n)$.
+
+Si suppone che il rappresentante sia identificato dalla testa della lista. Se è doppia, è sufficiente scorrere all'indietro con tempo peggiore $n$, ma per ottimizzare basta aggiungere un puntatore a ogni elemento. \textit{find\_set} ha tempo costante. 
+
+Per le altre operazioni, è utile avere puntatori \textit{head}, \textit{next} e \textit{tail}. In questo modo, mettere insieme due liste ha tempo costante per trovare l'ultimo elemento e quelli precedenti, che vengono collegati all'altra lista e poi devono essere ordinati.
+
+Ogni volta che \textit{union} viene chiamata, il numero di elementi aumenta: le opzioni sono farlo tante volte con liste corte, o poche con liste lunghe.
+
+Se le liste sono il più lunghe possibile, la quantità di aggiornamenti del puntatore al rappresentante è circa $2^i$ con $i$ aggiornamenti, mai maggiore degli elementi della lista. Il totale dei passaggi considerando le liste in ordine di lunghezza è quindi di $O(n\log n)$. 
+
+Riassumendo:
+\begin{enumerate}
+	\item \textit{make\_set} ha tempo $O(1)$;
+	\item \textit{find\_set} ha tempo $O(n)$;
+	\item \textit{union} ha tempo $O(n)$, e ci sono fino a $\log n$ union: per accelerare si utilizzano liste dinamiche con campi \textit{elemento}, \textit{head}, \textit{next}, \textit{tail}.
+\end{enumerate}
+
+\subsection{Alberi}
+Si possono utilizzare gli alberi come strutture dati di appoggio. In questo caso, \textit{make\_set} crea un albero con un nodo solo, e il rappresentante nell'unione è la radice. La \textit{union} deve collegare due radici, imponendone una come parent. 
+
+Il costo delle operazioni diventa:
+\begin{enumerate}
+	\item \textit{make\_set} ha tempo $O(1)$;
+	\item \textit{find\_set} ha tempo ammortizzato $O(n)$, utilizzando la compessione dei cammini;
+	\item \textit{union} ha tempo $O(1)$ (si uniscono le radici);
+\end{enumerate}
+
+Unione per rango: serve per velocizzare \textit{find\_set}. Quando due alberi vengono uniti, si tiene traccia del rango, ovvero dell'altezza dell'albero. L'albero con rango minore viene unito con quello di rango maggiore, per tenere il calcolo del rappresentante in $O(h)$, con $h$ altezza dell'albero.
+
+Per ottimizzare la ricerca del rappresetante si possono salvare quelli intermedi per poterli riutilizzare in futuro. La meccanica è sicura, perché comunque andrebbe trovato un nuovo rappresentante con l'unione, e si evita di formare catene di parents.
+
+Per migliorare ulteriormente, si possono comprimere i cammini. Gli alberi hanno performance migliori se l'unione è l'operazione più utilizzata, altrimenti le liste.
+
+\section{Minimum Spanning Tree}
+Minimum Spanning Tree è un problema di copertura di grafi non orientati.
+
+Dato un grafo $G = (V, E)$ in cui a ogni lato è associato un peso, un Minimum Spanning Tree è un cammino senza cicli che colleghi tutti i nodi (connesso) con peso totale minimo. 
+
+Questo algoritmo si basa sulle seguenti definizioni:
+\begin{itemize}
+	\item Un \textit{taglio} in un grafo non orientato è una partizione di $G$, in modo che ogni vertice appartenga o meno a essa;
+	\item Sia $G = (V, E)$ un grafo connesso, non orientato e pesato, con $A \subseteq E$ un sottoinsieme di archi di MST. Sia inoltre $S$ un taglio tale che non ci sono archi in $A$ che collegano due nodi di cui solo uno appartiene a $S$:
+	\begin{itemize}
+		\item Un arco leggero $(u, v)$ è un arco di peso minimo che attraversa il taglio (cioè collega due nodi di diverse partizioni);
+		\item $(u, v)$ è anche un arco sicuro, ovvero se lo aggiungiamo ad $A$ questo contnua a rappresentare un sottoinsieme di archi appartenenti a MST.
+	\end{itemize}
+\end{itemize}
+
+NB: un arco è leggero se è quello di peso minimo fra un sottoinsieme di archi che rispetti una determinata proprietà.
+
+\subsection{Algoritmo di Kruskal}
+Questo algoritmo serve per risolvere \textbf{Minimum Spanning Tree}, cercando archi sicuri di peso minimo da aggiungere alla foresta in costruzione.
+
+L'algoritmo greedy funziona in questo modo:
+\begin{itemize}
+	\item I lati vengono ordinati in base al peso non decrescente;
+	\item Si parte dall'insieme $A$ vuoto;
+	\item Per ogni coppia di nodi $(u, v)$ che formano un arco, se la find\_set di $u$ è diversa da quella di $v$ (sicuro), l'arco viene aggiunto ad $A$;
+	\item L'arco dev'essere leggero, cioé il costo dev'essere minimo;
+	\item Il processo viene ripetuto fino a trovare il MST.
+\end{itemize}
+
+Vengono sfruttate le strutture dati per insiemi disgiunti. Il tempo totale è $O(ElogV)$ per il merge sort, e si ha che $|E| \geq |V - 1|$ quindi il tempo dell'ordinamento resta il limite superiore.
+
+% pseudocodice

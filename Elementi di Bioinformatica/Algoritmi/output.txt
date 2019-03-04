@@ -1,0 +1,155 @@
+>CDS M10051 HUM
+atgggcaccgggggccggcggggggcggcggccgcgccgctgctggtggcggtggccgcg
+ctgctactgggcgccgcgggccacctgtaccccggagaggtgtgtcccggcatggatatc
+cggaacaacctcactaggttgcatgagctggagaattgctctgtcatcgaaggacacttg
+cagatactcttgatgttcaaaacgaggcccgaagatttccgagacctcagtttccccaaa
+ctcatcatgatcactgattacttgctgctcttccgggtctatgggctcgagagcctgaag
+gacctgttccccaacctcacggtcatccggggatcacgactgttctttaactacgcgctg
+gtcatcttcgagatggttcacctcaaggaactcggcctctacaacctgatgaacatcacc
+cggggttctgtccgcatcgagaagaacaatgagctctgttacttggccactatcgactgg
+tcccgtatcctggattccgtggaggataatcacatcgtgttgaacaaagatgacaacgag
+gagtgtggagacatctgtccgggtaccgcgaagggcaagaccaactgccccgccaccgtc
+atcaacgggcagtttgtcgaacgatgttggactcatagtcactgccagaaagtttgcccg
+accatctgtaagtcacacggctgcaccgccgaaggcctctgttgccacagcgagtgcctg
+ggcaactgttctcagcccgacgaccccaccaagtgcgtggcctgccgcaacttctacctg
+gacggcaggtgtgtggagacctgcccgcccccgtactaccacttccaggactggcgctgt
+gtgaacttcagcttctgccaggacctgcaccacaaatgcaagaactcgcggaggcagggc
+tgccaccaatacgtcattcacaacaacaagtgcatccctgagtgtccctccgggtacacg
+atgaattccagcaacttgctgtgcaccccatgcctgggtccctgtcccaaggtgtgccac
+ctcctagaaggcgagaagaccatcgactcggtgacgtctgcccaggagctccgaggatgc
+accgtcatcaacgggagtctgatcatcaacattcgaggaggcaacaatctggcagctgag
+ctagaagccaacctcggcctcattgaagaaatttcagggtatctaaaaatccgccgatcc
+tacgctctggtgtcactttccttcttccggaagttacgtctgattcgaggagagaccttg
+gaaattgggaactactccttctatgccttggacaaccagaacctaaggcagctctgggac
+tggagcaaacacaacctcaccaccactcaggggaaactcttcttccactataaccccaaa
+ctctgcttgtcagaaatccacaagatggaagaagtttcaggaaccaaggggcgccaggag
+agaaacgacattgccctgaagaccaatggggacaaggcatcctgtgaaaatgagttactt
+aaattttcttacattcggacatcttttgacaagatcttgctgagatgggagccgtactgg
+ccccccgacttccgagacctcttggggttcatgctgttctacaaagaggccccttatcag
+aatgtgacggagttcgatgggcaggatgcgtgtggttccaacagttggacggtggtagac
+attgacccacccctgaggtccaacgaccccaaatcacagaaccacccagggtggctgatg
+cggggtctcaagccctggacccagtatgccatctttgtgaagaccctggtcaccttttcg
+gatgaacgccggacctatggggccaagagtgacatcatttatgtccagacagatgccacc
+aacccctctgtgcccctggatccaatctcagtgtctaactcatcatcccagattattctg
+aagtggaaaccaccctccgaccccaatggcaacatcacccactacctggttttctgggag
+aggcaggcggaagacagtgagctgttcgagctggattattgcctcaaagggctgaagctg
+ccctcgaggacctggtctccaccattcgagtctgaagattctcagaagcacaaccagagt
+gagtatgaggattcggccggcgaatgctgctcctgtccaaagacagactctcagatcctg
+aaggagctggaggagtcctcgtttaggaagacgtttgaggattacctgcacaacgtggtt
+ttcgtccccagaaaaacctcttcaggcactggtgccgaggaccctaggccatctcggaaa
+cgcaggtcccttggcgatgttgggaatgtgacggtggccgtgcccacggtggcagctttc
+cccaacacttcctcgaccagcgtgcccacgagtccggaggagcacaggccttttgagaag
+gtggtgaacaaggagtcgctggtcatctccggcttgcgacacttcacgggctatcgcatc
+gagctgcaggcttgcaaccaggacacccctgaggaacggtgcagtgtggcagcctacgtc
+agtgcgaggaccatgcctgaagccaaggctgatgacattgttggccctgtgacgcatgaa
+atctttgagaacaacgtcgtccacttgatgtggcaggagccgaaggagcccaatggtctg
+atcgtgctgtatgaagtgagttatcggcgatatggtgatgaggagctgcatctctgcgtc
+tcccgcaagcacttcgctctggaacggggctgcaggctgcgtgggctgtcaccggggaac
+tacagcgtgcgaatccgggccacctcccttgcgggcaacggctcttggacggaacccacc
+tatttctacgtgacagactatttagacgtcccgtcaaatattgcaaaaattatcatcggc
+cccctcatctttgtctttctcttcagtgttgtgattggaagtatttatctattcctgaga
+aagaggcagccagatgggccgctgggaccgctttacgcttcttcaaaccctgagtatctc
+agtgccagtgatgtgtttccatgctctgtgtacgtgccggacgagtgggaggtgtctcga
+gagaagatcaccctccttcgagagctggggcagggctccttcggcatggtgtatgagggc
+aatgccagggacatcatcaagggtgaggcagagacccgcgtggcggtgaagacggtcaac
+gagtcagccagtctccgagagcggattgagttcctcaatgaggcctcggtcatgaagggc
+ttcacctgccatcacgtggtgcgcctcctgggagtggtgtccaagggccagcccacgctg
+gtggtgatggagctgatggctcacggagacctgaagagctacctccgttctctgcggcca
+gaggctgagaataatcctggccgccctccccctacccttcaagagatgattcagatggcg
+gcagagattgctgacgggatggcctacctgaacgccaagaagtttgtgcatcgggacctg
+gcagcgagaaactgcatggtcgcccatgattttactgtcaaaattggagactttggaatg
+accagagacatctatgaaacggattactaccggaaagggggcaagggtctgctccctgta
+cggtggatggcaccggagtccctgaaggatggggtcttcaccacttcttctgacatgtgg
+tcctttggcgtggtcctttgggaaatcaccagcttggcagaacagccttaccaaggcctg
+tctaatgaacaggtgttgaaatttgtcatggatggagggtatctggatcaacccgacaac
+tgtccagagagagtcactgacctcatgcgcatgtgctggcaattcaaccccaagatgagg
+ccaaccttcctggagattgtcaacctgctcaaggacgacctgcaccccagctttccagag
+gtgtcgttcttccacagcgaggagaacaaggctcccgagagtgaggagctggagatggag
+tttgaggacatggagaatgtgcccctggaccgttcctcgcactgtcagagggaggaggcg
+gggggccgggatggagggtcctcgctgggtttcaagcggagctacgaggaacacatccct
+tacacacacatgaacggaggcaagaaaaacgggcggattctgaccttgcctcggtccaat
+ccttcctaa
+>Distribuzione di frequenza dei codoni
+gag => 77
+ctg => 67
+aac => 53
+gtg => 49
+aag => 47
+gac => 44
+atc => 41
+ttc => 39
+acc => 39
+ggc => 37
+ccc => 37
+ctc => 35
+cag => 32
+cac => 31
+tgc => 30
+atg => 30
+tac => 29
+gaa => 29
+gcc => 28
+gtc => 28
+ggg => 28
+tcc => 27
+gat => 26
+cgg => 25
+att => 23
+tct => 22
+tat => 21
+aaa => 21
+ttt => 20
+tgg => 20
+aat => 19
+agg => 18
+tgt => 17
+ttg => 17
+gga => 17
+agt => 17
+gcg => 16
+acg => 16
+cct => 16
+tca => 15
+cca => 15
+cga => 14
+ccg => 14
+cgc => 13
+tcg => 12
+agc => 12
+gct => 11
+ggt => 11
+gca => 10
+act => 10
+ctt => 8
+gtt => 8
+cat => 7
+aga => 7
+cta => 6
+caa => 5
+aca => 5
+cgt => 5
+tta => 3
+gta => 2
+ata => 1
+>Distribuzione delle frequenze degli amminoacidi
+L => 136
+E => 106
+S => 105
+G => 93
+V => 87
+P => 82
+R => 82
+N => 72
+D => 70
+T => 70
+K => 68
+A => 65
+I => 65
+F => 59
+Y => 50
+C => 47
+H => 38
+Q => 37
+M => 30
+W => 20
+La traduzione della CDS coincide con la traduzione riportata nel file input

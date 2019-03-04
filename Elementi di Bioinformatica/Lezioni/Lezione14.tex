@@ -1,0 +1,319 @@
+\section{Approcci basati su parsimonia}
+I due problemi confrontati consistono nella grande e piccola parsimonia, risolti con gli algoritmi di \textbf{Fitch} e \textbf{Sankoff}.
+
+Il criterio di parsimonia si basa sul concetto di \textit{rasoio di Occam}, cioè la scelta della soluzione più semplice. L'albero dovrebbe avere la massima verosimiglianza, ma il modello di evoluzione sottostante dev'essere statistico e i tempi di calcolo sono elevati.
+
+\subsection{Grande parsimonia}
+Il \textbf{problema della grande parsimonia} consiste nel trovare la filogenesi (l'albero, sconosciuto) che minimizzi il numero di cambiamenti di stato, il momento in cui un carattere viene acquisito. In questo caso la matrice non è binaria, perché ogni carattere può avere più stati, non necessariamente in sequenza.
+
+NB: il problema in versione semplificata considera solo caratteri presenti o meno, quindi la matrice corrispondente è binaria e ogni valore può essere solo 0 o 1.
+
+Questo algoritmo è NP-completo, però può essere ridotto al \textbf{problema della piccola parsimonia}, in cui l'istanza in input è data dalla matrice $M$ e dalla topologia dell'albero. Si vuole determinare quale specie etichetta ogni foglia, e quali passaggi di stato sono rappresentati da ogni arco. 
+
+\subsection{Piccola parsimonia}
+La differenza tra la piccola e la grande parsimonia è che nella prima in input c'è la topologia dell'albero, quindi il problema è solo l'etichettatura.
+
+Questo problema, in altre parole, consiste nel riempire l'albero a partire dalla struttura. Esso ha come istanze:
+\begin{itemize}
+	\item Una matrice triangolare $M$ con $n$ specie e un insieme di caratteri $C$;
+	\item Un albero $T$, le cui foglie corrispondono alle specie di $M$;
+	\item Per ogni carattere $c \in C$, un costo $w_c$ fra ogni coppia di stati.
+\end{itemize}
+Una soluzione ammissibile è un'etichettatura $\lambda$ che assegna a ogni nodo uno degli stati possibili per i caratteri $C$. \\
+La nostra funzione obiettivo andrà quindi minimizzata:
+\begin{equation*}
+	min \sum_{c \in C} \sum_{(x, y) \in E(T)} w_c(\lambda_c(x), \lambda_c(y))
+\end{equation*}
+dove $E(T)$ è l'insieme dei lati di $T$.
+
+\begin{example}{Piccola parsimonia}{}
+
+Si ha in input una matrice $N$ di questo tipo: 
+\smallskip
+\begin{center}
+\begin{tabular}{l | *{6}{c}}
+	\# arti & 0 & 1 & 2 & 4 & 6 & 8 \\
+	\hline
+	0 & 0 & 1000 & 2000 & 4000 & 6000 & 8000 \\
+	1 & ~ & 0 & 60 & 150 & 190 & 232 \\
+	2 & ~ & ~ & 0 & 30 & 70 & 120 \\
+	4 & ~ & ~ & ~ & 0 & 25 & 80\\
+	6 & ~ & ~ & ~ & ~ & 0 & 10\\
+	8 & ~ & ~ & ~ & ~ & ~ & 0
+\end{tabular}
+\end{center}
+\smallskip
+Si indica che il costo di passare da $0$ a $1$ arto è elevato, da $0$ a $2$ arti ancora più elevato, da $6$ a $8$ arti invece è meno elevato, eccetera (in pratica, si assegna un costo legato al numero di arti che la specie aveva prima e dopo essersi evoluta, completamente inventato). È un esempio di caratteri non binari, possono avere più stati. Una matrice di questo tipo è \textit{parte dell'istanza}. \\
+
+\begin{center}
+\begin{tabular}{l | c c}
+	M & \# arti & Gene X \\
+	\hline
+	Topo & 4 & 0 \\
+	Uomo & 4 & 0 \\
+	Ragno & 8 & 1 \\
+	Mosca & 6 & 0 \\
+	Antilope & 4 & 0
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{forest}
+	for tree={
+		circle, draw, 
+		minimum size=1.5em,
+		s sep=1cm
+	},
+	[~, fill=gray,
+		[~, fill=red,
+			[~, nodevalue={south}{Mosca}],
+			[~, nodevalue={south}{Ragno}]
+		],
+		[~, fill=green,
+			[~, nodevalue={south}{Uomo}],
+			[~, nodevalue={south}{Topo}],
+			[~,nodevalue={south}{Antilope}]
+		]
+	]
+\end{forest}
+\end{center}
+
+Nella piccola parsimonia bisogna capire qual è l'etichettatura dei nodi interni (grigio, rosso e verde) in modo che la \textit{somma totale dei costi su ogni arco sia minimizzata}. Si possono trattare separatamente ogni singolo carattere, poiché questi sono \textbf{indipendenti}, quindi l'algoritmo è scritto in maniera tale da trattare un carattere per volta.
+
+\end{example}
+
+\subsection{Algoritmo di Sankoff}
+Questo è un algoritmo risolutivo per il problema della piccola parsimonia. Ogni carattere è completamente indipendente, quindi si può lavorare su ognuno singolarmente. 
+
+Per determinare l'etichettatura ottimale, è possibile sfruttare la programmazione dinamica salendo dalle foglie fino alla radice e usando un insieme di sottoistanze ordinate.
+
+L'etichettatura di ogni nodo è l'ultima componente della soluzione nei nodi precedenti. L'ordinamento nell'albero è parziale, ma è sufficiente esaminare le sottoistanze formate dai sottoalberi. Per ogni nodo $x$ nell'albero $T$, il valore $sol(x, y)$ nella matrice sarà la soluzione ottimale del sottoalbero di $T$ che ha radice $X$, con etichetta di $x$ uguale a $y$. 
+
+Formalmente, $sol(x, y) = min_{z_1,\ \dots,\ z_n} \{\sum_{i=1}^{h} sol(f_i, z_i) + d(z_i, y)\}$, dove $\{f_i\}$ sono tutti i figli di $x_iT$ e $\{z_i\}$ sono tutte le possibili etichette di $f_i$.
+
+In altre parole:
+\begin{itemize}
+	\item $M[x, z]$ è la soluzione ottimale del sottoalbero di $T$ che ha radice $x$, sotto la condizione che $x$ abbia etichetta $z$;
+	\item $M[x, z] = 0$ se $x$ è una foglia con etichetta (conosciuta, perché presente nella matrice) $z$;
+	\item $M[x, z] = +\infty$ se $x$ è una foglia con etichetta diversa da $z$ (insensata);
+	\item $M[x, z] = \sum_{f \in F(x)} min_s \{w(z, s) + M[f, s]\}$ dove $f(x)$ è l'insieme dei figli in $x$ di $T$, se $x$ è un nodo interno;
+	\item La soluzione ottimale è $min_s\{M[r, s]\}$ dove $r$ è la radice di $T$.
+\end{itemize}
+
+A differenza dell'allineamento, le istanze sono alberi e non stringhe o sequenze; i casi possibili dell'ultimo componente dipendono dal numero di caratteri dell'etichetta, per questo ci si appoggia sull'indice $z$.
+
+Per ogni figlio dell'albero viene calcolata la funzione \textit{min} (tutte le possibilità), e la soluzione del padre viene ricavata da quella dei figli. Ogni cambiamento ha un costo: se i figli sono già etichettati nel modo desiderato allora esso sarà 0.
+
+Il costo dell'arco $(x, f_1)$ è 0 se l'etichetta è uguale a $y$, 1 altrimenti. \\
+$z$ rappresenta ogni etichetta diversa da $y$. 
+
+\subsection{Algoritmo di Fitch}
+Funziona solo per il caso non pesato, in cui $T$ è un albero binario. Anch'esso sfrutta la programmazione dinamica, utilizzando le seguenti regole:
+\begin{enumerate}
+	\item $S(x) = \delta_c(x)$ se $x$ è una foglia;
+	\item $S(x) = S(f_l) \cap S(f_r)$ dove $f_l$ e $f_r$ sono i figli di $x$ in $T$, se $S(f_l) \cap S(f_r) \neq \emptyset$. \\
+	Se l'intersezione non è vuota, si etichetta il padre con l'\textbf{intersezione} dei figli;
+	\item $S(x) = S(f_l) \cup S(f_r)$ dove $f_l$ e $f_r$ sono i figli di $x$ in $T$, se $S(f_l) \cap S(f_r) = \emptyset$. \\
+	Se l'intersezione è vuota, si etichetta il padre con l'\textbf{unione} dei figli.
+\end{enumerate}
+
+La soluzione $B(x)$ consiste nell'insieme degli stati $z$ tale che $M[x, z]$ (il costo del sottoalbero che ha radice $x$ e con stato $z$) sia minimo, con $B(x) = S(x)$. Quindi $B(x)$ è lo stato migliore che posso ottenere con un determinato nodo $x$.
+L'algoritmo di Fitch funziona solo con l'albero binario: come estenderlo al caso generico (sempre non pesato)?
+
+Per generalizzare, si usa un'etichettatura con caratteristiche (colori) non pesate, di cui ognuna vale 1, e si cerca l'insieme degli stati che compare il maggior numero di volte.
+
+\section{Filogenesi su distanze}
+L'idea di base di questo approccio è che, più piccola è la distanza (non negativa) tra due specie, più simili esse sono.
+
+La distanza è una funzione $S \times S \rightarrow \mathbb{R}^+$, dove $S$ è l'insieme delle specie. Si ricordano le proprietà:
+\begin{itemize}
+	\item Simmetria;
+	\item $d(x, y) = 0 \leftrightarrow x = y$;
+	\item Disuguaglianza triangolare.
+\end{itemize}
+
+L'input è una matrice (simmetrica) in cui, per ogni coppia di individuo, è contenuta una sua stima della distanza dal punto di vista evolutivo. Ogni arco è etichettato con la misura del tempo trascorso dall'evento di speciazione a oggi. Si otterranno alberi senza radice (questo è un problema).
+
+\begin{example}{}{}
+	\begin{center}
+	\begin{tabular}{l | *{5}{c}}
+		M		& M & U & R & T & A \\ \hline
+		Mosca	& - & 10 & 2 & 12 & 9 \\
+		Uomo	& ~ & - & 9 & 2 & 3 \\
+		Ragno	& ~ & ~ & - & 13 & 14 \\
+		Topo	& ~ & ~ & ~ & - & 4 \\
+		Antilope & ~ & ~ & ~ & ~ & -
+	\end{tabular}
+
+	\begin{forest}
+		for tree={circle, draw,minimum size=1.5em, s sep=1cm}
+		[~,
+			[~, edgelabel={left}{8},
+				[~, edgelabel={left}{6}, fill=purple],
+				[~, edgelabel={right}{2}, fill=green]
+			],
+			[~, edgelabel={right}{1},
+				[~, edgelabel={left}{3}, fill=gray],
+				[~, edgelabel={right}{4}, fill=blue]
+			],
+			[~, edgelabel={right}{2}, fill=red]
+		]
+	\end{forest}
+	\end{center}
+\end{example}
+
+Per ogni arco c'è un intervallo temporale, ed è possibile trovare una matrice delle distanze indotte da $T$ (es. tra il nodo grigio e quello blu c'è una distanza di $4 + 3 = 7$). 
+
+Il problema da risolvere è: data una matrice numerica $M$ di distanze, trovare un albero $T$ la cui matrice di distanza indotta $M_T$ abbia minima distanza da $M$ (sia identica, o abbastanza simile, a quella in input). Non sempre è possibile trovare l'istanza minima, quindi a volte è sufficiente ottenere una matrice abbastanza simile.
+
+Quando una matrice $M$ ha un albero $T$ che la induce?
+
+\subsection{Orologio molecolare}
+\begin{example}{}{}
+
+	\begin{center}
+	\begin{forest}
+		for tree={circle, draw,minimum size=1.5em,s sep=1cm, terminal},
+		[~, name=a
+			[~, edgelabel={left}{12},
+				[~, edgelabel={left}{2}, fill=purple, nodevalue={south}{Mosca}],
+				[~, edgelabel={right}{2}, fill=green, nodevalue={south}{Ragno}]
+			],
+			[~, edgelabel={right}{4},
+				[~, edgelabel={left}{10}, fill=red, nodevalue={south}{Uomo}],
+				[~, edgelabel={right}{5},
+					[~, edgelabel={left}{5},fill=blue, nodevalue={south}{Antilope}],
+					[~, edgelabel={left}{5},fill=gray, nodevalue={south}{Topo}, name=b]
+				]
+			]
+		]
+		\draw[thick,-latex] ([xshift=1cm]a.north east) -- ([xshift=1cm]b.south east) node[midway, anchor=south,sloped]{tempo};
+	\end{forest}
+	\end{center}
+
+	La freccia indica che il tempo scorre in egual misura per tutte le specie. Quindi, se il tempo è misurato correttamente, la distanza tra tutti i percorsi da una foglia qualunque alla radice deve essere uguale. Questo deve valere anche per ogni nodo interno: \textit{la distanza fra ogni nodo e tutte le sue foglie deve essere uguale}.
+\end{example}
+
+Questo, però, presuppone che si riesca a calcolare una misura corretta del tempo: si possono confrontare solo le sequenze attualmente a disposizione.
+
+L'ipotesi che la differenza genomica sia in funzione proporzionale al tempo trascorso è chiamata \textbf{ipotesi dell'orologio molecolare}, cioè l'ipotesi che il numero di variazioni genomiche sia una misura precisa dello scorrere del tempo.
+
+L'ipotesi non è però vera in maniera assoluta: è troppo semplificativa, quindi è utile solamente per trattare il concetto di distanza. Il caso è ideale, non reale, altrimenti ogni coppia di figli dovrebbe avere la stessa etichetta che li collega al proprio genitore (il che è improbabile). \\
+In questo caso, la matrice delle distanze soddisfa la definizione di \textbf{ultrametrica}.
+
+\subsection{Ultrametrica}
+Comunque siano prese tre specie, vengono considerate le distanze tra tutte e tre le coppie di punti:
+$$\forall\ s_1, s_2, s_3 \quad max\{d(s_1, s_2), d(s_1, s_3), d(s_2, s_3)\}\quad\text{è realizzato da almeno due coppie.}$$
+
+\begin{example}{}{}
+	Per esempio, si hanno Uomo($s_1$), Antilope($s_2$) e Topo($s_3$):
+
+	\begin{align*}
+		d(s_1, s_2) &= 10 + 5 + 5 &= 20 \\
+		d(s_1, s_3) &= 10 + 5 + 5 &= 20 \\
+		d(s_2, s_3) &= 5 + 5 &= 10
+	\end{align*}
+
+	Due saranno tipicamente più vicini tra di loro ($s_2, s_3$), il resto invece ha valori massimi uguali (uguaglianza triangolare).
+\end{example}
+
+Le matrici ultrametriche permettono di usare un algoritmo efficiente per ottenere l'unico albero associato.
+
+Ogni metodo basato su distanze, senza l'ultrametrica che dà una proprietà in più, non è in grado di individuare la radice dell'albero (perché la matrice è simmetrica). Questo è il motivo per cui spesso gli alberi sono senza radice, ed è un problema: la radice serve appunto per capire se le specie hanno dei nodi in comune.
+
+	\begin{figure}[H]
+	\caption{Albero senza radice}
+	\begin{center}
+	\begin{forest}
+		for tree={
+			circle, draw,minimum size=1.5em,s sep=1cm,
+			every leaf node={
+				draw,
+				rectangle
+			}
+		},
+		[~, fill=blue,rectangle
+			[~, 
+				[~,
+					[~, fill=purple],
+					[~,
+						[~, fill=red],
+						[~, fill=green]
+					]
+				]
+			],
+			[~, fill=gray]
+		]
+	\end{forest}
+	\end{center}
+	\end{figure}
+
+	\begin{figure}[H]
+	\caption{Alberi con radice}
+	\begin{center}
+	\begin{forest}
+		for tree={
+			circle, draw,minimum size=1.5em,s sep=1cm,
+			every leaf node={
+				draw,
+				rectangle
+			}
+		},
+		[, phantom, s sep=3cm
+			[~,
+				[~, fill=purple],
+				[~, 
+					[~, fill=gray],
+					[~, fill=blue]
+				],
+				[~,
+					[~, fill=red],
+					[~, fill=green]
+				]
+			],
+			[~,
+				[~, fill=blue]
+				[~,
+					[~,
+						[~, fill=red],
+						[~, fill=green]
+					],
+					[~, fill=purple]
+				],
+				[~, fill=gray]
+			]
+		]
+	\end{forest}
+	\end{center}
+	\end{figure}
+
+Gli alberi con radice danno delle storie evolutive profondamente diverse: è necessario quindi trovare il modo di capire quale dei nodi interni sia il miglior candidato a radice.
+
+Per poterlo fare, bisogna aggiungere dei cosiddetti \textbf{outgroup}, specie che non c'entrano niente con il soggetto da analizzare.
+
+\subsection{Outgroup}
+L'introduzione dell'outgroup serve da una parte per individuare la radice, e dell'altra come \textit{controllo qualità}. È inoltre comune a tutti gli algoritmi che si basano sulle distanze.
+
+A volte si possono introdurre più specie outgroup. Un esempio può essere il seguente:
+
+\begin{example}{}{}
+	\begin{center}
+	\begin{forest}
+		for tree={circle, draw,minimum size=1.5em,s sep=1cm},
+		[
+			[, fill=black, nodevalue={south}{outgroup}],
+			[, name=top
+				[, [,name=bottomleft]]
+			],
+			[, name=topright [], [, name=bottomright]]
+		],
+		\node[draw=red, thick, fit=(top)(bottomright)(bottomleft)] {};
+	\end{forest}
+	\end{center}
+
+	La parte evidenziata è la parte di interesse, in cui il nodo padre dell'outgroup viene preso come radice. L'albero evolutivo avrà subito da una parte l'outgroup e dall'altra le specie che interessano.
+\end{example}
+
+Se gli outgroup sono nel mezzo e non vicini fra loro e alla radice, la matrice di partenza non era corretta. 
+
+

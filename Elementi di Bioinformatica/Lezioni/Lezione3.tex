@@ -1,0 +1,77 @@
+\section{Karp-Rabin}
+
+\subsection{Introduzione}
+Karp-Rabin apprtiene alla categoria degli algoritmi probabilistici, i quali non danno la garanzia che il risultato sia corretto e con lo stesso input potrebbero esserci output diversi. Un altro importante elemento è un numero pseudo-casuale: proprio esso rende l'algoritmo non deterministico.
+
+\subsection{L'algoritmo}
+L'algoritmo di Karp-Rabin viene eseguito in tempo lineare, e si basa sulle moltiplicazioni come operazioni bit. A ogni carattere di una stringa viene associato un numero che va da $0$ a $2^{m-1}$. Tutti gli elementi sono considerati numeri binari di $n$ bit, e vengono trasformati in un codice hash. 
+
+Questo algoritmo viene utilizzato per il pattern matching, in particolare per individuare casi di plagio di testi.
+
+Stringa $P$, testo $T$, $\Sigma = \{0, 1\}$
+Per una stringa di testo $T$, $T_r$ sia la sottostringa di $T$ di lunghezza $n$ che inizia al carattere $r$.
+
+Per la sequenza binaria $P$,
+$$H(P) = \sum_{i=1}^{i=n}2^{n-i}P(i)$$
+Similmente,
+$$H(T_r) = \sum_{i=1}^{i=n}T(r +^{} i - 1)$$
+Queste sono funzioni hash, trasformano una stringa di bit in un numero decimale (generalmente) univoco. La sliding window ha ampiezza $m$ su $T$, in altre parole la finestra (lunga quanto la sottostringa) inizia dalla posizione 0 e si sposta a destra di una posizione per volta fino alle ultime posizioni. 
+
+Ogni intero può essere scritto in modo unico come somma di potenze positive di 2, e questo algoritmo trova le occorrenze paragonando le sequenze di bit dei due numeri. 
+A ogni spostamento la fingerprint lunga $m$ del testo viene ricalcolata, per poi eseguire il controllo se essa è uguale alla fingerprint della sottostringa $P$. 
+
+Il problema è: si riesce a rendere il calcolo della fingerprint più veloce a partire dalla fingerprint precedente? Si usa la seguente formula:
+$$H(T[i + 1 : i + m]) = (H(T[i : i + m - 1]) - T[i])\ /\ 2 + 2^{m - 1}T[i + m]$$
+Il primo carattere è quello che pesa di meno (1), l'ultimo ha il peso più elevato ($2^{m-1}$) a causa del fattore moltiplicativo. A ogni spostamento il primo carattere (1) viene rimosso, il numero viene diviso per due e viene aggiunto l'n-esimo carattere della finestra elevato alla $m$.
+
+Cambiando alfabeto è sufficiente cambiare la base, utilizzando la più piccola potenza di 2 maggiore o uguale a $p$ (con $p$ numero di simboli) per rendere più veloci le operazioni. Questo comporta la perdita di univocità della stringa associata a una fingerprint insieme all'utilizzo di una quantità maggiore di memoria, $p^n$ (irrilevante al momento). 
+
+Esempio: $P = 0101$, $n = 4$ \\
+$H(P) = 2^3 \cdot 0 + 2^2 \cdot 1 + 2^1 \cdot 0 + 2^0 \cdot 5$
+
+Esempio: $T = 101101010$, $n = 4$, $r = 2$ \\
+$H(T_r) = 6$
+
+C'è un'occorrenza di $P$ che inizia in posizione $R$ se e solo se $H(P) = H(T_r)$, quindi $P = T[i : i + m - 1]$. 
+
+Uno dei maggiori problemi di questo algoritmo è la complessità computazionale. C'è una differenza tra il costo delle operazioni unitario (il costo di una semplice operazione) e il caso in cui i numeri considerati non sono polinomiali rispetto alla dimensione dell'input. 
+
+Se $H(P)$ e $H(T_r)$ sono numeri grandi, l'algoritmo è inefficiente a causa del rapido aumento delle potenze di 2, il cui numero di bit cresce esponenzialmente (costo logaritmico). Ogni operazione ha un costo proporzionale rispetto al logaritmo della somma dei due numeri.
+
+Tempo migliore e medio: $O(n + m)$ (con la garanzia che i numeri sono piccoli). \\
+Tempo peggiore: $O(nm)$.
+
+Con i numeri grandi viene utilizzato il modulo P, in modo da ridurli. In questo modo diventa
+$$2^{m-1}T[i + m]\ mod\ P$$
+che viene calcolato iterativamente. Il modulo viene calcolato a ogni passo. \\
+P è un numero primo casuale, quindi l'algoritmo diventa non deterministico. Il modulo viene applicato iterativamente all'ultima somma e non a tutta la formula per evitare l'elevata grandezza dei numeri (in questo modo ogni valore è minore di 2P). 
+
+I possibili errori sono falsi positivi FP in cui un'occorrenza non è vera, e i falsi negativi FN in cui un'occorrenza non viene trovata. Questi problemi sono causati dal fatto che non sempre lo stesso hash corrisponde alla stessa stringa. L'univocità è garantita solo se il modulo non viene utilizzato. 
+
+Questo algoritmo non può avere falsi negativi, cioè se una stringa non viene trovata nel testo è sicuro che essa non sia presente: il problema sono i falsi positivi. 
+
+La probabilità di errore è $P[\#FP \geq 1 ] \leq O(nm / I)$ se il numero primo $P$ è scelto fra tutti i primi $\leq I$. Maggiore è l'insieme dei primi possibili, minore è la probabilità di errore. \\
+Alcuni valori di $I$ prefissati danno probabilità fisse, quindi l'analisi della probabilità di errore è accurata. 
+
+Per abbassare le probabilità di errore è anche possibile scegliere \textbf{k} primi casuali (indipendenti senza ripetizioni) e cambiare ogni numero primo dopo FP. I falsi positivi possono essere riconosciuti leggendo le sottostringhe carattere per carattere, aggiungendo un tempo computazionale di $m$. Questo funziona quando il numero di occorrenze che ci si aspetta di trovare è basso, ma elimina completamente i falsi positivi. \\ 
+In pratica, i tempi di calcolo aumentano, ma la probabilità di errore diminuisce. 
+
+Con un numero primo, $T = O(n + m)$, $P[FP] = q$. \\
+Con $k$ numeri primi, $T = O(k(n + m))$, $P[FP] = q^k$. 
+
+Karp-Rabin quindi ha un tempo peggiore lineare, il che rende l'algoritmo utile per studiare altri problemi come il pattern matching in due dimensioni.
+
+\subsection{Classificazione degli algoritmi probabilistici}
+Il tempo di esecuzione di Karp-Rabin è essenzialmente sempre lo stesso indipendentemente dal numero casuale scelto, e il fattore probabilistico è l'errore. Questa tipologia di algoritmi è chiamata \textbf{Monte Carlo}: veloce ma forse non corretto. 
+
+La tipologia di algoritmi \textbf{Las Vegas} (quick sort) ha tempo variabile in base alla scelta del pivot probabilistica (casuale): se la scelta è ``corretta" i tempi saranno migliori e viceversa, ma l'algoritmo è sempre corretto. 
+
+Se in Karp-Rabin viene effettivamente controllato ogni falso positivo, l'algoritmo rientra nella categoria Las Vegas. Generalmente ciò non viene fatto, perché non vale la pena di incrementare il tempo con una probabilità così bassa di errore. \\
+Un altro modo di riconoscere i falsi positivi è considerare le sovrapposizioni, le quali sono distanti al massimo $m / 2$ caratteri: eventuali valori fuori da questa ampiezza capitano solo in situazioni ristrette e vengono gestiti come semiperiodici (una parte ripetuta più volte, periodo), $d$ è la lunghezza del periodo. 
+
+\begin{itemize}
+	\item $d = l_2 - l_1$; 
+	\item $P$ semiperiodico con periodo\ $d$; 
+	\item $P = \alpha\beta^{k-1}$, $\alpha$ suffisso di $\beta$;
+	\item Ogni run occupa $\leq n$ caratteri di $T$, ogni carattere di $T$ è in massimo 2 run.
+\end{itemize}

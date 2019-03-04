@@ -1,0 +1,24 @@
+\section{Applicazioni di Floyd-Warshall}
+\subsection{Soluzione ricorsiva del cammino minimo}
+Questo algoritmo funziona vincolando ogni sottoproblema a tenere in considerazione solo un determinato sottoinsieme di vertici. L'equazione di ricorrenza è simile a quella di Floyd-Warshall: 
+$$d_{ij}^k = \begin{cases}
+	w_{ij} & se\ k = 0 \\
+	min(d_{ij}^{k-1}, d_{ik}^{k-1}, d_{kj}^{k-1}) & altrimenti
+\end{cases}$$
+
+\subsection{Esempio 1}
+Sia G un grafo con archi $E = E_1 \cup E_2$ con $E_1$, $E_2$ disgiunti. Si determino le equazioni di ricorrenza di un algoritmo di programmazione dinamica per il calcolo del costo minimo di un cammino dal vertice $i$ al vertice $j$ con al più $z$ archi di $E_1$.
+$$w_{ij} = \begin{cases}
+0 & se\ i = j \\
+\infty & se\ i \neq j \land (i, j) \notin E \\
+c_{ij} & se\ i \neq j \land (i, j) \in E
+\end{cases}$$
+
+\subsection{Esempio 2}
+Dato un grafo senza cappi $G = (V, E, W)$ con $n = |V|$ e una funzione $col : V \rightarrow C$, calcolare per ogni $(i, j)$ con $i, j \in V$, il peso di un cammino minimo da $i$ a $j$ che contenga al massimo $M = 2$ vertici consecutivi di ugual colore.
+
+Il problema viene diviso in sottoproblemi: il sottoproblema $k$ rappresenta il peso di un cammino minimo da $i$ a $j$ che contiene al massimo $m$ coppie di vertici consecutivi dello stesso colore con vertici intermedi $\in \{1\dots k\}$.
+
+Ogni variabile è rappresentata da una matrice con $n^2$ elementi $D^{(k, m)}$, di cui ogni casella indica $\forall\ (i, j) \in V^2$ il peso di un cammino minimo da $i$ a $j$, cioè $d_{ij}^{(k, m)}$.
+
+Il caso base è il sottoproblema $(k, m)$ dove $k = 0$ e $n = 0$, quindi il sottoinsieme di vertici intermedi è vuoto e dev'esserci necessariamente un arco. Al massimo devono esserci 0 coppie di vertici consecutivi dello stesso colore (esattamente 0): la distanza non è infinito solo nel caso in cui ci sia un arco e che il colore di $i$ sia diverso da quello di $j$.

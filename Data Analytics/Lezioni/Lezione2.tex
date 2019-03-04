@@ -1,0 +1,51 @@
+\section{Data analytics issues}
+
+\subsection{Istanze, classi e attributi}
+\textbf{Istanza} (oggetto, record): esempio descritto da un numero di attributi. \\
+\textbf{Attributo} (campo, caratteristica): misura gli aspetti delle istanze. \\
+\textbf{Classe}: gruppo di istanze.
+
+Le istanze sono tipi specifici di esempi che devono essere classificati, associati ed eventualmente raggruppati. Possono essere \textit{dipendenti} o \textit{indipendenti} e sono caratterizzate da un numero predeterminato di attributi: l'input ai modelli di apprendimento sono istanze contenute in un dataset, basandosi su assunzioni \textbf{IID} (indipendenti e identicamente distribuite, derivano dalla stessa distribuzione).
+
+La rappresentazione in forma proposizionale (tabellare) implica la definizione degli attributi, rimuovendo le relazioni ed esprimendole eventualmente tramite campi e condizioni. Viene considerato solo l'insieme delle osservazioni disponibili (``mondo chiuso"). 
+
+Il processo di flattening di relazioni per creare un'unica tabella si indica con \textbf{proposizionalizzazione}: è possibile con qualsiasi insieme finito, ma causa ``biased models" con irregolarità o dati replicati rispetto al modello originale. Le relazioni $1 : n$ sono gestite associando un campo aggiuntivo nel lato 1 oppure con matrici booleane. L'operazione di \textit{join} generalmente causa rappresentazioni non totalmente veritiere (distorsioni), ma che hanno minore complessità computazionale.
+
+Gli attributi sono le \textit{features} che costituiscono lo spazio di rappresentazione dell'input: devono sempre avere lunghezza predefinita, eventualmente si ricorre all'uso di flag. L'esistenza di alcuni attributi (derivabili) può dipendere da altri, e questo potrebbe aumentare la complessità del modello. 
+
+Le variabili \textbf{nominali} (simboliche, categoriche, discrete) rappresentano una quantità nominale e non hanno relazioni logico-matematiche tra loro. \\
+Le variabili \textbf{ordinali} (numeriche) impongono un ordine (numeri, stringhe). \\
+Spesso non è immediata la distinzione tra nominali e ordinali. 
+
+Conoscere la natura dell'attributo è essenziale per poter effettuare confronti e avere un criterio per le operazioni, trattare i dati mancanti e gestire le problematiche legate alla qualità dei dati.
+
+\subsection{Data analytics tasks}
+\subsubsection{Classification learning}
+Supervisionato, si occupa della classificazione di campioni predefiniti in classi, secondo approcci di machine learning (regressioni, alberi di decisione, reti bayesiane). 
+
+Il modello deve avere buone capacità di generalizzazione per input mai trattati prima, ed è possibile definire modelli di apprendimento in base a regole logiche su rappresentazioni proposizionali. Le regole logiche sono codificate usando \textit{if}.
+
+\subsubsection{Clustering}
+Il clustering serve per identificare gruppi di istanze simili. Gli algoritmi sono non supervisionati: la classe di un esempio non è conosciuta in partenza. Vengono utilizzati per la segmentazione.
+
+\subsubsection{Associazione}
+Modello predittivo non supervisionato con l'obiettivo della comprensione di associazioni: dall'esistenza di un attributo prevedere l'esistenza di un altro.
+
+\subsubsection{Predizione numerica}
+Supervisionato, modelli con un valore target in input: cerca di individuare relazioni tra attributi numerici (regressione).
+
+\section{Data preprocessing}
+I dati solitamente contengono problematiche che devono essere affrontate prima di poterli dare in input al modello: il preprocessing è un'attività fondamentale per individuare rumore, inconsistenze e incorrettezze.
+
+Il processo di \textbf{data cleaning} si occupa di rimpiazzamento di valori mancanti e smoothing dei dati rumorosi. Ci sono modelli in grado di gestire per natura i missing values, ma altri hanno necessariamente bisogno della completezza. Non tutti i dati incompleti possono essere sostituiti.
+\begin{itemize}
+	\item MCAR (Missing Completely At Random): lla distribuzione di un esempio con valori mancanti non dipende da altri attributi;
+	\item MAR (Missing At Random): la distribuzione di un esempio con valori mancanti dipende dagli attributi osservati, non necessariamente mancanti;
+	\item NMAR (Not Missing At Random): la distribuzione di un esempio con valori mancanti dipende da attributi con valori mancanti.
+\end{itemize}
+
+I dati mancanti si possono ignorare, convertire a valori di default o rimpiazzare. Alcune tecniche di sostituzione implicano l'utilizzo della media (per valori continui con distribuzione normale) o della moda (discreti). Un altro modo è k-NN, che associa la classe sulla base della maggioranza degli oggetti vicini.
+
+Un metodo di discretizzazione (smoothing) è il binning: divide il range in $N$ intervalli in base alla media (distribuzioni normali) o alla frequenza (skewed).
+
+

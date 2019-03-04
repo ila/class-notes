@@ -1,0 +1,60 @@
+\section{Allineamento locale}
+Nel caso in cui due sequenze abbiano una parte limitata simile e tutto il resto diverso, il valore complessivo di omologia è relativamente basso: l'allineamento globale non riuscirebbe a evidenziare il tratto altamente omologo.
+
+Dato che lo scopo di confrontare le sequenze è anche funzionale, avere due regioni fortemente simili potrebbe essere interessante: questa problematica è definita allineamento locale.
+
+Dal punto di vista formale, l'input è lo stesso: due stringhe $s_1$, $s_2$, una matrice di score $d$, ma l'algoritmo individua le sottostringhe $t_1$ e $t_2$ tale che $All[t_1, t_2] \geq All[u_1, u_2]$ per ogni coppia di sottostringhe $u_1$, $u_2$ di $s_1$, $s_2$.
+
+Questo concetto deriva dal fatto che lo score è positivo o negativo in base al valore assegnato alla somiglianza. Tutte le parti non simili hanno un contributo fortemente negativo, quindi confrontare i valori delle sottostringhe è utile per trovare ciò che interessa.
+
+Una strategia consiste nella ricerca dei \textit{seed}, cioè sottostringhe comuni. Il problema è che in questo caso le sottostringe potrebbero essere simili, non necessariamente comuni, e il procedimento fallisce in rare occasioni. 
+
+L'approccio brute-force calcola tutte le sottostringhe e le confronta: con $|s_1| = n$, $|s_2| = m$, si ha un tempo di $O(n^3m^3)$, dove $n^2$ e $m^2$ sono il numero di sottostringhe e il restante è il tempo di confronto. Ovviamente questa soluzione non è ottimale. 
+
+Il tempo minimo raggiungibile per una soluzione ottima è $O(nm)$.
+
+\subsection{Variante con i prefissi}
+Una variante dell'algoritmo utilizza i prefissi: cerca i prefissi $t_1$, $t_2$ di $s_1$, $s_2$ tali che $All[t_1, t_2]$ sia il massimo.
+
+Viene ripreso Needleman-Wusch: la matrice usata per l'allineamento globale contiene l'allineamento ottimo di tutti i prefissi di $s_1$ e $s_2$. I valori temporanei sono sfruttati cercando il massimo di essi. La matrice deve anche contenere la cronologia degli spostamenti, in modo da poter seguire a ritroso il percorso. 
+
+Riassumendo, la matrice $M[i, j]$ memorizza l'allineamento di tutte le coppie di prefissi, il cui massimo è appunto il massimo di $M$. 
+
+$M[0, 0] = 0$. quindi non ci sono sottostringhe con allineamento negativo.
+
+Il problema è che vengono trovati tutti i prefissi, non tutte le sottostringhe. Questo algoritmo ha un tempo di $O(n^2m^2)$.
+
+\subsection{Smith-Waterman}
+Un'altra variante cerca $M[i, j]$, l'allineamento globale ottimo tra tutte le sottostringhe che finiscono nelle posizioni $i$ e $j$,  cioè $t_1 = s_1[\cdot, i]$ e $t_2 = s_2[\cdot, j]$.
+
+Siano $h$ e $k$ gli indici iniziali delle sottostringhe $t_1$ e $t_2$, essi sono incogniti. 
+
+Siano $t_1 = s_1[h : i]$, $t_2 = s_2[k : j]$ tali che $t_1$ e $t_2$ sono due sottostringhe di $s_1$ e $s_2$ rispettivamente che terminano in posizione $i$ e $j$, con massimo valore di $All[t_1, t_2]$. Inoltre, l'allineamento ottimo di $t_1$ e $t_2$ presenta un'ultima colonna senza indel.
+
+Allora le altre colonne sono l'allineamento ottimale di $s_1[h, i-1],\ s_2[k, j-1]$, che è anche l'allineamento ottimale di due sottostringhe di $s_1$, $s_2$ che terminano in $i-1$, $j-1$.
+
+Nell'ultima colonna, logicamente, ci sono l'$i$-esimo carattere di $s_1$ e il $j$-esimo di $s_2$. La porzione a sinistra è quindi l'allineamento tra $[h, i-1]$ e $[k, j-1]$. Viene dimostrato che $s_1[h, i-1]$, $s_2[k, j-1]$ è la migliore coppia di sottostringhe precedenti, cioè che i punti di inizio non cambiano.
+
+Si suppone che le migliori sottostringhe che terminano in $i-1$, $j-1$ siano $s_1[a, i-1]$ e $s_2[b, j-1]$, ovvero $All(s_1[a, i-1], s_2[b, j-1]) > All(s_1[h, i-1], s_2[k, j-1])$. 
+
+Si aggiunge la colonna $[s_1[i], s_2[j]$ ad $All(s_1[a, i-1], s_2[b, j-1])$. Questo nuovo allineamento, considerando uguali caratteri nell'ultima colonna, ha un valore maggiore di $All(s_1[h, i], s_2[k, j])$, il che è assurdo visto che è stato precedentemente definito quest'ultimo come massimo.
+
+Un ragionamento analogo è applicabile agli altri due casi, con un indel nella colonna: questo algoritmo introduce però un quarto caso, in cui nessuna sottostringa ha un allineamento positivo. Per evitare valori negativi piuttosto viene scelta la sottostringa vuota: se precedentemente ci sono mismatch, la casella corrente viene settata a 0. Si ha anche che $M[0, 0] = 0$.
+
+Le coordinate del valore massimo indicano le posizioni finali delle sottostringhe, mentre le coordinate del primo 0 a ritroso indicano il punto di inizio. \\
+Le condizioni al contorno sono leggermente differenti, ma nella prima riga e nella prima colonna i valori sono tutti comunque 0.
+
+Il tempo di questo algoritmo è $O(nm)$.
+
+\subsection{Considerazioni}
+Durante il confronto di genomi allineati, il valore di due colonne con coppie di caratteri uguali è lo stesso. Implicitamente, la probabilità delle mutazioni è la stessa: se ci sono $A$ e $C$ in colonna nella posizione 0 e nella posizione 15, teoricamente non cambierà nulla.
+
+Non esiste un modello corretto per interpretare la soluzione, ma i modelli più sofisticati sono più vicini alla realtà. L'esempio più classico è rappresentato dalle previsioni del tempo: esso richiede una forte competenza in dominio, ma è accurato. 
+
+Uno studio più approfondito delle sequenze richiederebbe conoscenze di biologia (genetica, ...) e un maggior tempo di calcolo. Per risultati migliori, si potrebbero avere diverse matrici di score, ma sarebbe più complicato; si cerca un equilibrio nel modello (il più semplice che funzioni, che di solito è anche il più veloce).
+
+Se si vuole confrontare una sequenza di DNA, un passaggio prevede che una tripletta (codone) di basi venga codificata in un aminoacido. Con 4 nucleotidi, ci sono 20 possibili aminoacidi: più codoni quindi codificano lo stesso aminoacido. 
+
+Una mutazione che trasforma diversi nucleotidi nella stesso aminoacido è molto probabile e importante da considerare. Un cambiamento nel codone di start o in quello di stop avrà una rilevanza significativa rispetto a qualche variazione nel mezzo, quindi un modello semplice non rappresenterà in modo esaustivo queste situazioni.
+
+Per questo motivo esistono dei modelli più complessi.

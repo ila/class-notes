@@ -1,0 +1,97 @@
+\section{Notazione}
+Durante il corso verranno usate delle specifiche notazioni.
+\subsection{Stringhe}
+Da notare che l'array inizia da $1$, e non da $0$.
+\begin{enumerate}
+    \item Simbolo: $T[i]$;
+    \item Stringa: $T = T[1]T[2]T[3]T[4] \dots T[l]$;
+    \item Sottostringa: $T[i:j]$;
+    \item Prefisso: $T[:j] = T[1:j]$ (estremi inclusi),\\
+    Esempio: $T = \text{abcdefg}, T[:3] = \text{abc}$;
+    \item Suffisso: $T[i:] = T[i:\left|T\right|]$ (estremi inclusi),\\
+    Esempio: $T = \text{abcdefg}, T[3:] = \text{cdefg}$;
+    \item Concatenazione: $T_1 \cdot T_2 = T_1 T_2$.
+\end{enumerate}
+
+
+\section{Pattern matching}
+
+\subsection{Problema}
+Il problema è il seguente: dato un testo $T = T[1]T[2] \dots T[n]$ e un pattern $P = P[1]P[2] \dots P[m]$ (con alfabeto $\Sigma$ qualunque), trovare \textbf{tutte} le occorrenze di $P$ in $T$, ovvero trovare tutti gli $i$ tale che $T[i]\dots T[i + m - 1] = P$. \par
+Questo algoritmo viene utilizzato in bioinformatica per riconoscere le sequenze nei geni, o anche dagli editor di testo. Il problema è semplice da risolvere ma c'è il rischio di una grande complessità computazionale: con un algoritmo banale si arriva ad una complessità di $O(nm)$, ma essa si può ottimizzare arrivando a un tempo di $O(n+m)$ (senza contare il tempo $k$ per contare le occorrenze).
+
+\subsection{Algoritmi semi-numerici}
+Gli algoritmi semi-numerici hanno la caratteristica che in essi vengono trattati numeri, ma in realtà viene esaminata la loro rappresentazione binaria. Le operazioni sono effettuate su insiemi di bit, anche relativamente grandi. Le sequenze di bit possono essere interpretate anche come valori booleani.
+
+\subsubsection{Rappresentazione binaria}
+Esempio: \begin{gather*}
+    25 = 00011001 \\
+    25 = 00011001 = FFFTTFFT\ (F = 0, T = 1)
+\end{gather*}
+
+Sfrutta il parallelismo implicito nell'usare operazioni della CPU.
+
+\subsubsection{Operazioni bit-level}
+Vengono trattate principalmente 5 operazioni base a livello di bit:
+\begin{enumerate}
+    \item Or: $x \lor y$;
+    \item And: $x \land y$;
+    \item Xor: $x \oplus y$;
+    \item Left Shift: $x << k$, \\
+    Prende i bit e li \textit{sposta} di $k$ posizioni a sinistra, scartando $k$ bit dalla testa, e aggiungendo $k$ zero ($0$) in coda (es.: $10111 << 2 = 11100$);
+    \item Right Shift: $x >> k$, \\
+    Prende i bit e li \textit{sposta} di $k$ posizioni a destra, scartando $k$ bit dalla coda, e aggiungendo $k$ zero ($0$) in testa (es.: $10111 >> 2 = 00101$).
+\end{enumerate}
+Tutte queste operazioni sono \textit{bitwise} (a livello di bit), e tutte eseguite a livello di hardware.
+
+\subsection{Dömölki / Baeza-Yates, Gonnet}
+\subsubsection{Un paio di considerazioni}
+Questo algoritmo di \textbf{string matching} viene comunemente chiamato \textbf{Shift-And}. Viene descritta però una semplificazione dello \textbf{Shift-And} (\href{http://www.cs.joensuu.fi/pages/whamalai/sciwri/alina.pdf}{\textit{bit parallel string matching}}). Infatti i caratteri dell'alfabeto non verranno codificati con una bit mask, ma verrà semplicemente controllato il valore del carattere vero e proprio. \par
+Lo scopo dell'algoritmo non è quello di ridurre il numero di operazioni (infatti la complessità rimane uguale all'algoritmo più efficiente che risolve lo stesso problema, cioè $O(nm)$), piuttosto cercare di ridurre al minimo il tempo che ci mette ogni singola operazione sfruttando la velocità delle operazioni sui bit.
+
+\subsubsection{L'algoritmo SPIEGATO DA DIO}
+Si definisce $T$\ (lunghezza $\left|T\right| = n$) la stringa, e $P$\ (lunghezza $\left|P\right| = m$) il pattern da matchare all'interno di essa. \par
+Si ipotizza quindi di avere una matrice $M$ di dimensione $m \times n$ ($m$ righe, una per ogni lettera di $P$ ed $n$ colonne, una per ogni lettera di $T$), e due indici $i, j$, corrispondenti agli indici di $P$ e di $T$. Vale il seguente:
+$$M[i, j] = 1 \Leftrightarrow P[:i] = T[j - i + 1 : j]$$
+Che in altre parole vuol dire: \textit{$M(i, j) = 1$ sse $P[:i]$\ (i primi $i$ caratteri del prefisso) è uguale alla sottostringa di lunghezza $i$ in posizione $j - i + 1$}.
+\begin{example}{}{}
+   Usando $T = AGCAGBGCA,\ n = 9,\ P = GCA,\ m = 3$ \\
+    \begin{center}
+    M = \begin{tabular}{l c | *{9}{c} }
+        ~ & ~ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+        ~ & ~ & A & G & C & A & G & B & G & C & A \\
+        \hline
+        1 & G & 0 & 1 & 0 & 0 & 1 & 0 & 1 & 0 & 0 \\
+        2 & C & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 0 \\
+        3 & A & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 1
+    \end{tabular}
+    \end{center}
+\end{example}
+
+L'ultima riga, in particolare, mostra se il pattern è presente o meno nel testo: ci sarà 1 in corrispondenza di ogni occorrenza, precisamente nella posizione del carattere finale.
+
+L'algoritmo funziona in questo modo: vengono definiti dei vettori $U[\sigma]$ lunghi $m = |P|$ per ogni $\sigma \in \Sigma$. $U[\sigma]$ avrà 1 in posizione $i$ se $P[i] = \sigma$, 0 altrimenti.
+
+Esempio: $P = cacao$, $U(c) = 10100$, $U(o) = 00001$, $U(x) = 00000$.
+
+La prima colonna della matrice viene sempre inizializzata a 0, a eccezione del primo valore che sarà 1 se e solo se $T[1] = P[1]$.
+
+Tutte le altre colonne dipendono dalla precedente in questo modo:
+\begin{itemize}
+	\item La colonna $i$ (con $i \geq 2$) corrisponde alla colonna $i-1$ shiftata di una posizione;
+	\item Il primo valore della colonna $i$ è settato di default a 1;
+	\item La colonna ottenuta in questo modo viene paragonata tramite $AND$ a $U[T[i]]$;
+	\item In questo modo ci sarà 1 solo nelle posizioni con caratteri di $T$ e $P$ uguali.
+\end{itemize}
+
+L'equazione di ricorrenza di questo algoritmo è
+$$C[j] = ((C[j - 1] >> 1) \lor (1 << (\omega - 1))) \land U[T[j]]$$
+dove $\omega$ è la word size.
+
+Le sottostringhe sono considerate uguali se il carattere corrente $i$ è uguale al carattere $j$, e la sottostringa di $T$ precedente è uguale alla sottostringa di $J$ precedente. 
+Ogni 1 nell'ultima riga della matrice corrisponde a un'occorrenza (carattere finale).
+
+Alla fine dell'algoritmo, nella matrice risultante, risulterà una sottomatrice \textbf{identità} di dimensioni $m \times n$ per ogni occorrenza del pattern nel testo.
+
+Se $n$ non occupa una word intera, bisogna copiare l'ultimo bit della metà precedente sul primo 0 della metà successiva (come il riporto nell'addizione).
+Queste operazioni devono essere eseguite $(n / m) + 1$ volte, infatti con \textit{m} non troppo grande (una word) l'algoritmo è veloce. Al contrario, con \textit{m} grande la complessità computazionale cresce.

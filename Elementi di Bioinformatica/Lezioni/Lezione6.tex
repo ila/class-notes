@@ -1,0 +1,112 @@
+\section{Sottostringa comune di \textit{k} stringhe}
+Si ricorda che l'algoritmo per trovare la sottostringa comune di due stringhe risolve il problema in tempo lineare, utilizzando un suffix tree generalizzato.
+
+\subsection{Variante con suffix tree}
+L'obiettivo è estendere l'algoritmo conosciuto con $k$ stringhe di lunghezza complessiva $v$, e tradurre l'albero dei suffissi in un array. La costruzione dell'albero è la stessa, e le visite indicano quali stringhe hanno almeno un suffisso sotto ogni nodo interno. 
+
+Si ha che, in un suffx tree generalizzato, a partire da un nodo $x$, esso deve avere come discendente almeno una foglia per ogni stringa dell'insieme. Se questa condizione è verificata, allora il tratto dalla radice a $x$ è comune a tutte le stringhe.
+
+Tra tutti, viene scelto il nodo di string-depth massima che rispetti questo vincolo, ovvero quello con il cammino più lungo dalla radice a $x$.
+
+Ogni foglia rappresenta un suffisso di una delle $k$ stringhe, ed è distinta dalla propria stringa di provenienza (identificatore). Per ogni nodo, viene memorizzato il numero di identificatori che appaiono nelle foglie ($C[i]$). \\
+Le foglie hanno solo un identificatore a causa dei diversi simboli terminali.
+
+Un'alternativa è un array $A$ lungo $k$ di valori booleani per ogni nodo, dove $A[i]$ vale $T$ se e solo se $x$ è antenato di una foglia che rappresenta un suffisso di $s_i$.
+
+Per ottenere la sottostringa più lunga, la visita costruisce un array $V$ che contiene la string-depth del nodo più in fondo tale che il numero di identificatori associati sia $k$, per ogni $k \in \{1,\ \dots,\ v\}$.
+
+Riassumendo (alternativa con array booleani):
+\begin{enumerate}
+	\item Costruzione del suffix tree generalizzato;
+	\item Visita dell'albero per etichettare ogni vertice con l'insieme delle stringhe di cui un suffisso etichetta un discendente (post-order);
+	\item Per ogni nodo, esiste un array di $k$ booleani in cui ogni posizione indica se esiste un suffisso della $i$-esima stringa tra i discendenti;
+	\item L'array di ogni nodo, quindi, è l'$or$ di tutti gli array dei figli;
+	\item L'albero viene visitato ancora per capire quali nodi prendere in considerazione;
+	\item Viene eseguita un'ultima visita per trovare la string-depth massima.
+\end{enumerate}
+
+Il tempo non è più lineare: diventa $O(k^h)$ dove $h$ è la somma della lunghezza delle stringhe. \\
+In caso di stringhe tutte lunghe $n$, si ha $O(k^2n)$: il fattore $k$ deriva dalla computazione del numero di identificatori, salvati in un altro array $C$. Le altre due visite hanno tempo lineare.
+
+Esistono algoritmi in tempo migliore, ma sono molto complessi.
+
+\subsection{Variante con suffix array}
+Come si traduce il suffix tree in suffix array? \\
+Ogni foglia corrisponde a un elemento del suffix array, e c'è una corrispondenza $1 : 1$ tra gli elementi (in ordine lessicografico) e le foglie. Un nodo interno corrisponde a un determinato intervallo (porzione contigua) del suffix array; non c'è una corrispondenza $1 : 1$. 
+
+Ogni nodo interno del suffix tree corrisponde a un insieme di suffissi che condividono una porzione iniziale nel suffix array, quindi suffissi contigui.
+
+Il suffix array generalizzato è diviso in due parti: una contiene gli indici delle posizioni, e una contiene l'indice della stringa del suffisso.
+
+L'algoritmo di costruzione del suffix array generalizzato riceve in input un insieme di stringhe; usa una variabile $len$ con la lunghezza complessiva di tutte le stringhe, e poi procede normalmente. Vengono utilizzati $k$ terminatori diversi.
+
+Ogni intervallo del suffix array associato a un nodo del suffix tree corrisponde a tutti e soli i suffissi che iniziano con il percorso dalla radice a quel nodo.
+
+Gli intervalli associati a un nodo e il padre sono uno un sottoinsieme dell'altro. Se due nodi sono foglie, i sottoinsiemi sono disgiunti (così come gli intervalli).
+
+L'algoritmo trova, per ogni nodo, se contiene suffissi delle stringhe di ingresso, e tra essi quello con string-depth massima. Vengono calcolati tutti gli intervalli, controllando di avere almeno un suffisso della stringa d'ingresso, e poi scelto il massimo.
+
+Il numero di intervalli sarebbe $\binom{n}{2}$, che è troppo elevato per poterli calcolare tutti; bisogna quindi restringere il campo: si cerca quello con $Lcp$ massimo tra quelli che contengono almeno un suffisso per ogni stringa.
+
+Dato un suffix array $SA$, con il relativo $Lcp$, si considerano tutti gli intervalli che finiscono in una determinata posizione $j$ (per ogni $j$ da 1 a $n$, ma non è conosciuto il punto di inizio). L'obiettivo è trovare l'intervallo che corrisponde alla più lunga sottostringa comune di tutto l'input, fra quelli che soddisfano due proprietà:
+\begin{itemize}
+	\item Devono contenere tutti gli indici da 1 a $k$: questo viene controllato in modo veloce associando un numero intero per ogni stringa in un array ausiliario, che indica la posizione dell'ultima occorrenza di un suffisso. In questo modo, con $k$ interi è possibile testare tutti gli intervalli e sapere che sono accettabili se e solo se il punto di inizio è minore o uguale del minimo dell'array;
+	\begin{itemize}
+		\item Es: $prev = [57, 99, 98, 60]$, l'intervallo $[80, 99]$ non contiene nessuna sottostringa comune perché l'ultima occorrenza di $S1$ è in posizione 57;
+	\end{itemize}
+	\item Per ogni intervallo in posizione $j$, si controlla solo l'intervallo $j$ dato che tutti quelli con indice minore contengono i successivi;
+	\begin{itemize}
+			\item Si ha che il $Lcp$ dell'intervallo più piccolo è sempre maggiore o uguale del $Lcp$ dell'intervallo più grande. Dato un intervallo, la lunghezza della sottostringa comune è il minimo $Lcp$: quindi, se un intervallo contiene un altro, $Lcp$ dell'intervallo maggiore sarà minore o uguale. Pertanto, sarà inutile controllare i sovrainsiemi.
+	\end{itemize}
+\end{itemize}
+L'implementazione in C è una traduzione diretta di questi step. 
+
+Per ogni $j$, viene aggiornato l'array $prev$ in tempo costante, e calcolato il minimo in tempo $k$. Poi bisogna trovare $Lcp$ minimo: il tempo dell'operazione dipende dall'ampiezza. \\
+Alla fine, l'algoritmo trova la stringa comune più lunga in tempo $O(nlogn)$, utilizzando l'algoritmo Range Minimum Query.
+
+\section{Range Minimum Query}
+Il problema \textit{Range Minimum Query} si occupa di trovare il minimo tra due qualsiasi intervalli. \\
+Lo scopo di questo algoritmo è calcolare il minimo $Lcp$ nel problema del pattern matching con suffix array.
+
+Si ha in input un array $A$ di interi, con cardinalità $n$.
+Viene richiesto di: 
+\begin{enumerate}
+    \item Indicizzare l'array $A$, tempo $O(nlogn)$;
+    \item Rispondere a query, tempo $O(1)$:
+    \begin{itemize}
+        \item Dati $i, j$ (due numeri qualsiasi), calcolare il minimo nella porzione di array $A$ fra indice $i$ e indice $j$ compreso: $min_{i \leq z \leq j} \{A[z]\}$.
+    \end{itemize}
+\end{enumerate}
+
+Non è possibile calcolare tutti i minimi di ogni intervallo (il tempo di indicizzazione sarebbe troppo), ma non è nemmeno possibile rispondere troppo lentamente alle query: è necessario trovare un bilanciamento, preferibilmente in tempo lineare. 
+
+L'indicizzazione è in tempo $O(nlogn)$ in cui il logaritmo è un fattore moltiplicativo. Il preprocessamento (non ottimale) viene eseguito \textit{una tantum} in modo da permettere una risposta in tempo costante. Esso consiste nel calcolare degli intervalli, e su questi  andare a cercare il minimo.
+
+\subsection{Preprocessamento}
+Consiste nel calcolare degli intervalli, e su essi andare a trovare il minimo.
+
+Viene costruito un array bidimensionale $B$, indicizzato da $x, y$, che conterrà il minimo della porzione dell'array $A$, che inizia con $x$ e finisce con $x + 2^y - 1$. \\
+Quindi: $A[x: x + 2^y - 1]$, l'inizio è in $x$ e l'ampiezza è $2^y$, e vengono calcolati solo gli intervalli che corrispondono a una potenza di $2$. Questa matrice avrà $nlogn$ elementi.
+
+\begin{itemize}
+    \item Caso base: $y = 0$ ha come minimo $A[x]$, intervallo ampio $1$ perché contiene solo $x$, \\
+    $A[x : x + \cancel{1} - \cancel{1}]$;
+    \item $B[x, y] = min(B[x, y - 1], B[x + 2^{y - 1}, y - 1])$, si confrontano il minimo della prima e quello della seconda metà.
+\end{itemize}
+
+Dopo aver indicizzato gli intervalli, si ricerca in tempo costante qual è il minimo tra tutti gli intervalli compresi tra $i, j$. Con due intervalli sovrapposti, si confrontano semplicemente i due minimi dei rispettivi intervalli.
+
+Il più grande intervallo precalcolato in $B$ è: $w = $ la più grande potenza di $2 \leq j - i + 1 \Rightarrow \lfloor log_2(j - i + 1) \rfloor$. Si ha che, con $\abs{A} \geq 1$, $0 \leq j \leq \lceil log_2 \abs{A} \rceil$.
+
+In pratica: si costruisce $B$, quindi si trova il minimo di un certo intervallo utilizzando la matrice $B$.
+
+\subsection{Implementazione}
+L'algoritmo in C è la semplice implementazione di quanto presentato. \\
+La prima modifica è l'inizializzazione di \textit{\_\_matrix\_\_}, che viene mantenuta in modo tale da poter riutilizzarla quando necessario.
+La scelta implementativa è tra due intervalli di lunghezza diversa o due che si sovrappongono: è meglio il secondo caso, perché permette il semplice confronto del minimo. 
+
+Per evitare ``buchi", è meglio suddividere in intervalli grandi (è meno probabile) cioè della più grande potenza di 2 minore o uguale della lunghezza di $j - i + 1$. In termini matematici, $w = \lfloor log_2(j - i + 1) \rfloor$.
+
+Dimostrazione per assurdo: si suppone che ci sia un buco, quindi i due intervalli sono disgiunti e c'è un elemento nel mezzo. Perché ciò sia possibile, l'ampiezza dell'intervallo dev'essere maggiore di $w$, quindi della più grande potenza di 2, che è un controsenso. 
+
+I valori trovati vengono poi confrontati in tempo lineare.

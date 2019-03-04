@@ -1,0 +1,87 @@
+\newpage
+\section{Programmazione greedy}
+La programmazione greedy (o golosa, ingorda, miope) è una tecnica per la progettazione di algoritmi di ottimizzazione. Essa consiste nella costruzione di una soluzione mediante una successione di passi durante ciascuno dei quali viene scelto un elemento localmente migliore.
+
+In altre parole, a ciascun passo la scelta migliore viene compiuta in ambito limitato, senza controllare che il procedimento porti effettivamente a una soluzione ottima.
+
+\subsection{Esempi di algoritmi greedy}
+Gli algoritmi greedy sono semplici e facilmente implementabili.
+
+Il primo passo è la comprensione del problema e del metodo per risolverlo: non sempre la programmazione greedy riesce a trovarne la soluzione ottima. Un modo per sapere se questo è possibile è utilizzare il \textbf{Teorema di Rado}, ma è anche necessario individuare la NP-completezza.
+
+In seguito, va dimostrato che l'algoritmo trovato è il migliore.
+
+\subsection{Altezza minima}
+In una sala da ballo ci sono $n$ uomini di altezza $\{u_1,\ u_2,\ \dots,\ u_n\}$ e $n$ donne di altezza $\{d_1,\ d_2,\ \dots,\ d_n\}$. Accoppiare ogni uomo con una donna in modo da minimizzare l'altezza, quindi $\sum{i_1}^{n}$ utilizzando un algoritmo greedy.
+
+Una soluzione consiste nell'ordinare le due serie e accoppiarle in colonna, in modo da avere un'associazione $1 : 1$. In questo caso $c = c + |u'[i] - d'[i]|$ in un ciclo $for$.
+
+La dimostrazione che questa sia la soluzione ottima è per assurdo, non esistono combinazioni migliori (proprietà del valore assoluto). 
+
+\subsection{Travelling salesman}
+Si ha un insieme di vertici $\{v_1,\ v_2,\ \dots,\ v_n\}$ con un peso $w : E \rightarrow \R^+$ associato a ogni coppia di vertici, con $(v_i,\ v_j) \in E\ \forall\ i,\ j$.
+
+Si richiede un algoritmo per minimizzare il peso complessivo visitando tutti i vertici, quindi minimizzare $\sum_{i} w(v'_i,\ v'_{i+1})$. Ogni vertice dev'essere visitato solo una volta.
+
+Un approccio semplice sarebbe la ricerca del minimo peso e la visita del vertice associato, e così via. Il problema è che se l'ultimo arco ha un peso elevato, non ci sono altre scelte e il valore complessivo aumenta di molto. 
+
+\subsection{Intervalli chiusi}
+Si ha una serie di punti $\{x_1,\ x_2,\ \dots,\ x_n\} \in \R$ (es. 1.1, 2.4). Trovare un insieme di intervalli tale che la distanza data sia coperta ma il numero di intervalli sia il minimo.
+
+I punti devono essere ordinati, e il primo intervallo deve coprire l'estremità inferiore arrivando il più lontano possibile. Poi, tramite un ciclo, si iterano gli altri intervalli cercando quello con l'estremo sinistro che più si avvicina. 
+
+Qualsiasi altra soluzione alternativa coincide con quella ottima, oppure lascia spazi vuoti. 
+
+\subsection{Banconota}
+Si suppone di avere una banconota da $n$ euro, che si vuole cambiare in 20, 10, 5 o 1 euro. L'obiettivo è minimizzare la quantità di banconote totali restituite.
+
+La programmazione greedy risolve questo problema assegnando il maggior numero di banconote da 20 finché il resto non è meno di 20; poi passando al taglio subito minore e così via.
+
+Questa soluzione è la migliore perché, non usando banconote da 20, la quantità aumenterebbe. Il problema della dimostrazione più intuitiva è che in questo caso le banconote devono essere una multipla dell'altra: altrimenti, essa fallisce. 
+
+\subsection{Bin packing}
+Si ha un insieme di oggetti $O = \{1,\ 2,\ \dots,\ n\}$ con a ciascuno associato un peso $w$, e una serie di container $C = \{c_1,\ c_2,\ \dots,\ c_n\}$. Si vuole trovare la combinazione ottimale di oggetti nei rispettivi container.
+
+Gli oggetti vengono ordinati in base al peso, e ogni $O[i]$ viene inserito nel primo bagaglio che lo può contenere. Esiste anche il caso in cui la distribuzione ottimale abbia più oggetti nello stesso contenitore, quindi l'algoritmo greedy non sempre restituisce l'ottimo.
+
+I singoli oggetti sono svincolati e possono essere aggiunti in base al loro costo, quindi una singola scelta non è influenzata dall'ambiente globale. 
+
+Questo è un problema NP-completo: nemmeno la programmazione dinamica riesce a risolverlo in tempo polinomiale.
+
+\section{Problemi di ottimizzazione greedy}
+Siano $<E,\ F>$ due insiemi, di cui $E$ è il sovrainsieme e $F$ una famiglia dell'insieme delle parti $E$ (tutte le possibili combinazioni). Si ricorda che $|\mathcal{P}(E)| = 2^n$ con $n$ elementi.
+
+Una struttura di questo tipo si definisce \textbf{insieme di indipendenza} se vale la seguente proprietà: $\forall\ A \in F,\ B \subseteq A \rightarrow B \subseteq F$ (ideale d'ordine rispetto alla relazione di inclusione). 
+
+Sia $\mathbb{R}^+$ l'insieme dei numeri reali non negativi, una funzione peso è una arbitraria funzione $w : E \rightarrow \mathbb{R}^+$, per un elemento $E$.
+
+Volendo estendere la funzione peso $w$ da un elemento a un sottoinsieme, si può semplicemente porre $w'(A) = \sum_{i \in F}w_i$ per ottenere il peso complessivo di A.
+
+Il problema di ottimizzazione sarà composto da istanza e soluzione. L'istanza è un sistema di indipendenza $<E, F>$ e una funzione peso $w : E \rightarrow \mathbb{R}^+$.
+
+Tra tutte le soluzioni, si cercano quelli che rispettano due condizioni:
+\begin{enumerate}
+	\item Ammissibilità, il peso totale non deve eccedere quello del contenitore;
+	\item Massimo, tra le soluzioni bisogna cercare la migliore.
+\end{enumerate}
+
+In altre parole, si cerca un algoritmo greedy in grado di trovare il massimo della funzione peso estesa alle famiglie di sottoinsiemi. 
+
+Si parte dal sottoinsieme vuoto; dato un sottoinsieme $i \in E$, se esso è compatibile è possibile aggiungere il suo peso al totale. Un approccio greedy cerca il massimo valore possibile in un insieme delle scelte $Q$, ed eventualmente lo somma alla soluzione. 
+
+La variante con ordinamento impiega circa $O(n \log n)$ per il sorting, un tempo migliore rispetto alla scelta casuale. La verifica dell'appartenenza ha tempo lineare $C(n)$, quindi il tempo totale è di al più $O(n \log n + nC(n))$.
+
+\newpage
+\section{Matroidi}
+I matroidi (Birkhoff) servono per capire se un problema può essere risolto utilizzando un algoritmo greedy, qualunque sia la funzione peso considerata. Viene dimostrato che un sistema di indipendenza ha una soluzione ottima greedy se e solo se esso è un matroide.
+
+$<E,\ F>$ è matroide se $\forall\ A,\ B \in F$, con $|B| = A + 1$, si ha che $\exists\ b \in B - A$ tale che $A \cup \{b\} \in F$.
+
+Esempio: sia $E$ un insieme finito di vettori generici in un sottospazio vettoriale, e $F$ un insieme di vettori linearmente indipendenti. $<E,\ F>$ è un matroide? \\
+Togliendo degli elementi a $F$ l'insieme appartiene comunque ai vettori, ed esiste un $b$ (che non sia già in $A$)  che sia comunque linearmente indipendente rispetto agli altri. Di conseguenza, questo è un matroide. 
+
+Knapsack non ha un matroide: non è possibile effettuare operazioni di rimozione di elementi a piacere, perché ogni inserimento è vincolato dagli oggetti precedenti. A ogni passaggio si dovrebbero rimettere in discussione tutte le altre scelte. 
+
+\subsection{Teorema di Rado}
+$<E,\ F>$ (sistema di indipendenza) è matroide se e solo se $\forall\ w : E \rightarrow \R^+$, l'algoritmo greedy per ogni $w$ restituisce l'ottimo.
+

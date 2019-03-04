@@ -1,0 +1,60 @@
+\section{Fibonacci-Strassen}
+
+\subsection{Prodotto di matrici $n \times n$}
+
+Esistono due soluzioni a questo problema.
+\begin{enumerate}
+    \item Algoritmo immediato \begin{enumerate}
+        \item $O(n^3)$ somme prodotti/reali
+    \end{enumerate}
+    \item Algoritmo di Strassen(1969) \begin{enumerate}
+        \item Per $n = 1$: $1$ prodotto e $0$ somme di reali
+        \item Per $n = 2$: $7$ moltiplicazioni e $18$ addizioni(sarebbero $8$ e $4$ con l'algoritmo immediato)
+    \end{enumerate}
+\end{enumerate}
+
+\begin{gather}
+A = \begin{pmatrix}
+    a_{1,1} & a_{1,2} \\
+    a_{2,1} & a_{2,2}
+\end{pmatrix} B = \begin{pmatrix}
+    b_{1,1} & b_{1,2} \\
+    b_{2,1} & b_{2,2}
+\end{pmatrix} \\
+C = A \cdot B = \begin{pmatrix}
+    c_{1,1} & c_{1,2} \\
+    c_{2,1} & c_{2,2}
+\end{pmatrix}
+\end{gather}
+
+\subsection{La soluzione}
+
+L'\textbf{Algoritmo di Strassen} applica i seguenti calcoli per ottenre la matrice finale $C$:
+Moltiplicazioni:
+\begin{gather}
+    P_1 = (a_{1,1} + a_{2,2})\cdot(b_{1,1} + b_{2,2} \\
+    P_2 = (a_{2,1} + a_{2,2}) \cdot b_{1,1} \\
+    P_3 = a_{1,1} \cdot (b_{1,2} - b_{2,2}) \\
+    P_4 = a_{2,2} \cdot (b_{2,1} - b_{1,1}) \\
+    P_5 = (a_{1,1} + a_{1,2}) \cdot b_{2,2} \\
+    P_6 = (a_{2,1} - a_{1,1}) \cdot (b_{1,1} + b_{1,2}) \\
+    P_7 = (a_{1,2} - a_{2,2}) \cdot (b_{2,1} + b_{2,2})
+\end{gather}
+Somme:
+\begin{gather}
+    C_{1,1} = P_1+P_4-P_5+P_7 \\
+    C_{1,2} = P_3 + P_5 \\
+    C_{2,1} = P_2 + P_4 \\
+    C_{2,2} = P_1 + P_3 - P_2 + P_6
+\end{gather}
+Per $n = 2^{k+1}$: riducibile a $7$ moltiplicazioni e $18$ somme di matrici di ordine $2^k$. \\
+Numero di operazioni: \begin{enumerate}
+    \item Prodotti: \begin{enumerate}
+        \item $P(1) = 1$ 
+        \item $P(2^{k+1}) = 7 \cdot P(2^k)$
+    \end{enumerate}
+    \item Somme: \begin{enumerate}
+        \item $S(1) = 0$
+        \item $S(2^{k+1}) = 7 \cdot S(2^k) + 18 \cdot 2^{2k}$
+    \end{enumerate}
+\end{enumerate}
