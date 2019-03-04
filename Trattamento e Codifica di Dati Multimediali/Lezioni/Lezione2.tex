@@ -106,12 +106,30 @@ La moltiplicazione di un segnale per un rettangolo lo approssima con segmenti ve
 
 Funzione \textbf{delta di Dirac} $\delta(t)$: distribuzione con rettangolo di base infinitesima e altezza infinita che abbia l'area unitaria, con la larghezza che tende a 0 e di conseguenza l'altezza che tende a infinito. 
 $$\int_{-\infty}^{\infty} \delta(t) dt = 1$$
-Limite dell'impulso rettangolare di base $\Delta$ per $\Delta \rightarrow 0$: 
+Limite dell'impulso rettangolare di base $\Delta$ per $\Delta \rightarrow 0$, dove $\Delta$ è uno scalare sull'asse $x$: 
 $$\delta(t) = \lim\limits_{\Delta \rightarrow 0} \frac{1}{\Delta} \text{ rect}\Big(\frac{t}{\Delta}\Big) \qquad \delta(t - x) = 0 \qquad \text{se } t \neq x$$
 Viene introdotta per rappresentare fenomeni fisici di durata infinitesima (impulsi).
 
-discreto: delta di Kronecker o impulso unitario, freccia verticale. IMPORTANTE
-n-2 = delta in ritardo di 2, + anticipo
+Il corrispondente di $\delta$ discreto nel dominio è la \textbf{delta di Kronecker} o impulso unitario, rappresentato con una freccia verticale di altezza (o peso) unitario. Questa funzione ha significative applicazioni nel trattamento dei segnali. 
+
+Si ha un impulso $A\delta(n - n_0)$ di ampiezza $A$ e che occorre al tempo $n = n_0$. Con $n - 2$, $\delta$ è in ritardo di 2 (se fosse + sarebbe anticipo).
+
+\begin{wrapfigure}{R}{0.5\textwidth}
+	\begin{center}
+		\includegraphics[width=0.4\textwidth]{Lezioni/Immagini/gradinodiscreto}
+	\end{center}
+\end{wrapfigure}
+
+Esistono anche l'analogo discreto della delta di Dirac e del gradino unitario:
+$$\delta(n) = \begin{cases}
+1 & \text{se } n = 0 \\
+0 & \text{se } n \neq 0
+\end{cases}
+\qquad
+u(n) = \begin{cases}
+1 & \text{se } n \geq 0 \\
+0 & \text{se } n < 0
+\end{cases}$$
 
 Il gradin o continuo nel discreto diventa una successione di delta. 
 u(n) = sommatoria k=0 to inf delta(n-k)
