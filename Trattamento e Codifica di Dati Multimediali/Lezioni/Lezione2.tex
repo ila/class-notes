@@ -116,8 +116,9 @@ Si ha un impulso $A\delta(n - n_0)$ di ampiezza $A$ e che occorre al tempo $n = 
 
 \begin{wrapfigure}{R}{0.5\textwidth}
 	\begin{center}
-		\includegraphics[width=0.4\textwidth]{Lezioni/Immagini/gradinodiscreto}
+		\includegraphics[width=0.38\textwidth]{Lezioni/Immagini/gradinodiscreto}
 	\end{center}
+	\vspace{-80pt}
 \end{wrapfigure}
 
 Esistono anche l'analogo discreto della delta di Dirac e del gradino unitario:
@@ -131,13 +132,27 @@ u(n) = \begin{cases}
 0 & \text{se } n < 0
 \end{cases}$$
 
-Il gradin o continuo nel discreto diventa una successione di delta. 
-u(n) = sommatoria k=0 to inf delta(n-k)
+$x(n) \cdot \delta(n) = x(0) $ 
+
+$f(n) \cdot \delta(n - n_0) = f(n_0)$ 
+
+$\delta(n) = u(n) - u(n - 1)$
+
+Il gradino continuo, nel discreto diventa una successione di $\delta$: $u(n) = \sum_{i=0}^{+\infty} \delta(n - i)$ 
 
 \section{Sequenze}
-causali: n positivi
-anticausali: n negativi
-= considerare i campioni da adesso in poi causali
+Le sequenze $x(n)$ sono formate da segnali a tempo discreto. Se essi sono quantizzati in ampiezza, si parla di segnale digitale. 
+
+Sequenza causale:: $x(n)\ :\ n > 0$ (numeri positivi). \\
+Sequenza anticausale: $x(n)\ :\ n < 0$ (numeri negativi).
+
+Sequenza pari: $x(n) = x(-n)$ (coseno). \\
+Sequenza dispari: $x(n) = -x(-n) \rightarrow x(0) = 0$ (seno).
+
+Sequenza periodica: $x(n) = x(n + T)$ \\
+Sequenza limitata: $\abs{x(n)} \leftarrow x_0 < \infty \quad \forall\ n$
+
+Non è possibile tornare indietro nel tempo, quindi le sequenze considerate sono generalmente causali. 
 
 diagonale = funzione rampa, fattore moltiplicativo n
 
