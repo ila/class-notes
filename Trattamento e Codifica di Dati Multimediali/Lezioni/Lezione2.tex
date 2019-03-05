@@ -143,8 +143,16 @@ Il gradino continuo, nel discreto diventa una successione di $\delta$: $u(n) = \
 \section{Sequenze}
 Le sequenze $x(n)$ sono formate da segnali a tempo discreto. Se essi sono quantizzati in ampiezza, si parla di segnale digitale. 
 
-Sequenza causale:: $x(n)\ :\ n > 0$ (numeri positivi). \\
-Sequenza anticausale: $x(n)\ :\ n < 0$ (numeri negativi).
+\begin{wrapfigure}{R}{0.35\textwidth}
+	\vspace{-15pt}
+	\begin{center}
+		\includegraphics[width=0.3\textwidth]{Lezioni/Immagini/impulso}
+	\end{center}
+	\vspace{-20pt}
+\end{wrapfigure}
+
+Sequenza causale: $x(n) : n > 0$ (con numeri positivi). \\
+Sequenza anticausale: $x(n) : n < 0$ (con numeri negativi).
 
 Sequenza pari: $x(n) = x(-n)$ (coseno). \\
 Sequenza dispari: $x(n) = -x(-n) \rightarrow x(0) = 0$ (seno).
@@ -154,17 +162,7 @@ Sequenza limitata: $\abs{x(n)} \leftarrow x_0 < \infty \quad \forall\ n$
 
 Non è possibile tornare indietro nel tempo, quindi le sequenze considerate sono generalmente causali. 
 
-diagonale = funzione rampa, fattore moltiplicativo n
+Nella figura, $\delta(n)$ rappresenta l'impulso unitario. Moltiplicando $\delta$ per un coefficiente $k$ l'impulso avrà diversa lunghezza, o diversa direzione se $k$ è negativo. \\
+Un ritardo $t - t_0$ sposta l'impulso verso destra, un anticipo $t + t_0$ viceversa.
 
-\section{Analisi di Fourier}
-Decompone il segnale in costituenti sinusoidali di differenti frequenze. Il segnale non è più nel dominio tempo-spazio, ma delle frequenze: i dati sono gli stessi, cambia solo la rappresentazione.
-
- 
-
-
-
-
-
-
-
-
+Se gli impulsi hanno un fattore moltiplicativo $n$, si definisce una funzione rampa: il segnale seguirà la diagonale. 
