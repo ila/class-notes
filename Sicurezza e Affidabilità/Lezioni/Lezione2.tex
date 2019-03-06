@@ -28,7 +28,25 @@ Le fasi, riassumendo, sono due: \begin{enumerate}
     Consideriamo la seguente applicazione sulla quale vogliamo eseguire dei test:
 
     \begin{figure}[H]
-        \caption{Ciao}
+        \caption{Simple Game}
         \includegraphics[width=\textwidth]{Lezioni/Lezione2/simplegame.png}
     \end{figure}
+
+    L'applicazione è dotata di due campi di testo (numerici o testuali) ed un pulsante per far partire il sistema. È bene sottolineare che non si vuole entrare nei dettagli specifici del programma, ma semplicemente si vuole lavorare sula base dell'interfaccia data.
+
+    Il programma, per avviare il gioco, richiede di specificare il numero di giocatori ed il nome della partita. Il tasto ``Start game'' deve avviare il gioco in maniera corretta.
+
+    Effettuare il testo di questa applicazione vuol dire inserire dei valori nei campi specificati, premere ``Start game'' ed osservare il comportamento in modo da verificarne la correttezza. Si richiede di scegliere al più \textit{dieci} prove da effettuare:
+
+    \begin{center}
+    \begin{tabular}{c | > {\centering}p{7cm} | c}
+        Caso standard  & \centering Casi di errore previsto & Casi di stress \\ \hline
+        Players $\geq 1$ & Nome con caratteri particolari potrebbero mandare in crash il sistema & Players molto elevato \\
+        & Players con lettere invece di numeri & Nome stringa lunga \\
+        & Players < 0 & \\
+        & Campi vuoti & \\
+        & Players è un double & \\
+    \end{tabular}
+    \end{center}
+    Si può osservare che si sono considerati i casi in cui il sistema potrebbe andare in crash (lo sviluppatore non è stato attento).
 \end{example}
