@@ -24,7 +24,7 @@ Le fasi, riassumendo, sono due: \begin{enumerate}
     \item verificare che le prove scelte nel punto precedente siano anche adeguate.
 \end{enumerate}
 
-\begin{example}[]{Simple game}
+\begin{example}{}{Simple game}
     Consideriamo la seguente applicazione sulla quale vogliamo eseguire dei test:
 
     \begin{figure}[H]
@@ -49,4 +49,57 @@ Le fasi, riassumendo, sono due: \begin{enumerate}
     \end{tabular}
     \end{center}
     Si può osservare che si sono considerati i casi in cui il sistema potrebbe andare in crash (lo sviluppatore non è stato attento).
+\end{example}
+
+\subsection{Test Obligations and Test Cases}
+
+Quando si ragiona sull'identificazione dei test, vengono identificati una serie di elementi (come nell'esempio sopra) che vengono indicati come ``test objectives'' o ``test obligations''.
+
+Se non si conosce la specifica del sistema, si possono individuare casi di crash/malfunzionamento che si verificano per qualunque sistema, indipendentemente dal dominio applicativo. Tuttavia, molti fallimenti dipendono dal sistema, pertanto, quando si passa all'obiettivo del test alla corrispondente implementazione, si ha che quest'ultima è fatta dai risultati attesi degli stessi. Per conoscere questi risultati attesi, è \textit{necessario} conoscere la specifica del sistema.
+
+\begin{itemize}
+    \item \textbf{Test Obligations}: test che devono essere effettuati almeno una volta per verificare il corretto funzionamento dell'applicazione. Non è necessario conoscere la specifica;
+    \item \textbf{Test Case}: test fatti ad-hoc per dei casi particolari. È necessario conoscere la specifica \textit{prima} di eseguire il test.
+\end{itemize}
+
+\begin{example}{}{Simple Game - Specifica}
+    \begin{quotation}
+    L'applicazione (\textit{Simple Game}) permette all'utente di creare delle istanze di un gioco. Per creare tali istanze è necessario specificare il numero di giocatori e un nome della partita. Il gioco richiede almeno cinque giocatori ed al massimo può essere giocata da trenta giocatori. Se i giocatori sono più di trenta, allora il gioco parte comunque, ma in una modalità specifica denominata ``Team-Mode''. Il gioco può partire in modalità ``Private-Mode'' se il nome del gioco comincia con l'asterisco, oppure in ``Public-Mode'' se non comincia con l'asterisco (quindi in tutti gli altri casi).
+    \end{quotation}
+
+    Questo è un esempio di specifica della nostra applicazione. È pertanto possibile definire dei valori per il valore atteso di ciascun obiettivo.
+
+    Supponiamo di considerare l'input seguente:
+
+    \begin{itemize}
+        \item Players = 5
+        \item Name = ``nome''
+    \end{itemize}
+
+    Secondo la specifica, è possibile dedurre i valori attesi:
+
+    \begin{itemize}
+        \item Con 5 giocatori il gioco può partire in modalità normale
+        \item Con ``nome'' il gioco partirà in ``Public-Mode'' in quant il nome non contiene un asterisco
+    \end{itemize}
+
+    Chiaramente, se il valore atteso corrisponde a quello del valore ottenuto con l'input specificato, allora il test ha avuto successo, altrimenti avremo un \textit{bug}.
+
+    Quindi, alla luce della specifica sopra introdotta, è facile vedere come gli obiettivi di test prima individuati non siano più ottimali.
+
+    \begin{center}
+    \begin{tabular}{c | > {\centering}p{7cm} | c}
+        Caso standard  & \centering Casi di errore previsto & Casi di stress \\ \hline
+        Players $\geq 5$ & Campi vuoti & Players molto elevato \\
+        Players $\geq 5$ e $\leq 30$ & Players $<$ 5 & \\
+        Nome con ``*'' & & \\
+        Nome senza ``*'' & & \\
+        Nome = ``*'' & & \\
+        Nome con ``*'' in mezzo & & \\
+        Nome con ``*'' e spazio & &
+    \end{tabular}
+    \end{center}
+
+    Lo stesso obiettivo di test può essere raggiunto da più valori (considerando l'esempio precedente, è possibile provare l'applicazione per Players = 40, Players = 32, etc...).
+
 \end{example}
