@@ -1,0 +1,89 @@
+\section{Strutture di files}
+I metodi di accesso sono algoritmi o moduli che forniscono primitive CRUD per ciascuna delle strutture.
+
+Esempi di metodi di accesso sono: 
+\begin{itemize}
+	\item Strutture sequenziali;
+	\item Strutture con accesso calcolato (hash);
+	\item Strutture ad albero (indice).
+\end{itemize}
+
+L'accesso può essere sequenziale, binario o con indice. Il costo è determinato dallo spazio e dal tempo, ed è solitamente approssimato come il numero di blocchi acceduti. Per sceglere la struttura ottima è necessario distinguere se i file sono statici o dinamici e la frequenza delle operazioni CRUD.
+
+\subsection{Sequenziali}
+Le strutture sequenziali hanno in comune il mantenimento di un ordinamento fisico in memoria. Esistono organizzazioni per righe o per colonne.
+
+\textbf{Non ordinata}: i nuovi record sono appesi in fondo al file nell'ordine in cui arrivano al DB, e l'ordine di visualizzazione è arbitrario. Il dato non è persistente finchè non viene scritto sul FS, quindi il blocco dev'essere copiato nel buffer e il record aggiunto. \\
+La scansione è necessariamente sequenziale, quindi lettura e aggiornamento sono lente, e i record vengono periodicamente riorganizzata per sovrascrivere le cancellazioni.
+
+\textbf{Ordinata}: la posizione fisica è determinata dal campo chiave, e l'ordinamento fisico è l'ordinamento delle chiavi. \\
+La ricerca (anche per range) è semplice, ma la creazione impiega più tempo. La cancellazione dipende dallo schema di allocazione, ma richiede riorganizzazione periodica. 
+
+Alcuni metodi per rimediare al tempo di inserimento sono l'append in coda con riordinamento periodico, (accesso logaritmico) oppure l'allocazione al posto di record cancellati. Può essere lasciato spazio libero per uso futuro, o possono esserci file di overflow con linked list.
+
+\subsection{OLAP}
+OLAP (On Line Analytical Processing) è la raccolta di dati il cui uso primario è per le decisioni organizzative. Un data warehouse è un carico di lavoro subject-oriented, integrato, non volatile e variabile con il tempo. 
+	
+Le informazioni sono rappresentate tramite un cubo dimensionale di cui gli assi indicano il tempo, i prodotti e i punti vendita. L'organizzazione è gerarchica, in categorie.
+
+Non esiste un metodo generale per la modellazione di un DW: il modello ER dev'essere trasformato ed esteso, i dati devono essere permanenti e sono memorizzati in blocchi contenenti righe vicine tra loro. 
+
+I dati sono salvati colonna per colonna per evitare scansioni multiple in query come COUNT, ma l'inserimento viene effettuato comunque con la riga (strutture row-oriented) che poi viene spostata.
+
+\subsection{Hash}
+Le tabelle hash permettono l'accesso diretto sulla base del campo chiave, in casi in cui una struttura ad array sarebbe inefficiente perché i possibili valori della chiave sono molti di più di quelli utilizzati.
+
+I record sono organizzati in bucket (blocchi), e la funzione hash, generalmente il modulo, associa a ogni valore della chiave un indirizzo. Lo spazio delle chiavi è più grande dello spazio degli indirizzi (funzione non iniettiva) e ci sono possibilità di collisioni.
+
+Le collisioni vengono gestite tramite tabella di overflow o extensible hashing. La tabella di overflow funziona come bucket aggiuntivo per gli hash duplicati, e l'eventuale spostamento con la cancellazione dei record.
+
+Questo comporta la decisione della grandezza dei bucket e dei file: bisogna tenere in considerazione il numero medio di accessi. La probabilità di overflow cresce con il numero di record e decresce con la dimensione del blocco. 
+
+Con $T$ records e $F$ record per bucket in media, il numero dei bucket $B$ dovrebbe essere $B = T / (0.8 \cdot F)$ per utilizzare il 50-80\% dello spazio disponibile.
+
+Le strutture hash sono efficienti per accesso diretto con il valore della chiave, ma non funzionano per ricerche basate su range o campi diversi. La dimensione dei file non deve subire variazioni significative nel tempo.
+
+L'extensible hashing consente la crescita indefinita della struttura ed elimina l'overflow: essa aumenta dinamicamente con accesso tramite directory, la quale definisce la funzione hash. 
+
+Lo spreco di spazio è limitato, le riorganizzazioni sono solo a livello locale e il tempo di accesso è veloce. La directory va tenuta nella memoria principale.
+
+\subsection{Strutture ad albero}
+Un indice è una struttura ausiliaria, il cui scopo è l'accesso efficiente ai record di un file sulla base dei valori di un campo o un insieme di campi (chiave o pseudochiave), non necessariamente identificanti.
+
+Un indice è un altro file con record contenenti chiave e indirizzo, ordinato secondo i valori della chiave (indice analitico di un libro). Viene rappresentato come una struttura a cui è collegato il file principale.
+
+\subsubsection{Indice primario}
+L'indice primario è costituito da due campi, di cui il primo è dello stesso tipo della chiave di ordinamento del file dati e il secondo è un puntatore al blocco dei file dati. Generalmente il campo dev'essere anche chiave primaria, altrimenti l'indice si definisce di cluster.
+
+Non è necessario che tutti i valori delle chiavi siano rappresentati, perciò lo spazio occupato è minimo. Questo concetto rende l'indice sparso (talvolta). Ogni file può avere al più un indice primario.
+
+\subsubsection{Indice secondario}
+L'indice secondario è definito su un campo chiave diverso da quello di ordinamento. I puntatori puntano ai record (o ai blocchi) che corrispondono al valore della chiave.
+
+L'indice secondaria è per sua natura denso, cioè tutti i puntatori puntano necessariamente a tutti i record. Il numero di indici secondari è variabile.
+
+\subsubsection{Caratteristiche degli indici}
+La dimensione del file indice dipende dal numero di blocchi occupati. Si definiscono $L$ record nel file dati, blcchi di dimensione $B$, $R$ lunghezza dei record, $K$ lunghezza del campo chiave e $P$ lunghezza dei puntatori.
+
+Si ha: \\
+Numero di blocchi per file dati $\rightarrow N_F = \lceil L/(\lfloor B/R \rfloor) \rceil$ \\
+Numero di blocchi per un file di indice denso $\rightarrow N_D = \lceil L/(\lfloor B/(K+P) \rfloor) \rceil$ \\
+Numero di blocchi per un file di indice sparso $\rightarrow N_F = \lceil N_F/(\lfloor B/(K+P) \rfloor) \rceil$
+
+Gli indici sono efficienti perché permettono accesso diretto efficiente sulla chiave, sia puntuale sia per intervalli. Questo significa che le operazioni CRUD sono lente, quindi sono soggetti a riorganizzazione periodiche o flag per le eliminazioni.
+
+Una possibilità per evitare le ricerche tra blocchi diversi è la costruzione di indici sugli indici, quindi multilivello. Possono esistere livelli fino ad avere quello più alto con un solo blocco, ma solitamente sono pochi essendo i record piccoli e ordinati. \\
+Numero di blocchi al livello $j$ dell'indice $\rightarrow N_j = \lceil N_{j-1}/(\lfloor B/(K+P) \rfloor) \rceil$
+ 
+\subsection{Alberi}
+Gli indici sono strutture ordinate sequenziali, quindi poco flessibili e scarsamente adattabili alla dinamicità e ai cambiamenti. Gli alberi rimediano a questo problema.
+
+Le strutture ad albero (B-tree) si basano sull'utilizzo di un indice multilivello, struttura ausiliaria per l'accesso efficiente ai record tramite un campo chiave (non necessariamente identificante).
+
+
+
+
+
+
+
+
