@@ -1,0 +1,33 @@
+\section{Introduzione}
+
+\subsection{Testing}
+
+Osservando la storia più recente, è noto che gli strumenti utilizzabili (linguaggi di programmazione, strumenti di supporto allo sviluppo, strumenti di convalida di processi software) hanno subito una forte innovazione, che ha portato ad uno sviluppo più facile dei software. Più facile, ma comunque soggetto all'errore umano.
+
+Nel mondo in cui viviamo, si tende a ragionare con elementi lineari. Ad esempio, se si esegue su un test di carico di un ponte, il risultato sarà una funzione continua: il ponte reggerà fino ad un certo carico. Non è possibile ragionare così quando si parla di \textit{software testing}: non è detto che dei test effettuati con dei certi valori diano lo stesso risultato di altri test con altri valori. Non è quindi possibile determinare un intervallo in cui si ha la certezza che il software funzioni. Oltretutto, il software deve anche soddisfare i requisiti di progetto, tempi di risposta ragionevoli, sicuro, etc.
+
+Un software, quindi, possiede delle caratteristiche che rendono il problema della qualità particolarmente difficile da risolvere: \begin{itemize}
+    \item Requisiti di qualità: \begin{itemize}
+        \item Funzionalità;
+        \item qualità non funzionali (prestazioni, tolleranza ai guasti, sicurezza);
+        \item qualità interne (manutenibilità, portabilità);
+    \end{itemize}
+    \item Struttura in evoluzione (e deterioramento);
+    \item non linearità intrinseca (la funzione che descrive il suo comportamento in base agli input non è continua)
+    \item distribuzione non uniforme dei guasti
+\end{itemize}
+
+\subsection{Cybersecurity}
+
+Si vuole garantire nel software rilasciato delle protezioni rispetto a vari tipi di elementi. È necessario quindi, oltre a poter dimostrare che il software funziona, controllare se il servizio (o dati forniti) sono o non sono accessibili, se devono o non devono esserlo. In alcuni casi si vuole persino essere in grado di sapere \textbf{quando} un servizio (o un dato) deve essere accessibile (solo in determinate ore del giorno, solo dopo certi eventi, etc...), come può essere accessibile (se ci sono utenti con privilegi diversi e che possono quindi svolgere operazioni diverse), sapere chi può accedere al servizio e chi no, etc. Tutte queste problematiche, che stanno attorno alla vera funzionalità del sistema, vengono definite \textbf{problemi di sicurezza}.
+
+Pertanto, quando un software: \begin{itemize}
+    \item deve soddisfare un particolare requisito;
+    \item deve essere accessibile solo da qualcuno in particolare;
+    \item deve essere accessibile solo in particolari momenti e con certe modalità;
+    \item deve essere accessibile solamente con certe opzioni;
+\end{itemize}
+
+si parla di \textbf{cybersecurity}.
+
+Lo scopo di questa disciplina è di proteggere il sistema da possibili attacchi mirati. Il contesto è quindi dinamico: infatti, se la qualità non è quella attesa, è più facile per gli hacker violare il sistema ed attaccarlo. Qualità e sicurezza devono andare quindi di pari passo.
