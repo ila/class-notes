@@ -1,3 +1,4 @@
+\newpage
 \section{Testing e Verifica dell'Adeguatezza}
 
 Il termine \textbf{testing} si riferisce all'eseguire un programma ed osservarne i risultati, andandoli a confrontare con un risultato atteso (si devono quindi avere delle specifiche). Bisogna inoltre definire quante volte è necessario eseguire l'operazione di testing (\textit{testing adequacy}). Un'altra, meno usata, definizione di testing si chiama ``exhaustive testing'', cioè che il sistema viene testato per tutti i possibili input. Vien da sè capire che questo tipo di testing è controverso, poiché non è possibile controllare tutti i possibili input (che sono infiniti, o comunque enormi). Questa controversia è riconducibile all'\textit{halting problem}: può esistere un algoritmo che risponde \textit{si} o \textit{no} rispetto alla terminazione di un programma qualsiasi? \textit{No}.
@@ -7,6 +8,8 @@ Quello che si ottiene attraverso la fase di testing è un'approssimazione ottimi
     \item le prove non manifestano bug (è ottimistico concludere che il programma funziona per tutti gli altri input)
 \end{itemize}
 
+Un \textit{criterio di adeguatezza} dovrebbe permettere di rispondere ``si'' o ``no'' alla domanda ``L'insieme di casi di test progettati è sufficiente?'' Può quindi essere visto come un predicato che è \textit{vero} (soddisfatto) o \textit{falso} (non soddisfatto) di una coppia del tipo \texttt{<programma, test suite>}.
+
 \subsection{Terminologia dei bug (IEEE)}
 
 Il termine \textit{bug} ha varie sfumature: \begin{itemize}
@@ -15,7 +18,7 @@ Il termine \textit{bug} ha varie sfumature: \begin{itemize}
     \item error; \\ ulteriore analisi del fault: ci si chiede il perché si è verificato l'errore, e di conseguenza ci permette di classificare i fault in base all'area in cui appartengono (es. errori di gestione della memoria, etc...)
 \end{itemize}
 
-\subsection{Selezionare il test a partire da una failure}
+\subsection{Selezionare il test da una failure}
 
 Come abbiamo detto in precedenza, non è possibile testare il software con tutti i possibili input. Come prima cosa, si fanno delle prove che vanno a stimolare il sistema in maniera mirata per trovare delle failure. Questo primo obiettivo è abbastanza intuitivo. Come seconda cosa, mano a mano che vengono eseguiti i test, che vengono identificati bug (e corretti), i pochi test rimasti da fare vano in convergenza. In pratica, una volta verificato che il software supera tutti i test previsti, ci si chiede \textit{``cosa sappiamo?''} In particolare, ci chiediamo se i test che abbiamo fatto siano sufficienti per poter definire il software di qualità e pronto al rilascio.
 
@@ -38,6 +41,8 @@ Le fasi, riassumendo, sono due: \begin{enumerate}
 
     Effettuare il testo di questa applicazione vuol dire inserire dei valori nei campi specificati, premere ``Start game'' ed osservare il comportamento in modo da verificarne la correttezza. Si richiede di scegliere al più \textit{dieci} prove da effettuare:
 
+    \begin{figure}[H]
+    \caption{Casi per Simple Game}
     \begin{center}
     \begin{tabular}{c | > {\centering}p{7cm} | c}
         Caso standard  & \centering Casi di errore previsto & Casi di stress \\ \hline
@@ -48,10 +53,11 @@ Le fasi, riassumendo, sono due: \begin{enumerate}
         & Players è un double & \\
     \end{tabular}
     \end{center}
+    \end{figure}
     Si può osservare che si sono considerati i casi in cui il sistema potrebbe andare in crash (lo sviluppatore non è stato attento).
 \end{example}
 
-\subsection{Test Obligations and Test Cases}
+\subsection{Test Obligations e Test Cases}
 
 Quando si ragiona sull'identificazione dei test, vengono identificati una serie di elementi (come nell'esempio sopra) che vengono indicati come ``test objectives'' o ``test obligations''.
 
@@ -87,8 +93,10 @@ Se non si conosce la specifica del sistema, si possono individuare casi di crash
 
     Quindi, alla luce della specifica sopra introdotta, è facile vedere come gli obiettivi di test prima individuati non siano più ottimali.
 
+    \begin{figure}[H]
+    \caption{Casi per Simple Game dopo la specifica}
     \begin{center}
-    \begin{tabular}{c | > {\centering}p{7cm} | c}
+    \begin{tabular}{c | > {\centering}p{5cm} | c}
         Caso standard  & \centering Casi di errore previsto & Casi di stress \\ \hline
         Players $\geq 5$ & Campi vuoti & Players molto elevato \\
         Players $\geq 5$ e $\leq 30$ & Players $<$ 5 & \\
@@ -99,7 +107,44 @@ Se non si conosce la specifica del sistema, si possono individuare casi di crash
         Nome con ``*'' e spazio & &
     \end{tabular}
     \end{center}
+    \end{figure}
 
     Lo stesso obiettivo di test può essere raggiunto da più valori (considerando l'esempio precedente, è possibile provare l'applicazione per Players = 40, Players = 32, etc...).
 
 \end{example}
+
+\subsection{Boundary Testing}
+
+Fino ad ora non abbiamo però tenuto conto dei cosiddetti \textit{casi limite} o \textit{boundary testing}, ossia i test effettuati usando valori che soddisfano una casistica molto specifica, che nel nostro esempio per ``Simple Game'' possono essere Players = 5, Players = 30, Players = 31.
+
+La specifica distingue una serie di comportamenti, di cui tre risultano essere particolarmente di interesse:
+\begin{itemize}
+    \item Players = 5 \\ Il gioco non funziona
+    \item Players = 30 \\ Il gioco funziona in modalità non a squadre
+    \item Players = 31 \\ Il gioco funziona in ``Team-Mode''
+\end{itemize}
+Questi comportamenti dipendono dal parametro \textit{numero di giocatori}, tuttavia, sono adiacenti l'uno all'altro (c'è un valore specifico per il quale ad un certo punto si passa da un comportamento ad un altro). Il comportamento del sistema è quindi \textit{non-lineare}.
+
+In generale quindi, si cercano di identificare tre cose: \begin{enumerate}
+    \item Comportamenti normali \\ Esplicitamente definiti dalla specifica
+    \item Comportamenti eccezionali \\ Implicitamente suggeriti dalla specifica, e sono di ``contorno'' ai comportamenti normali
+    \item Casi di confine
+\end{enumerate}
+
+I comportamenti individuati nel nostro sistema di esempio sono: \begin{enumerate}
+    \item Comportamenti normali \begin{itemize}
+        \item Players < 5
+        \item Players $\geq 5$ e $\leq 30$
+        \item Players > 30
+    \end{itemize}
+    \item Comportamenti eccezionali \begin{itemize}
+        \item Players è una stringa (dovrebbe essere un numero)
+        \item Name è una stringa vuota (campo non compilato)
+    \end{itemize}
+    \item Casi di confine \begin{itemize}
+        \item Players = 4
+        \item Players = 5
+        \item Players = 30
+        \item Players = 31
+    \end{itemize}
+\end{enumerate}
