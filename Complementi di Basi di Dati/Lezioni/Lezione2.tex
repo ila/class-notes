@@ -1,3 +1,4 @@
+% !TeX spellcheck = en_GB
 \section{Strutture di files}
 I metodi di accesso sono algoritmi o moduli che forniscono primitive CRUD per ciascuna delle strutture.
 
@@ -47,7 +48,7 @@ L'extensible hashing consente la crescita indefinita della struttura ed elimina 
 
 Lo spreco di spazio è limitato, le riorganizzazioni sono solo a livello locale e il tempo di accesso è veloce. La directory va tenuta nella memoria principale.
 
-\subsection{Strutture ad albero}
+\subsection{Indicizzazione}
 Un indice è una struttura ausiliaria, il cui scopo è l'accesso efficiente ai record di un file sulla base dei valori di un campo o un insieme di campi (chiave o pseudochiave), non necessariamente identificanti.
 
 Un indice è un altro file con record contenenti chiave e indirizzo, ordinato secondo i valori della chiave (indice analitico di un libro). Viene rappresentato come una struttura a cui è collegato il file principale.
@@ -78,9 +79,47 @@ Numero di blocchi al livello $j$ dell'indice $\rightarrow N_j = \lceil N_{j-1}/(
 \subsection{Alberi}
 Gli indici sono strutture ordinate sequenziali, quindi poco flessibili e scarsamente adattabili alla dinamicità e ai cambiamenti. Gli alberi rimediano a questo problema.
 
-Le strutture ad albero (B-tree) si basano sull'utilizzo di un indice multilivello, struttura ausiliaria per l'accesso efficiente ai record tramite un campo chiave (non necessariamente identificante).
+\subsubsection{Alberi di ricerca di ordine P}
+Un esempio è l'albero di ricerca: ogni nodo contiene un numero fisso $F$ di chiavi e $F + 1$ puntatori, con valori delle chiavi ordinate all'interno di un nodo. La rappresentazione sequenziale affianca puntatori e nodi.
 
+Ogni chiave $K_j$ con $0 \leq j \leq F$ è seguita da un puntatore $P_j$ e preceduta dal puntatore $P_{j-1}$. Il primo puntatore è $P_0$. Ognuno di essi punta a un sottoalbero:
+\begin{itemize}
+	\item $P_0$ punta al sottoalbero con valori di chiave $< K_1$;
+	\item $P_F$ punta al sottoalbero con valori di chiave $>= F$;
+	\item $P_j$ con $0 \leq j \leq F$ punta al sottoalbero con valori di chiave comprese nell'intervallo $K_j \leq K < K_{j+1}$.
+\end{itemize}
+Il valore $F + 1$ è il fan-out dell'albero, cioè il numero di input.
 
+Ci sono due tipi di alberi utilizzati:
+\begin{itemize}
+	\item Key-sequenced trees, con i record dati contenuti nelle foglie, tipici quando la chiave corrisponde al campo identificante;
+	\item Indirect trees, con puntatori al record contenuti nelle foglie, qualsiasi altro meccanismo di allocazione delle tuple e tipici quando a un valore corrispondono più record (indice secondario, chiave non primaria).
+\end{itemize}
+
+Data la chiave $V$, la ricerca viene effettuata similmente alla ricerca binaria:
+\begin{enumerate}
+	\item Se $V < K$ si procede da $P_0$;
+	\item Se $V \geq K_F$ si procede da $P_F$;
+	\item Altrimenti viene seguito il puntatore $P_j$ tale che $K_j \leq V \leq K_{j+1}$.
+\end{enumerate}
+
+L'accesso è pertanto associativo per chiave, dove il numero di blocchi per accesso singolo rappresenta la profondità dell'albero. Questo tipo di struttura permette accesso efficiente sia per valore che per intervallo, quindi è la più comune nei DBMS.
+
+\subsubsection{Alberi bilanciati}
+Si ricorda che un albero bilanciato ha un numero variabile di foglie tale che la lunghezza dei cammini verso ognuna di esse sia la stessa. Ciò è ottenuto tramite operazioni di split e merge, e permette un tempo quasi costante (logaritmico) per gli accessi. Il numero di blocchi corrisponde alla profondità dell'albero.
+
+Le strutture ad albero bilanciate si basano sull'utilizzo di un indice multilivello, struttura ausiliaria per l'accesso efficiente ai record tramite un campo chiave (non necessariamente identificante). 
+
+Ci sono due tipi di alberi bilanciati:
+\begin{itemize}
+	\item B+ trees, con foglie concatenate secondo l'ordine della chiave. I valori possono essere ripetuti, e la ricerca è ottimizzata. \\
+	Potenziale maggiore occupazione di memoria, e supporto efficiente di range queries;
+	\item B trees, senza concatenamento sequenziale delle foglie. I nodi interni usano due puntatori per ogni valore $K_k$ della chiave, di cui uno punta al blocco che contiene il record e uno punta al sottoalbero con chiavi comprese tra $K_j$ e $K_{j+1}$. \\
+	Inserimento e cancellazione sono preceduti da una ricerca fino a una foglia, e se non c'è spazio libero il nodo va diviso. \\
+	Minore occupazione di memoria, ma le ricerche relative a chiavi che puntano direttamente al record sono più efficienti.
+\end{itemize}
+
+L'occupazione di memoria, attraverso l'esecuzione delle operazioni di aggiornamento, è mantenuta tra il 50\% e il 100\%. L'efficienza è alta, perché le pagine ai primi livelli (accedute spesso) sono spesso nel buffer: ciò può comportare racing e deadlock, ma è poco probabile dato che le transazioni sono generalmente letture.
 
 
 

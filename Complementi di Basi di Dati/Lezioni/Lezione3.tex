@@ -1,0 +1,24 @@
+\section{Architettura DBMS e MySQL}
+MySQL è un esempio di DBMS che utilizza le strutture fisiche e i metodi di accesso menzionati precedentemente. L'architettura è composta da elementi come query compiler, gestore delle transazoni, gestore del buffer e gestore dei metodi di accesso. 
+
+MySql Pluggable Storage Engine Architecture consente ai DBA di selezionare sistemi di storage diversi, di cui ognuno è specializzato per particolari applicazioni. 
+
+Storage engine disponibili:
+\begin{enumerate}
+	\item MyISAM, motore default, utilizzato per applicazioni web;
+	\item InnoDB, implementa sistemi transazionali e garantisce alcune proprietà ACID;
+	\item Memory, memorizza i dati in memoria centrale per migliorare l'accesso;
+	\item Merge, supporta l'integrazione in formato MyISAM per considerare più tabelle come un oggetto;
+	\item Archive, per archivi di grandi dimensioni poco acceduti;
+	\item Federated, per dati distribuiti con un unico schema logico;
+	\item Cluster/NDB, per high performances e alta disponibilità.
+\end{enumerate}
+
+MyISAM è stato il sistema di storage di default fino alla versione 3.2, non è transazionale: ogni database era una directory e ogni tabella un file. Gestisce record in formato fisso e dinamico (dati variabili), con meccanismo di accesso a matrice. Gli indici sono BTREE, RTREE e FULLTEXT, e la concorrenza è solo a livello di tabella.
+
+InnoDB usa il concetto di tablespace per cui la struttura, la tabella e gli indici sono memorizzati insieme. Sono implementati gli indici BRTEE, e le interrogazioni più frequenti hanno tabelle di hash corrispondenti. Il controllo di concorrenza ha caratteristiche multi-versioning, low-level locking e foreign key constraints.
+
+Memory non prevede memorizzazione in memoria persistente, solo centrale. Supporta indici hash e tree-based.
+
+Il DBA può decidere quale storage engine usare per ogni tabella tramite CREATE TABLE. I vari storage differiscono per funzionalità e per velocità di accesso ai dati. 
+
