@@ -1,0 +1,90 @@
+\subsection{Wrappers}
+I wrappers sono metodologie per riconoscere le possibili interazioni tra le variabili, a discapito del tempo computazionale (al contrario dei filtri).
+
+La subset evaluation viene effettuata tramite wrappers, i quali includono politiche per valutare le features rispetto al potere predittivo del modello di appendimento. Le performances devono soddisfare un determinato livello di qualità per poter accettare il sottoinsieme, e l'obiettivo è la massimizzazione della qualità.
+
+I risultati possono variare a seconda della ricerca nello spazio delle possibili variabili, e l'output è strettamente dipendente dall'approccio utilizzato (paradigma di predizione). Questi parametri devono essere definiti e valutati attentamente, misurando man mano le performance e la robustezza del modello.
+
+Fasi dell'algoritmo:
+\begin{enumerate}
+	\item Selezione di un subset di attributi (uno o più);
+	\item Induzione di un algoritmo di apprendimento (albero di decisione, SVM, \dots);
+	\item Valutazione dell'accuratezza o del risultato in generale;
+	\item Se essa non è sufficiente, ripetizione del processo.
+\end{enumerate}
+
+Il problema della selezione del subset ottimale è NP-hard, quindi si ricorre a strategie metaeuristiche di ricerca. Le classi si dividono in forward e backward (aggiunta o rimozione di features nell'insieme), e la metodologia viene misurata tramite cross-evaluation, inducendo il wrapper sul training set e valutando sul test set. 
+
+La tecnica è comunque molto pesante computazionalmente, però permette un utilizzo semplice e universale dei wrappers.
+
+\section{Evaluation issues}
+Lo sviluppo di modelli per la valutazione delle features ha comportato la necessità di una misurazione accurata della predizione, introducendo errori e stime di performances.
+
+Gli errori sul training data non sono buoni indicatori della qualità dell'apprendimento, perché non è possibile prevedere l'output con altri dati (la varianza è alta). I test set per questo sono utili a capire la variabilità dell'output con differenti input.
+
+Problemi più comuni:
+\begin{itemize}
+	\item Overfitting, quando il modello è molto accurato (troppo complesso) sui dati di training ma ha scarsi risultati con il testing e incapacità di generalizzazione;
+	\item Underfitting, quando la varianza è nulla e tutti i dati sono interpretati allo stesso modo troppo generico (semplice), i risultati sono scarsi sia nel training che nel testing.
+\end{itemize}
+
+Nel momento in cui i risultati del training iniziano a divergere da quelli del testing, c'è la probabilità di overfitting. Il range ideale ha complessità ridotta del modello con poco scostamento delle curve.
+
+Ci sono diversi metodi di valutazione degli errori:
+\begin{itemize}
+	\item Misurazione delle performance, contando quante istanze sono classificate correttamente e in base a ciò calcolare error rate e accuracy;
+	\item Falsi negativi/positivi, da minimizzare;
+	\item Problemi multi-classe, osservando come il modello si comporta in base a ogni classe;
+	\item Precisione, tenendo conto delle singole istanze con recall e self-measure;
+	\item Curve ROC, grafici di veri positivi e falsi negativi al variare della soglia;
+	\item Complessità computazionale.
+\end{itemize}
+
+Ognuno di questi è distinto dall'utilizzo di veri/falsi positivi e negativi, che contribuiscono al calcolo di alcuni indicatori di performance. Le misurazioni distinguono tra actual target values $a_1, a_2, \dots, a_n$ e predicted target values $p_1, p_2, \dots, p_n$.
+$$\text{Mean-squared error: } \frac{(p_1 - a_1)^2 + \dots + (p_n - a_n)^2}{n}$$
+$$\text{Mean-absolute error (meno sensibile agli outliers): } \frac{|p_1 - a_1|^2 + \dots + |p_n - a_n|^2}{n}$$
+$$\text{Root ean-squared error: } \sqrt{\frac{(p_1 - a_1)^2 + \dots + (p_n - a_n)^2}{n}}$$
+
+Altre formule utilizzate:
+\begin{enumerate}
+	\item Accuracy, $A = \frac{\text{numero di istanze correttamente classificate}}{\text{istanze totali}} = \frac{TP + TN}{TP + TN + FP + FN}$;
+	\item Precision, $P(k) = \frac{\text{numero di istanze correttamente classificate come }k}{\text{istanze totali classificate come }k} = \frac{TP + TN}{TP + FP}$;
+	\item Recall, $R(k) = \frac{\text{numero di istanze correttamente classificate come }k}{\text{istanze totali della classe come }k} = \frac{TP + TN}{TP + FN}$;
+	\item F-measure, $F(k) = \frac{2 \cdot P(k) \cdot R(k)}{P(k) + R(k)}$, distinta da:
+	\begin{itemize}
+		\item Macro-average, $\frac{1}{N} \sum_{i=1}^{N} P(i)$, che consiste nella media di tutte le F-measures di ogni classe;
+		\item Micro-average, $\sum_{i=1}^{N} \frac{C_i}{N} P(i)$, per assegnare ad alcune classi una maggiore importanza (dove $C$ è la cardinalità).
+	\end{itemize}
+\end{enumerate}
+
+\subsection{Numerosità del dataset}
+Generalmente il dataset, se sufficientemente grande, viene diviso in training e testing (solitamente 2/3 training, 1/3 testing) ed essi vengono utilizzati rispettivamente per costruire e valutare il classificatore.
+
+Più aumenta di dimensioni il training set, più migliora il classificatore; più aumenta il testing set, più la stima degli errori è accurata. Dopo la valutazione, i dati vengono uniti per costruire la versione finale.
+
+In mancanza di informazioni a riguardo, si assume che la distribuzione dei parametri sia uniforme, e poi si aggiusta la precisione in base alla performance.
+
+Se il quantitativo di dati è piccolo, si usano strategie di repeated holdout: il processo di training viene ripetuto più volte con diversi sottoinsiemi di attributi, ma ciò causa overlap. A ogni istanza viene assegnato un numero casuale per l'assegnazione.
+
+La cross-validation evita l'overlap dividendo i dati in $k$ subsets (di solito 10) e dividendo ulteriormente essi in testing e training (\textit{k}-fold), stratificando i gruppi e calcolando stime globali. La stratificazione permette il rispetto della cardinalità di ogni classe distribuendole comunque in modo relativamente uniforme. 
+
+Se un'istanza di minoranza viene valutata più volte in testing, la sua originale distribuzione marginale viene persa, e ci sono più previsioni per lo stesso dato.
+
+Altre tecniche meno utilizzate sono quelle di bootstrap, con dati poco numerosi: ogni istanza uò far parte sia del set di training che di testing. Ogni elemento viene scelto più volte, il che è utile in presenza di classi di minoranza. La varianza è ridotta, ma i risultati tendono a essere pessimisti.
+
+Una particolare istanza ha probabilità $1 - \frac{1}{n}$ di non essere selezionata, quindi la probabilità di essere selezionata è:
+$$\Big(1 - \frac{1}{n}\Big)^n \approx e^{-1} = 0.368$$
+Questo significa che il training data ha circa il 63.2\% delle istanze.
+
+Le curve di learning mostrano come l'accuratezza cambia al variare della dimensione del campione, stabilizzandosi dopo una certa quantità. 
+
+Quando ci sono davvero poche istanze si utilizza leave-one-out, una forma di cross-validation che crea tanti folds quante le istanze e ne usa uno solo come testing, iterativamente.
+
+
+
+
+
+
+
+
+
