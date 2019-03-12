@@ -1,0 +1,54 @@
+% continua = località, shift = uniformità
+% 110, 184
+\section{Proprietà delle funzioni}
+Gli automi cellulari devono simulare fenomeni con le seguenti proprietà:
+\begin{itemize}
+	\item Iniettività, che implica la reversibilità delle azioni insieme alla suriettività e garantisce la distinzione delle orbite (non collassano);
+	\item Suriettività, che garantisce la raggiungibilità (o la vicinanza, con un errore arbitrariamente piccolo) degli stati; 
+	\item Funzione stabile o instabile (verso il caos)
+\end{itemize}
+
+Gli automi cellulari iniettivi sono necessariamente anche suriettivi, quindi l'iniettività è sufficiente per assicurare l'invertibilità. La funzione inversa $F^{-1}$ è anch'essa un automa cellulare (Hedlund), perciò rispetta anche la reversibilità (estensione dell'invertibilità).
+
+Si ricorda che una funzione $F$ è suriettiva se e solo se $\forall\ y \in A^Z\ \exists\ x \in A^Z : y = F(X)$, cioè ogni elemento ha almeno un'immagine. 
+
+La regola 110 non è suriettiva: il numero delle triplette che finiscono in 0 non è uguale a quelle che finiscono in 1, pertanto è sbilanciata. 
+
+\subsection{Grafo di De Bruijn associato a un automa}
+Si ha un automa $A = <A, r, f>$ e un grafo $G = <V, E>$ con $V = A^{2r}$. Siano $u, v$ parole di lunghezza $2r$, $(u, v) \in E$ se $f(uv_{2r})$ è la label di $(u, v)$.
+
+$f(uv_{2r})$ quindi consiste in tutti i simboli di $u$ a cui è attaccato l'ultimo di $v$. 
+
+Esempio: $< \{0, 1\}, r = 1, f_{110} >$ con $V = \{0, 1\}^2$ \\
+Ci sono 4 stati etichettati con 00, 01, 10, 11. Tra 00 e 01 c'è una parte uguale togliendo il primo simbolo di $u$ e l'ultimo di $v$, quindi $f(001)$ ha un arco etichettato con 1 (ultimo simbolo). \\
+01 e 11 ha $f(011)$ e arco 1, e così via (inserendo anche i cappi). 
+
+\begin{center}
+\usetikzlibrary{automata}
+
+	\begin{tikzpicture}[shorten >=1pt, node distance=2cm, auto]
+		\node[state] (00) {$00$};
+		\node[state] (10) [above right=of 00] {$10$};
+		\node[state] (01) [below right=of 00] {$01$};
+		\node[state] (11) [below right=of 10] {$11$};
+		
+		\path[->]
+		(00) edge[loop left] node {$0$} (00)
+		(11) edge[loop right] node {$0$} (11)
+		(00) edge[below] node {$1$} (01)
+		(10) edge[above] node {$0$} (00)
+		(10) edge[bend left] node {$1$} (01)
+		(01) edge[bend left] node {$1$} (10)
+		(11) edge[above] node {$1$} (10)
+		(01) edge[below] node {$1$} (11);
+	
+	\end{tikzpicture}
+\end{center}
+
+Questo grafo rappresenta un oggetto finito, e una stringa (configurazione) è un cammino infinito sui vertici.
+	
+% finire
+
+
+
+	

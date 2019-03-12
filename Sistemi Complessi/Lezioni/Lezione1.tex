@@ -1,21 +1,25 @@
 \section{Automi Cellulari}
 Un automa cellulare è un sistema dinamico discreto costituito da una rete regolare di automi a stati finiti, che costituiscono le celle. Tramite aggiornamenti e regole locali esse cambiano simultaneamente i loro stati, sulla base dei loro vicini.
 
+Formalmente, un automa cellulare unidimensionale è una tripla $< A, r, f >$, dove:
+\begin{itemize}
+	\item $A$ corrisponde all'alfabeto;
+	\item $r \in \mathds{N}$ è il raggio;
+	\item $f : A^{2r+1} \rightarrow A$ è la regola locale.
+\end{itemize}
+
+$$A^\mathds{Z} = \{ x | x: \mathds{Z} \rightarrow A\} \qquad f : A^\mathds{Z} \rightarrow A^\mathds{Z} $$
+Si ha uno spazio delle configurazioni infinito $A^\mathds{Z}$ e non, ad esempio, $A^n$ altrimenti $f$ sarebbe ciclica (o comunque limitata), e non potrebbero verificarsi proprietà come l'\textit{instabilità}.
+
+Sono definiti automi perché le celle possono essere rappresentate come nodi collegati in un grafo (ciclico), tramite un array infinito con un simbolo assegnato a ogni posizione. La funzione di transizione $f$ è equivalente a $\delta$ nei FSA, dove lo stato $Q$ è $A$ e l'alfabeto $\Sigma$ è $A^{2r}$ ($r$ dipendenze).
+
+Gli automi cellulari sono universali, perché riescono a simulare una macchina di Turing universale (nastro semi-infinito, stati infiniti) tramite le regole locali di aggiornamento.
+
 Il processo di cambiamento di stato viene eseguito iterativamamente nel tempo, quindi gli istanti di tempo assumono valori discreti.
 
 Le precedenti caratteristiche si possono riassumere definendo gli automi cellulari come sistemi discreti, omogenei (uniformi) negli aggiornamenti e locali nelle loro interazioni.
 
-L'utilizzo di AC deriva dal fatto che molti processi in natura sono governati da regole che rispettano questi principi, come la fluidodinamica (collisioni tra particelle). 
-
-
-
-
-
-	
-\subsection{Notazione} 
-$A^\mathds{Z} = \{ x | x: \mathds{Z} \rightarrow A\}$
-$$ f: A^\mathds{Z} \rightarrow A^\mathds{Z} $$
-Richiediamo uno spazio delle configurazioni infinito $A^\mathds{Z}$ e non, ad esempio, $A^n$ altrimenti $f$ sarebbe ciclica(o comunque limitata), e non potrebbero verificarsi proprietà come l'\textit{instabilità}.
+L'utilizzo di AC deriva dal fatto che molti processi in natura sono modelli matematici di calcolo parallelo governati da regole che rispettano questi principi, come la fluidodinamica (collisioni tra particelle). 
 
 \subsection{Distanza}
 Una \textit{distanza}, tra due elementi dell'insieme $X$, è una qualunque funzione $d: X \times X \rightarrow \mathds{R}^{+}$ tale che
@@ -44,19 +48,9 @@ Sia $x \in A^2, a,b \in \mathds{Z}, a \leq b$:
 $$x[a,b] = x_a, x_{a+1}, .. x_{b} \in A^{b-a+1}$$
 	
 	
-\subsection{Proposizione} Vicinanza. $\forall x,y \in A^\mathds{Z}, \forall n \in \mathds{N}:$
-\begin{equation}   d(x,y) < \frac{1}{2^n} \iff x[-n,n] = y[-n,n]
-\end{equation}
-	
-\subsection{Definizione formale}
-	
-Un automa cellulare unidimensionale è una tripla $<A, r, f>$, dove:
-	
-\begin{itemize}
-	\item $A$ alfabeto
-	\item $r \in \mathds{N}$ raggio
-	\item $f: A^{2r+1} \rightarrow A$ regola locale
-\end{itemize}
+\subsection{Vicinanza}
+$\forall x,y \in A^\mathds{Z}, \forall n \in \mathds{N}:$ \\
+$d(x,y) < \frac{1}{2^n} \iff x[-n,n] = y[-n,n]$
 	
 
 

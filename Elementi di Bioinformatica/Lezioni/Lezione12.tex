@@ -68,7 +68,7 @@ L'algoritmo è NP-hard, e dato che ci sono porzioni quasi perfettamente ripetute
 
 \newpage
 \section{String graph per l'assemblaggio}
-Il problema di assemblaggio del genoma, quindi, è ridotto a un problema su grafi. Ogni read corrisponde a un vertice, e i collegamenti sono rappresentati tramite archi con un'etichetta che ne indica la lunghezza. Le rappresentazioni più comuni sono \textbf{OLC} e \textbf{De Brujin}.
+Il problema di assemblaggio del genoma, quindi, è ridotto a un problema su grafi. Ogni read corrisponde a un vertice, e i collegamenti sono rappresentati tramite archi con un'etichetta che ne indica la lunghezza. Le rappresentazioni più comuni sono \textbf{OLC} e \textbf{De Bruijn}.
 
 Ogni superstringa viene convertita in un grafo completo, orientato e pesato. Data una funzione $ov$ che calcola l'overlap (orientato), ogni etichetta è ottenuta con $|A| - ov(A, B)$ con $A$ nodo di partenza, $B$ nodo di arrivo. Si vuole trovare il cammino più corto che tocca ogni vertice una e una sola volta.
 
@@ -142,8 +142,8 @@ Alcuni oligonucleotidi non reagiranno, perché non hanno trovato il proprio comp
 
 Questa tecnologia in pratica non viene utilizzata, ma ha degli interessanti aspetti algoritmici. Una differenza essenziale tra un grafo di overlap e SBH è che i $k$-meri hanno tutti la stessa lunghezza, al contrario delle read, e ci si aspettano sovrapposizioni lunghe esattamente $k - 1$.
 
-\subsubsection{Grafi di De Brujin}
-Ogni $k$-mero (sottostringa di lunghezza $k$) viene diviso in $(k - 1)$-meri: in un grafo di De Brujin, ogni \textbf{arco} corrisponde a un $k$-mero, ogni \textbf{vertice} corrisponde a un $(k - 1)$-mero, e due vertici sono collegati se ci sono sovrapposizioni. 
+\subsubsection{Grafi di De Bruijn}
+Ogni $k$-mero (sottostringa di lunghezza $k$) viene diviso in $(k - 1)$-meri: in un grafo di De Bruijn, ogni \textbf{arco} corrisponde a un $k$-mero, ogni \textbf{vertice} corrisponde a un $(k - 1)$-mero, e due vertici sono collegati se ci sono sovrapposizioni. 
 
 Dato che tutte le stringhe in ingresso hanno lunghezza $k$ e sono presenti in almeno una read, il problema della costruzione del grafo diventa più semplice.
 

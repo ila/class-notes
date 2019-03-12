@@ -1,7 +1,7 @@
 \section{Analisi di Fourier}
 L'analisi di Fourier decompone il segnale in costituenti sinusoidali di differenti frequenze. Il segnale non è più nel dominio tempo-spazio, ma delle frequenze: i dati sono gli stessi, cambia solo la rappresentazione.
 
-\textit{Ogni funzione periodica e a quadrato sommabile può essere espressa come somma di funzioni seno e coseno (combinazioni di funzioni armoniche).}
+\textit{Ogni funzione periodica e a quadrato sommabile può essere espressa come somma infinita e pesata di funzioni seno e coseno (combinazioni di funzioni armoniche).}
 
 Si ricorda che una sequenza periodica è $x(n) = x(n + T)$. Una funzione armonica è una funzione periodica del tipo:
 $$y = A\sin(\varpi x + \varphi) \qquad y = A\cos(\varpi x + \varphi)$$
@@ -22,21 +22,112 @@ La serie di Fourier è una formula utile per approssimare la scomposizione. Rapp
 $$f(x) = \frac{a_0}{2} + \sum_{k=1}^{\infty} a_k \cos\Big(\frac{2\pi}{N}kx\Big) + b_k\sin\Big(\frac{2\pi}{N}kx\Big)$$
 $$N \rightarrow \text{periodo} \qquad (1/N) \rightarrow \text{frequenza fondamentale } f_0 \qquad (1/N)k \rightarrow \text{frequenze multiple } kf_0$$
 
-$a_k$ e $b_k$ sono numeri reali, $k$ è un numero intero che funge da fattore moltiplicativo e $N$ è l'ampiezza della parte di funzione che si ripete periodicamente.
+$a_k$ e $b_k$ sono numeri reali, $k$ è un numero intero che funge da fattore moltiplicativo e $N$ è l'ampiezza della parte di funzione che si ripete periodicamente (l'inverso è la frequenza fondamentale). $x$ è la variabile indipendente.
 
-Con tempo $T = 1/f$ il dominio del tempo è $t$, e il dominio della frequenza è $Hz$.
+Le frequenze (infinite), quindi, sono una parte fondamentale della formula. Con tempo $T = 1/f$ il dominio del tempo è $t$, e il dominio della frequenza è $Hz$. In altre parole, il segnale passa dal dominio spazio-tempo alle frequenze, con coppie frequenza-peso associate alla sinusoidale (ampia $A$).
 
 Estendendo la formula con il concetto di pulsazione, si ha che una pulsazione è $\varpi_k = 2\pi f_k$, e di conseguenza:
 $$f(x) = \frac{a_0}{2} + \sum_{k=1}^{\infty} a_k \cos(2\pi kf_0x) + b_k\sin(2\pi kf_0x)$$
 $$a_k = \frac{2}{N} \int_{-\frac{N}{2}}^{\frac{N}{2}} f(x)\cos(2\pi kf_0x) dx \qquad b_k = \frac{2}{N} \int_{-\frac{N}{2}}^{\frac{N}{2}} f(x)\sin(2\pi kf_0x) dx$$
 
+La variabile $x$ e la funzione associata sono continue (periodiche), ma la variabile di frequenza è discreta ($k$ intera), quindi dall'integrale si passa alla sommatoria.
+
 Si ricorda che $N$ è il periodo. Data la funzione $f(x)$ periodica, i coefficienti della serie sono \textbf{univocamente} determinati. I coefficienti sono i fattori moltiplicativi di seno e coseno, in relazione al tempo $t$.
+
+Questo significa che esiste biunivocità, la trasformazione può essere effettuata da entrambi i versi senza perdere informazione.
 
 \subsection{Fourier e i suoni}
 I suoni elementari hanno andamento sinusoidale, periodico e con estensione indefinita; la maggior parte dei suoni in natura sono però caratterizzati da forme d'onda diverse.
 
+\begin{wrapfigure}{R}{0.5\textwidth}
+	\vspace{-15pt}
+	\begin{center}
+		\includegraphics[width=0.4\textwidth]{Lezioni/Immagini/armoniche}
+	\end{center}
+	\vspace{-40pt}
+\end{wrapfigure}
+
+Un segnale si definisce complesso quando è formato da più funzioni sinusoidali combinate, invece che una sola.
+
 Si può dimostrare che, fatte alcune ipotesi di regolarità sull'andamento della forma d'onda, un generico suono complesso può essere descritto come una combinazione di suoni elementari (armoniche).
 
+Le armoniche sono funzioni che, combinate fra loro, permettono di determinare il timbro degli strumenti musicali. Insieme costituiscono forme d'onda. 
+
+\subsection{Onda quadra}
+L'onda quadra è un caso particolare in cui tutte le armoniche pari sono nulle, e l'onda quadra è data dalla forma delle componenti $F_0, 3F_0, 5F_0, \dots$ cioè 200 Hz, 600 Hz, 1 Kz eccetera. Si ricorda che l'ampiezza di conseguenza è $\nicefrac{1}{3}, \nicefrac{1}{5}, \dots$ cioè la parte dispari della sommatoria.
+
+Ognuna di queste componenti ha un'ampiezza diversa rispetto a quella dell'armonica fondamentale. La funzione è asimmetrica, e i termini pari sono appunto i coseni: ci sono solo seni non nulli. 
+
+\begin{wrapfigure}{L}{0.5\textwidth}
+	\begin{center}
+		\vspace{-5pt}
+		\includegraphics[width=0.38\textwidth]{Lezioni/Immagini/ondaquadra}
+	\end{center}
+	\vspace{-25pt}
+\end{wrapfigure}
+
+Esempio: un'onda quadra con periodo 5 ms può essere ottenuta sommando onde sinusoidali di opportuna frequenza, ampiezza e fase. Il contributo più rilevante è dato dalla prima sinusoide, si frequenza pari a quella dell'onda quadra (200 Hz, frequenza fondamentale $F_0$).
+
+Per costruire l'onda quadra sono necessarie anche altre componenti elementari di frequenza maggiore, le armoniche multiple di $F_0$.
+
+\subsection{Numeri complessi e serie di Fourier}
+I numeri complessi sono rappresentabili su un piano cartesiano come l'intersezione tra numeri reali sull'asse $x$ e numeri complessi sull'asse $y$. Ogni numero complesso ha quindi una parte reale $a$ e una immaginaria $b$.
+$$z = ai+b \qquad \abs{z} = \sqrt{a^2 + b^2} = \pi$$
+
+% fixare sta cosa
+\begin{wrapfigure}{I}{0.5\textwidth}
+	\vspace{-15pt}
+	% \begin{center}
+		\includegraphics[width=0.4\textwidth]{Lezioni/Immagini/cartesiano}
+	% \end{center}
+	\vspace{-30pt}
+\end{wrapfigure}
+
+Forma polare:  \\ 
+$a = \pi\cos(\theta)$ \\ 
+$b = \pi\sin(\theta)$ \\ 
+$\theta = \arctan\Big(\frac{b}{a}\Big)$
+
+Le coordinate polari corrispondono a quelle cartesiane (proiezione). 
+
+Applicando i numeri complessi alla serie di Fourier, si possono usare gli esponenziali complessi e la formula di Eulero. 
+
+Sia seno che coseno sono somme di due esponenziali complessi, con segno $+$ e $-$ rispettivamente. Il picco della frequenza è intero per il coseno, immaginario per il seno. 
+% formule
+
+La parte del seno è immaginaria, il coseno è reale. Le formule sono le stesse, ma applicate al sovrainsieme dei complessi ($j$ e $i$ sono indicatori convenzionali della parte immaginaria).
+
+Mettendo a sistema seno e coseno ottenuti in questo modo, si può estendere la serie di Fourier rappresentando le somme di contributi nello spazio degli esponenziali complessi.
+
+Quando $\theta$ cambia segno, l'angolo si sposta. Essendo il coseno pari, questo non cambia; il seno è dispari quindi è l'opposto. 
+
+Per passare dalle variabili discrete alle continue, si usa il coefficiente $R_k$ che raccoglie le due sommatorie (fino a infinito da entrambi i versi) e si applica l'integrale. 
+
+Il coefficiente $\nicefrac{A}{2}$ è dato appunto dalla divisione del coefficiente $R$ in 2 parti, seno e coseno: l'ampiezza sarà la metà. C'è corrispondenza biunivoca fra dominio temporale e dominio delle frequenze. I seni hanno solo la parte complessa.
+
+\subsection{Trasformata di Fourier di funzioni continue}
+Per passare dalle funzioni periodiche a quelle reali, la sommatoria diventa un integrale. La trasformata di Fourier serve per rapppresentare le funzioni continue come sinusoidi.
+
+% definizione formule 28
+
+$F(u)$ sostituisce il coefficiente discreto $R_k$. La trasformata di Fourier non si può applicare a tutte le funzioni, ma solo a quelle con quadrato sommabile (trovare la formula) e continue.
+
+Esiste un valore della trasformata (non più $\delta$) per ogni funzione continua. Invertendo la funzione, quindi, se è a supporto finito non ci sarà $2\delta$.
+
+Piuttosto che guardare parte reale e immaginaria, si considerano modulo e fase, ricavabili direttamente. Il modulo indica la potenza del segnale, e la fase assicura la biunivocità della corrispondenza. % 30
+
+La trasformata di Fourier è un operatore scomponibile, quindi per passare da una dimensione a $n$ semplicemente si applica $n$ volte la formula. In altre parole, si scompone rispetto a una direzione la funzione.
+
+Un'altra importante proprietà è la linearità: la trasformata di Fourier applicata a una funzione che è combinazione lineare (somma pesata) di funzioni, il risultato è uguale alla trasformata di Fourier di ogni funzione presa singolarmente. 
+
+La separabilità e la linearità permettono di ridurre la complessità della trasformata.
+
+\subsection{Trasformata di Fourier di funzioni discrete}
+Il primo step è il campionamento: in questo caso si utilizza la sommatoria, ma la funzione continua è rappresentata da un numero discreto di campioni. La funzione è definita per campioni $i$.
+
+Limitando la funzione spazialmente, il passo $\Delta x$ per convenzione diventa $\nicefrac{1}{N}$, e la sommatoria arriva fino a $N - 1$ invece che infinito. $f(i)$ è la funzione campionata: la trasformata è periodica. 
+
+Per campionare le funzioni $f(x)$ e $F(u)$ si applicano le trasformate di Fourier discrete (DFT). Il segnale campionato è periodico, quindi la funzione inversa è comunque periodica con distanza $\nicefrac{1}{\Delta x}$. Se il passo tende a 0, la funzione tende a infinito (senza repliche) e viceversa. 
 
 
 
