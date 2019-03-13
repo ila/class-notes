@@ -9,3 +9,134 @@ Tipicamente, tutti i criteri di adeguatezza di tipo funzionale (e quindi basati 
     \item casi di confine.
 \end{itemize}
 
+In generale:
+
+\begin{figure}[H]
+\caption{Tipi di approccio}
+\begin{center}
+\begin{tabular}{p{7cm} | p{7cm}}
+    Approccio Sistematico & Approccio Random \\ \hline
+    \begin{itemize}
+        \item Cerca di fare delle scelte specifiche guidate da dei principi di analisi della specifica
+        \item È legato alla persona che compie le scelte
+    \end{itemize}
+    & \begin{itemize}
+        \item È più automatico
+        \item Evita che la scelta dei casi di test sia basata sull'abilità specifica della persona che esegue l'analisi
+        \item Sceglie una distribuzione per gli input e campiona automaticamente
+    \end{itemize}
+\end{tabular}
+\end{center}
+\end{figure}
+
+Chiaramente, selezionare il tipo di approccio da usare di volta in volta è essenziale.
+
+\begin{example}{}{Quando applicare un approccio sistematico?}
+    Si supponga di dover testare un programma che risolve un'equazione di secondo grado, che sappiamo essere risolvibile con la seguente formula:
+    $$x_{1,2} = \frac{- b \pm \sqrt{b^2 - 4ac}}{2a}$$
+    L'input saranno i coefficienti $a,b,c$ ed il programma ritorna $x_{1,2}$.
+
+    In questo caso, andare a testare esempi random non è l'approccio più corretto da fare, poiché non si vanno ad esaminare i casi più di interesse, come quando $\Delta = \sqrt{b^2 - 4ac} = 0$, oppure $2a = 0$.
+\end{example}
+
+\tikzset{
+    boxtest/.style={draw, minimum width=1.5em, minimum height=1.5em, outer sep=0pt},
+    boxtestfull/.style={boxtest, fill=red}
+}
+
+\begin{figure}[H]
+
+\caption{Distribuzione delle failure}
+\begin{center}
+
+\begin{itemize}
+    \item[] \begin{tikzpicture}\draw node[boxtestfull] {\;};\end{tikzpicture} Failure (test case utile)
+    \item[] \begin{tikzpicture}\draw node[boxtest] {\;};\end{tikzpicture} No Failure 
+\end{itemize}
+
+\begin{tikzpicture}[node distance=1cm]
+    \matrix (m) [matrix of nodes,nodes={boxtest},row sep=0.5em,column sep=0.5em]
+    {
+        \; & \; & & \; & \; & & \; & \; & & \; & \; & & |[boxtestfull]| \; & |[boxtestfull]| \\
+        \; & \; & & \; & \; & & \; & \; & & \; & \; & & |[boxtestfull]| \; & \; \\
+        \\
+        \; & \; & & \; & \; & & \; & \; & & \; & \; & & \; & \; \\
+        \; & \; & & \; & \; & & \; & \; & & \; & \; & & \; & \; \\
+        \\
+        \; & \; & & \; & \; & & \; & \; & & \; & \; & & \; & \; \\
+        \; & \; & & \; & \; & & \; & \; & & \; & \; & & \; & \; \\
+        \\
+        \; & \; & & \; & \; & & |[boxtestfull]| \; & |[boxtestfull]| \; & & \; & \; & & \; & \; \\
+        \; & \; & & \; & \; & & |[boxtestfull]| \; & |[boxtestfull]| \; & & \; & \; & & \; & \; \\
+        \\
+        \; & \; & & \; & \; & & \; & \; & & \; & \; & & \; & \; \\
+        \; & \; & & \; & \; & & \; & \; & & \; & \; & & \; & \; \\
+    };
+\end{tikzpicture}
+\end{center}
+
+\end{figure}
+
+Nella figura sopra, vediamo come le failure siano scarse in tutto il range di input, ma si addensino attorno a certi punti, che sono i nostro punti di interesse.
+
+In generale, si vogliono eseguire poche prove, ma fondamentali. Ovviamente, è impossibile stabilire a priori, dato che gli input sono infiniti, dove si verificheranno esattamente le failure. Possiamo, però, dividere gli input possibili in insiemi, e per ciascuno di questi testare almeno un input, in maniera tale da poter coprire la maggior parte dei casi; alternativamente, si può ragionare a partire dal codice, supponendo che ogni statement corrisponda ad una classe di input. Questi, ed altri criteri per la scelta dei test, vengono definiti \textit{criteri di adeguatezza}.
+
+\subsection{Criteri di adeguatezza}
+
+Esistono diversi tipi di criteri di adeguatezza, ed ogni tipologia ha un'origine diversa.
+
+\textbf{Criteri funzionali}: \\
+derivano dalle specifiche del software
+
+\textbf{Criteri strutturali}: \\
+derivano dall'analisi del codice
+
+\textbf{Criteri basati sui modelli}: \\
+i modelli vengono estratti dalle specifiche (test su un protocollo di comunicazione)
+
+\textbf{Criteri basati sui fault}: \\
+si ipotizza che il programma possa contenere certe classi di fault (come per esempio il buffer overflow)
+
+\subsubsection{Funzionali vs Strutturali}
+
+In generale, nessuno dei due criteri prevale sull'altro, infatti spesso si adotta una combinazione dei due.
+
+\begin{example}{}{Divisione tra numeri}
+    Supponiamo di avere il seguente frammento di codice:
+
+    \begin{lstlisting}
+int fun (int param) {
+    int result;
+    result = param / 2;
+    return result;
+}
+    \end{lstlisting}
+    Ed analizziamolo sia dal punto di vista della specifica, che dal punto di vista del codice:
+
+    \textbf{Specifica}: un programma che prende in input un intero \textit{n} e restituisce \textit{n / 2} se l'input è un numero pari, o solo \textit{n} se l'input è un numero dispari.
+
+    \begin{figure}[H]
+    \caption{Criteri a confronto}
+    \begin{center}
+    \begin{tabular}{p{5cm} | p{5cm}}
+        Criterio basato sulla specifica & Criterio basato sul codice \\ \hline
+        Sono necessari almeno due test: \begin{itemize}
+            \item Almeno un test per input pari
+            \item Almeno un test per input dispari
+        \end{itemize}
+        & È sufficiente un unico test per eseguire tutti gli statement
+    \end{tabular}
+    \end{center}
+    \end{figure}
+
+    Nel caso del \textit{criterio basato sulla specifica}, si rivelerà un malfunzionamento durante il test con input dispari.
+
+    Con il \textit{criterio basato sul codice}, non avrò la certezza di individuare il bug, poiché potrebbe essere testato un singolo numero pari.
+
+    Quindi è chiaro, in questo caso, che la scelta migliore sia di adottare un \textit{criterio basato sul codice}; si può inoltre notare come in questo esempio venga evidenziata la mancanza di implementazione di una parte della specifica (errore di \textit{missing logic}).
+
+    In generale, il \textit{criterio basato sulla specifica} ci aiutare a trovare facilmente errori di \textit{missing logic}.
+\end{example}
+
+\subsection{Combinational Testing}
+
