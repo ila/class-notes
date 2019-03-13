@@ -22,3 +22,40 @@ Memory non prevede memorizzazione in memoria persistente, solo centrale. Support
 
 Il DBA può decidere quale storage engine usare per ogni tabella tramite CREATE TABLE. I vari storage differiscono per funzionalità e per velocità di accesso ai dati. 
 
+\section{Esecuzione e ottimizzazione di query}
+L'esecuzione delle query, insieme all'ottimizzazione, sono operazioni di cui si occupano il compiler, i gestori delle interrogazioni, dei metodi d'accesso e del buffer. L'approccio può comportare compilazione e memorizzazione oppure esecuzione diretta dopo la compilazione. 
+
+Tramite statistiche, parsing e calcolo del piano logico e fisico, le tabelle logiche vengono trasformate in strutture fisiche con metodi di accesso alla memoria e vengono implementate su esse le operazioni algebriche.
+
+Il primo step è il parsing: il data catalog effettua un'analisi lessicale, sintattica e semantica usando il dizionario. Le query testuali vengono tradotte in algebra relazionale e trasformate in un query tree. Le foglie corrispondono alle tabelle (strutture dati), e i nodi intermedi sono le operazioni algebriche di selezione, proiezione, join ecc.
+
+Il query tree viene successivamente convertito in un query plan logico (sempre con algebra relazionale) che è ottimizzato rispetto al costo computazionale. A un'interrogazione possono corrispondere diverse espressioni, ma l'ordine delle clausole è rilevante per determinare la più efficiente tra quelle equivalenti.
+
+Esempio: le istruzioni WHERE (selezioni) con operatori logici vengono sempre effettuate prima dei JOIN, essendo quest'ultima molto pesante (prodotto cartesiano), ed è meglio ridurre il numero di tuple coinvolte.
+
+Regole di trasformazione di equivalenza:
+\begin{enumerate}
+	\item Atomizzazione, una soluzione congiuntiva può essere sostituita da una sequenza di operazioni di selezione individuali;
+	\item Commutatività della selezione, interscambiabilità delle clausole;
+	\item Commutatività di selezione e prodotto cartesiano;
+	\item Commutatività di selezione e proiezione;
+	\item Commutatività di proiezione e JOIN;
+	\item Equivalenza di prodotto cartesiano e selezione con JOIN;
+	\item \textbf{Anticipazione della selezione rispetto al JOIN} (JOIN con tuple filtrate o meno);
+	\item Anticipazione della proiezione rispetto al JOIN, sotto opportune condizioni.
+\end{enumerate}
+
+La trasformazione pertanto avviene seguendo queste proprietà, e stimando i costi delle operazioni fondamentali per diversi metodi di accesso. Il problema ha generalmente complessità esponenziale ma si ricorre alle metaeuristiche. 
+
+Le informazioni quantitative che vengono prese in considerazione sono per esempio la cardinalità delle relazioni, le dimensione di tuple e valori o il numero di valori distinti. Tutte queste sono memorizzate nel catalogo delle statistiche e aggiornate periodicamente. 
+
+\subsection{Buffer management}
+L'implementazione degli operatori relazionali e i metodi di accesso dispongono di un numero (sufficiente) di blocchi o pagine nella memoria principale. Ogni pagina corrisponde a un blocco in memoria secondaria, ed è allocata e gestita nel buffer (non persistente).
+
+Il buffer è organizzato in pagine, con dimensioni multiple rispetto ai blocchi nel file system. Si ha che il rapporto tra il tempo di accesso al FS e quello al buffer è $\geq 10^6$. Vale il principio di località e la valutazione della hit ratio.
+
+Il buffer manager media tutte le richieste di lettura e scrittura dei blocchi. Gli indirizzi vengono tradotti, dal disco al buffer e viceversa, e quelli logici diventano fisici. Il numero di pagine disponibili è un parametro definito in fase di creazione del DB, detto buffer pool.
+
+\subsection{Valutazione dei costi}
+% slide 35
+
