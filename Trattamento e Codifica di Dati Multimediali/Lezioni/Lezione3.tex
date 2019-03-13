@@ -39,12 +39,12 @@ Questo significa che esiste biunivocità, la trasformazione può essere effettua
 \subsection{Fourier e i suoni}
 I suoni elementari hanno andamento sinusoidale, periodico e con estensione indefinita; la maggior parte dei suoni in natura sono però caratterizzati da forme d'onda diverse.
 
-\begin{wrapfigure}{R}{0.5\textwidth}
+\begin{wrapfigure}{R}{0.44\textwidth}
 	\vspace{-15pt}
 	\begin{center}
 		\includegraphics[width=0.4\textwidth]{Lezioni/Immagini/armoniche}
 	\end{center}
-	\vspace{-40pt}
+	\vspace{-50pt}
 \end{wrapfigure}
 
 Un segnale si definisce complesso quando è formato da più funzioni sinusoidali combinate, invece che una sola.
@@ -58,28 +58,23 @@ L'onda quadra è un caso particolare in cui tutte le armoniche pari sono nulle, 
 
 Ognuna di queste componenti ha un'ampiezza diversa rispetto a quella dell'armonica fondamentale. La funzione è asimmetrica, e i termini pari sono appunto i coseni: ci sono solo seni non nulli. 
 
-\begin{wrapfigure}{L}{0.5\textwidth}
-	\begin{center}
-		\vspace{-5pt}
-		\includegraphics[width=0.38\textwidth]{Lezioni/Immagini/ondaquadra}
-	\end{center}
+\begin{wrapfigure}{L}{0.48\textwidth}
+	\vspace{-5pt}
+	\includegraphics[width=0.45\textwidth]{Lezioni/Immagini/ondaquadra}
 	\vspace{-25pt}
 \end{wrapfigure}
 
 Esempio: un'onda quadra con periodo 5 ms può essere ottenuta sommando onde sinusoidali di opportuna frequenza, ampiezza e fase. Il contributo più rilevante è dato dalla prima sinusoide, si frequenza pari a quella dell'onda quadra (200 Hz, frequenza fondamentale $F_0$).
 
-Per costruire l'onda quadra sono necessarie anche altre componenti elementari di frequenza maggiore, le armoniche multiple di $F_0$.
+Per costruire l'onda quadra sono necessarie anche altre componenti elementari di frequenza maggiore, le armoniche multiple di $F_0$. \\
 
 \subsection{Numeri complessi e serie di Fourier}
 I numeri complessi sono rappresentabili su un piano cartesiano come l'intersezione tra numeri reali sull'asse $x$ e numeri complessi sull'asse $y$. Ogni numero complesso ha quindi una parte reale $a$ e una immaginaria $b$.
 $$z = ai+b \qquad \abs{z} = \sqrt{a^2 + b^2} = \pi$$
 
-% fixare sta cosa
-\begin{wrapfigure}{I}{0.5\textwidth}
+\begin{wrapfigure}{I}{0.43\textwidth}
 	\vspace{-15pt}
-	% \begin{center}
-		\includegraphics[width=0.4\textwidth]{Lezioni/Immagini/cartesiano}
-	% \end{center}
+		\includegraphics[width=0.42\textwidth]{Lezioni/Immagini/cartesiano}
 	\vspace{-30pt}
 \end{wrapfigure}
 
@@ -90,32 +85,39 @@ $\theta = \arctan\Big(\frac{b}{a}\Big)$
 
 Le coordinate polari corrispondono a quelle cartesiane (proiezione). 
 
-Applicando i numeri complessi alla serie di Fourier, si possono usare gli esponenziali complessi e la formula di Eulero. 
-
+Applicando i numeri complessi alla serie di Fourier e quindi cambiando dominio, si possono usare gli esponenziali complessi e la formula di Eulero. 
+$$e^{j\theta} = \cos\theta + j\sin\theta \qquad e^{-j\theta} = \cos\theta - j\sin\theta$$
 Sia seno che coseno sono somme di due esponenziali complessi, con segno $+$ e $-$ rispettivamente. Il picco della frequenza è intero per il coseno, immaginario per il seno. 
-% formule
-
-La parte del seno è immaginaria, il coseno è reale. Le formule sono le stesse, ma applicate al sovrainsieme dei complessi ($j$ e $i$ sono indicatori convenzionali della parte immaginaria).
+$$\cos\theta = \frac{1}{2}(e^{j\theta} + e^{-j\theta}) \qquad \sin\theta = -\frac{j}{2}(e^{j\theta} - e^{-j\theta})$$
+La parte del seno è immaginaria, il coseno è reale. Le formule sono le stesse, ma applicate al sovrainsieme dei complessi $\mathbb{C}$ ($j$ e $i$ sono indicatori convenzionali della parte immaginaria).
 
 Mettendo a sistema seno e coseno ottenuti in questo modo, si può estendere la serie di Fourier rappresentando le somme di contributi nello spazio degli esponenziali complessi.
+$$f(x) = \frac{a_0}{2} + \sum_{k=1}^{\infty} a_k \cos(2\pi f_kx) + b_k\sin(2\pi f_kx)$$
+$$f(x) = \sum_{-\infty}^{\infty} R_ke^{j(2\pi f_kx)}$$
 
-Quando $\theta$ cambia segno, l'angolo si sposta. Essendo il coseno pari, questo non cambia; il seno è dispari quindi è l'opposto. 
+Si ricorda che $\theta = 2\pi f_k$. Quando $\theta$ cambia segno, l'angolo si sposta. Essendo il coseno pari, questo non cambia; il seno è dispari quindi è l'opposto. 
 
 Per passare dalle variabili discrete alle continue, si usa il coefficiente $R_k$ che raccoglie le due sommatorie (fino a infinito da entrambi i versi) e si applica l'integrale. 
-
-Il coefficiente $\nicefrac{A}{2}$ è dato appunto dalla divisione del coefficiente $R$ in 2 parti, seno e coseno: l'ampiezza sarà la metà. C'è corrispondenza biunivoca fra dominio temporale e dominio delle frequenze. I seni hanno solo la parte complessa.
+$$R_k = \int_{-\frac{N}{2}}^{\frac{N}{2}} f(x)e^{-j(2\pi f_kx)} dx$$
+Il coefficiente $\frac{A_n}{2}$ (altezza del segnale sull'asse $y$) è dato appunto dalla divisione del coefficiente $R$ in 2 parti, seno e coseno: l'ampiezza sarà la metà, e ogni ampiezza viene sommata insieme alle funzioni. C'è corrispondenza biunivoca fra dominio temporale e dominio delle frequenze. I seni hanno solo la parte complessa.
 
 \subsection{Trasformata di Fourier di funzioni continue}
 Per passare dalle funzioni periodiche a quelle reali, la sommatoria diventa un integrale. La trasformata di Fourier serve per rapppresentare le funzioni continue come sinusoidi.
 
-% definizione formule 28
+Ogni funzione continua $f(x)$ anche se non periodica (purché abbia area finita) può essere espressa come integrale di sinusoidi complesse opportunamente pesate. L'antitrasformata ha dominio spaziale (temporale, diretto) mentre la trasformata ha dominio delle frequenze.
+$$\text{Antitrasformata di Fourier: } f(x) = \int_{-\infty}^{\infty} F(u)e^{j2\pi ux} dx$$
+$$\text{Trasformata di Fourier: } F(u) = \int_{-\infty}^{\infty} f(x)e^{-j2\pi ux} dx$$
+$F(u)$ sostituisce il coefficiente discreto $R_k$, $u$ è la frequenza. La trasformata di Fourier non si può applicare a tutte le funzioni, ma solo a quelle con quadrato sommabile (trovare la formula) e continue.
 
-$F(u)$ sostituisce il coefficiente discreto $R_k$. La trasformata di Fourier non si può applicare a tutte le funzioni, ma solo a quelle con quadrato sommabile (trovare la formula) e continue.
+Dalla trasformata di Fourier, la funzione originiaria può essere ricostruita senza perdita di informazione attraverso il processo inverso: è possibile spostarsi dal dominio spaziale a quello delle frequenze e poi tornare indietro senza aver perso informazione.
 
 Esiste un valore della trasformata (non più $\delta$) per ogni funzione continua. Invertendo la funzione, quindi, se è a supporto finito non ci sarà $2\delta$.
 
-Piuttosto che guardare parte reale e immaginaria, si considerano modulo e fase, ricavabili direttamente. Il modulo indica la potenza del segnale, e la fase assicura la biunivocità della corrispondenza. % 30
-
+Piuttosto che guardare parte reale e immaginaria, si considerano modulo e fase, ricavabili direttamente. Il modulo indica la potenza del segnale, e la fase assicura la biunivocità della corrispondenza. 
+$$F(u) = \digamma[f(x)] = \Re(u) + j\Im(u) = \abs{F(u)}e^{j\phi(u)}$$
+$$\text{Spettro: } \abs{F(u)} = [\Re(u)^2 + \Im(u)^2]^{\nicefrac{1}{2}}$$
+$$\text{Fase: } \phi(u) = \tan^{-1} \Big[\frac{\Im(u)}{\Re(u)}\Big]$$
+$$\text{Potenza (densità) spettrale: } \abs{F(u)}^2 = \Re(u)^2 + \Im(u)^2$$
 La trasformata di Fourier è un operatore scomponibile, quindi per passare da una dimensione a $n$ semplicemente si applica $n$ volte la formula. In altre parole, si scompone rispetto a una direzione la funzione.
 
 Un'altra importante proprietà è la linearità: la trasformata di Fourier applicata a una funzione che è combinazione lineare (somma pesata) di funzioni, il risultato è uguale alla trasformata di Fourier di ogni funzione presa singolarmente. 
@@ -123,12 +125,20 @@ Un'altra importante proprietà è la linearità: la trasformata di Fourier appli
 La separabilità e la linearità permettono di ridurre la complessità della trasformata.
 
 \subsection{Trasformata di Fourier di funzioni discrete}
-Il primo step è il campionamento: in questo caso si utilizza la sommatoria, ma la funzione continua è rappresentata da un numero discreto di campioni. La funzione è definita per campioni $i$.
-
-Limitando la funzione spazialmente, il passo $\Delta x$ per convenzione diventa $\nicefrac{1}{N}$, e la sommatoria arriva fino a $N - 1$ invece che infinito. $f(i)$ è la funzione campionata: la trasformata è periodica. 
-
+Il primo step è il campionamento: in questo caso si utilizza la sommatoria, ma la funzione continua è rappresentata da un numero discreto di campioni. La funzione è definita per campioni $i$, e la variabile indipendente $x$ assume valore complesso $i\Delta x$.
+$$F(u) = \int_{-\infty}^{+\infty} f(x)e^{-j2\pi ux} dx \Longrightarrow F(u) = \sum_{i=-\infty}^{\infty} f(i)e^{-j2\pi ui\Delta x}$$
+Limitando la funzione spazialmente, il passo $\Delta x$ per convenzione diventa $\nicefrac{1}{N}$, e la sommatoria arriva fino a $N - 1$ invece che infinito. $f(i)$ è la funzione campionata (a partire da $f(x)$ continua): la trasformata è periodica. Si ha $f(i) = f(x_0 + i\Delta x)$.
+$$F(u) = \frac{1}{N} \sum_{i=0}^{N-1} f(i)e^{-j2\pi u \frac{1}{N}i}$$
 Per campionare le funzioni $f(x)$ e $F(u)$ si applicano le trasformate di Fourier discrete (DFT). Il segnale campionato è periodico, quindi la funzione inversa è comunque periodica con distanza $\nicefrac{1}{\Delta x}$. Se il passo tende a 0, la funzione tende a infinito (senza repliche) e viceversa. 
 
+In altre parole, da una funzione campionata $\Delta x = \nicefrac{1}{N}$ si passa a una funzione continua e periodica di periodo $N$. 
+
+Il fattore $\nicefrac{1}{N}$ davanti alla trasformata o all'antitrasformata è un fattore di normalizzazione per il dualismo fra spazio diretto e spazio trasformato. Di conseguenza, $\Delta u = \frac{1}{N\Delta x}$.
+
+Un ragionamento analogo si applica per passare da una dimensione a due: la sommatoria è doppia e si divide per entrambi i fattori di normalizzazione. Entrambe le variabili rispettano la periodicità.
+
+\subsubsection{Analisi e sintesi}
+% slide 38
 Modulo: raccoglie le frequenza di un'immagine.
 
 Fase: informazione posizionale dell'oggetto in un'immagine, perché le frequenze sono le stesse a prescindere dall'organizzazione spaziale. 
