@@ -1,0 +1,44 @@
+\section{Campionamento}
+Il campionamento è un processo che legge valori distanziati l'uno dall'altro con un passo $\Delta t$ approssimato al tempo infinitesimo, ma in realtà discreto. La scelta dell'ampiezza del passo deve evitare sia lo spreco di risorse che la perdita di informazioni.
+
+A una funzione campionata (con passo $\Delta x$) corrisponde nel dominio trasformato uno spettro periodico. Il periodo è inversamente proporzionale al passo di campionamento (ricostruzione della funzione continua dalla trasformata).
+
+Se il passo di campionamento è troppo alto, le repliche dello spettro si sovrappongono (periodo troppo breve) e non è possibile risalire alla funzione originale. \\
+Questo succede perché le alte frequenze che non vengono considerate (a causa dell'alta variabilità del segnale, che non può essere interpretata in un periodo) ma si sovrappongono alle più basse, causando una errata rappresentazione.
+
+La frequenza di campionamento minima, quindi, garantisce un periodo sufficientemente grande per contenere l'intero spettro. Esso è simmetrico, quindi $-f_{max} = f_{max}$ come visto nel dominio della trasformata di Fourier-
+
+Lo spazio pertanto sarà $2f_{max}$, il che è il minimo valore per evitare le sovrapposizioni delle repliche. Nella formula viene utilizzata la disuguaglianza stretta per assicurare che non ci siano due frequenze nello stesso punto.
+
+Teorema di Shannon:
+
+Per eliminare le frequenze alte e di conseguenza ridurre il passo di campionamento si ricorre al filtraggio (filtro anti-aliasing), che comunque non assicura il recupero della funzione originale ma evita le sovrapposizioni.
+
+L'aliasing è appunto il fenomeno per cui il segnale originale non è ricostruibile dato che il campionamento è avvenuto con frequenza inferiore a quella di Nyquist, e il segnale risultante ha frequenza inferiore all'originale. Questo può gravemente compromettere la qualità di immagini e video.
+
+immagine: omega è la pulsazione, fn frequenza normalizzata \\
+frequenza = numero di cicli al secondo (continuo), con campioni al posto dei secondi nel mondo campionato \\
+
+guardare quanti cicli ci sono per campioni, o quanti campioni ci sono in un ciclo e fare l'inverso
+un periodo è 12 campioni, quindi 1/12
+la frequenza al secondo (hertz) è calcolabile sapendo quanta distanza c'è tra un campione e l'altro, altrimenti per ogni rappresentazione ci sarebbero infinite sinusoidi
+
+un periodo è 2pi, se 12 campioni sono in 2pi bisogna fare la proporzione
+sfasamento theta = pi/3
+
+frequenza normalizzata = quanto si vedono bene i campioni e la loro variazione in un periodo, per poi decidere la finestra di osservazione. t per il passo di campionamento
+
+per non confondersi con la formula guardare le unità di misura
+
+un altro modo per arrivare allo stesso risultato è sostituire a n * deltat la t
+
+numero massimo di campioni: 2, quindi frequenza massima = 1/2
+
+il range massimo min-max è 1, tutto ciò che è al di fuori dell'intervallo in realtà si trova comunque normalizzato all'interno.
+
+aumentando omega, infatti, dopo un giro (periodo 2pi) si torna ad avere la stessa funzione
+omega + multipli interi di 2pi = omega
+
+frequenza di nyquist fn = -1/2 + 1/2
+
+Il segnale sinusoidale è periodico se e solo se la sua frequenza normalizzata $f$ è un numero razionale (rapporto fra due interi). I numeri razionali quindi impongono la periodicità. 
