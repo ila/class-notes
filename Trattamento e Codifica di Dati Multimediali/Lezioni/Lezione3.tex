@@ -120,10 +120,6 @@ $$\text{Fase: } \phi(u) = \tan^{-1} \Big[\frac{\Im(u)}{\Re(u)}\Big]$$
 $$\text{Potenza (densità) spettrale: } \abs{F(u)}^2 = \Re(u)^2 + \Im(u)^2$$
 La trasformata di Fourier è un operatore scomponibile, quindi per passare da una dimensione a $n$ semplicemente si applica $n$ volte la formula. In altre parole, si scompone rispetto a una direzione la funzione.
 
-Un'altra importante proprietà è la linearità: la trasformata di Fourier applicata a una funzione che è combinazione lineare (somma pesata) di funzioni, il risultato è uguale alla trasformata di Fourier di ogni funzione presa singolarmente. 
-
-La separabilità e la linearità permettono di ridurre la complessità della trasformata.
-
 \subsection{Trasformata di Fourier di funzioni discrete}
 Il primo step è il campionamento: in questo caso si utilizza la sommatoria, ma la funzione continua è rappresentata da un numero discreto di campioni. La funzione è definita per campioni $i$, e la variabile indipendente $x$ assume valore complesso $i\Delta x$.
 $$F(u) = \int_{-\infty}^{+\infty} f(x)e^{-j2\pi ux} dx \Longrightarrow F(u) = \sum_{i=-\infty}^{\infty} f(i)e^{-j2\pi ui\Delta x}$$
@@ -135,10 +131,33 @@ In altre parole, da una funzione campionata $\Delta x = \nicefrac{1}{N}$ si pass
 
 Il fattore $\nicefrac{1}{N}$ davanti alla trasformata o all'antitrasformata è un fattore di normalizzazione per il dualismo fra spazio diretto e spazio trasformato. Di conseguenza, $\Delta u = \frac{1}{N\Delta x}$.
 
-Un ragionamento analogo si applica per passare da una dimensione a due: la sommatoria è doppia e si divide per entrambi i fattori di normalizzazione. Entrambe le variabili rispettano la periodicità.
+Un ragionamento analogo si applica per passare da una dimensione a due: la sommatoria è doppia e si divide per entrambi i fattori di normalizzazione. Entrambe le variabili rispettano la periodicità, cioè $F(u, v) = F(u + M, v + N)$ con $\Delta u = 1/M \Delta x$, $\Delta v = 1/N \Delta y$.
 
-\subsubsection{Analisi e sintesi}
-% slide 38
-Modulo: raccoglie le frequenza di un'immagine.
+\subsubsection{Elaborazione di immagini}
+Il segnale di un'immagine viene scomposto, come visto precedentemente, in modulo e fase. il modulo raccoglie le frequenza di un'immagine, mentre la fase contiene l'informazione posizionale di ogni in un'immagine (le frequenze sono le stesse a prescindere dall'organizzazione spaziale). L'ampiezza $\angle$ contiene informazioni relative alle posizione o meno delle strutture nell'immagine.
+$$F(u, v) = \abs{F(u, v)}e^{j\phi(u, v)}$$
+I pixel possono assumere valore da 0 a 255, mappati in una trasformata di Fourieri discreta. Data la periodicità e la simmetria dello spettro rispetto all'origine, è possibile scegliere il periodo dello spettro centrato sull'origine $(0, 0)$.
 
-Fase: informazione posizionale dell'oggetto in un'immagine, perché le frequenze sono le stesse a prescindere dall'organizzazione spaziale. 
+In questo modo, il picco rappresenza la componente continua (valore medio della funzione), e le frequenze crescono allontanandosi dal picco. Per convenzione lo spettro (in alto a sinistra) si trasla in modo da essere al centro, e le alte frequenze sono verso gli angoli esterni.
+
+Il processo è reversibile: l'immagine, di solito sotto forma di segnale, se viene ricostruita dalla trasformata è identica all'originale.
+
+L'istogramma di un'immagine a livelli di grigio è una funzione discreta $h(r_k) = n_k$ dove $r_k$ è il livello di grigio \textit{k}-simo, e $n_k$ è il numero di pixel nell'immagine con intensità $r_k$ (per ogni livello).
+
+Lo spettro è il risultato della trasformata, di cui una parte è reale e una immaginaria. Le circonferenze dal centro raccolgono la maggioranza della potenza spettrale totale, e manipolando lo spettro il risultato dell'inversione sarà differente.
+
+\subsection{Proprietà della trasformata}
+La scomponibilità viene utilizzata per cambiare dimensione. \\
+Un'altra importante proprietà è la linearità: la trasformata di Fourier applicata a una funzione che è combinazione lineare (somma pesata) di funzioni, il risultato è uguale alla trasformata di Fourier di ogni funzione presa singolarmente. 
+$$F(f)x) + g(x) = F(f(x)) + F(g(x)) = F(u) + G(u)$$
+La separabilità e la linearità permettono di ridurre la complessità della trasformata.
+
+Vale anche la traslazione nello spazio (tempo), ma solo per la trasformata discreta: una traslazione equivale a una modulazione nelle frequenze con un esponente complesso.
+$$F(f(x + x_0)) = e^{j2\pi ux_0} \qquad F^{-1}(F(u \pm \varpi)) = f(x)e^{\pm j2\pi \varpi x}$$
+$$\text{Scala: } F(f(ax)) = \frac{1}{\abs{a}} F\Big(\frac{u}{a}\Big) \implies f(\alpha x, \beta y) = \frac{1}{\abs{\alpha \beta}} F\Big(\frac{u}{\alpha}, \frac{v}{\beta}\Big)$$
+$$\text{Inversione: } F(f(-x)) = F(-u)$$
+La trasformata di una funzione reale gode di simmetria Hermitiana: la parte reale e il modulo sono simmetrici rispetto all'origine, mentre la parte immaginaria e la fase sono antisimmetriche rispetto all'origine.
+$$\text{Periodicità (discreta): } F(u) = F(u + M) \implies F(u) = \frac{1}{M} \sum_{x=0}^{M-1} f(x)e^{-j\frac{2\pi}{M}ux} \quad u = 0, \dots, M - 1$$
+Altre proprietà sono già state enunciate, come l'esistenza dell'inversa della trasformata discreta, la separabilità e la reversibilità.
+$$\text{Valore medio di una trasformata discreta: } F(0) = \frac{1}{M} \sum{x=0}^{M-1} f(x) = \overline{f}(x)$$
+$F(u_0)$ è il peso con cui l'onda complessa $e^{j2\pi u_0x}$ di frequenza $u_0$ concorre a formare il segnale $f(x)$. Se $f(x)$ è un'onda complessa di frequenza $u_k$, $F(u)$ sarà 0 per ogni frequenza diversa da $u_k$.
