@@ -80,9 +80,15 @@ Le curve di learning mostrano come l'accuratezza cambia al variare della dimensi
 
 Quando ci sono davvero poche istanze si utilizza leave-one-out, una forma di cross-validation che crea tanti folds quante le istanze e ne usa uno solo come testing, iterativamente.
 
+\subsection{Affidabilità delle misurazioni}
+Per confrontare due modelli di misurazione delle performances si utilizzano gli intervalli di confidenza, stimando quanto una misura di errore è vicino alla realtà. Si può affermare ($T$ di Student) che $p$ si trova in un intervallo specifico con un determinato livello di confidenza.
 
+I test di significatività indicano quanta confidenza si può avere che ci sia una differenza tra due risultati di modelli. L'ipotesi nulla in questo caso è che non esistano differenze rilevanti.
 
-
+Il \textit{T}-test serve per capire se le medie di due campioni sono diverse, prendendo individui da tutti i sottoinsiemi considerati nella cross-validation. Si ha:
+$$\frac{m_x- \mu}{\sqrt{\sigma^2_x / k}}$$
+Le medie sono (approssimativamente) normalmente distribuite se il numero di campioni è sufficientemente elevato. La differenza delle medie $m_d$ ha una distribuzione Student con $k - 1$ gradi di libertà. La versione standardizzata di $m_d$ è:
+$$t = \frac{m_d}{\sqrt{\sigma^2_d / k}}$$
 
 
 
