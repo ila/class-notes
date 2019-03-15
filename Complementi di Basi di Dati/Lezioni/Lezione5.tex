@@ -1,0 +1,37 @@
+\section{Tecnologie per DBMS}
+Le applicazioni vengono costantemente sviluppate e aggiornate, possono esserci imprevisti nella vita reale, ma i dati devono restare sempre atomici e consistenti (persistenti). Queste due proprietà sono assicurate e rispettate dai DBMS attraverso operazioni apposite e gestione dei fallimenti. 
+
+Una sequenza di esecuzioni di un insieme di transazioni è detta schedule, seriale se una transazione termini prima che la successiva inizi. L'ordine, pertanto, è importante: possono esserci risultati diversi anche se il sistema gestisce le esecuzioni nello stesso modo.
+
+Proprietà di isolamento (schedule serializzabile): un insieme di transazioni eseguite concorrentemente produce lo stesso risultato che produrrebbe un'esecuzione sequenziale, quindi è come se ogni ogni transazione non avesse concorrenza. Questo processo è poco efficiente. 
+
+Dato uno schedule seriale con $n$ transazioni, ci sono $n!$ permutazioni possibili. Una transazione può essere rappresentata come una sequenza di parentesi begin/commit, azioni elementari di scrittura e lettura di un dato oppure con operazioni analoghe. 
+
+Per garantire l'isolamento è necessario garantire la serializzabilità di un insieme di transazioni. Ciò va a discapito del livello di concorrenza possibile, quindi ci vuole un giusto compromesso tra throughput e isolamento. 
+
+Il commit non viene eseguito finché non ci sono le condizioni necessarie per assicurare la corretta gestione della transazione. La concorrenza può causare diversi problemi, come i dati incoerenti in lettura o update inesistenti. Non tutti i DBMS gestiscono la concorrenza (es. MyISAM).
+
+Lo scheduler ha il compito di garantire l'isolamento, assegnando identificatori univoci a ogni transazione e controllando se l'insieme può essere effettuato senza problemi. 
+
+Ci sono diversi modi di rappresentare il concetto di serializzabilità: oltre la garanzia dell'equivalenza dell'esecuzione, è necessario definire le classi di equivalenza e i rispettivi livelli. L'idea di base è trovare il maggior numero di schedule serializzabili all'interno di quelli seriali e verificabili in complessità ragionevole.
+
+\subsection{Algoritmi di controllo della concorrenza}
+Esistono diversi algoritmi per il controllo della concorrenza. Un tipo di controllo è basato sui conflitti: un conflitto è una situazione in cui scambiando l'ordine di due transazioni, l'output o il comportamento non è lo stesso. 
+
+Non tutte le transazioni avranno conflitti, quindi esse possono essere scambiate senza problemi. Anticipando alcune transazioni si ottiene una maggior concorrenza, per l'accesso a risorse diverse. 
+
+Un altro modo è tramite grafi di precedenza: questo deve tenere conto della lettura o scrittura, e in base a esse verificare che le scritture non siano in contemporanea e tutte le letture avvengano sulla stessa risorsa aggiornata.
+
+Se esiste almeno un ciclo nel grafo, l'insieme di transazioni non rispetta la condizione di equivalenza e di conseguenza non è serializzabile. Questa verifica è effettuabile in tempo lineare, ma con molti nodi diventa comunque poco vantaggiosa. 
+
+La soluzione a ciò è l'uso dei lock: una transazione acquisisce il lock su una risorsa e lo rilascia quando ha completato la sua esecuzione, e ogni transazione ben formata è contenuta in una sezione critica.
+
+Uno schedule si definisce legale se ogni coppia di lock-unlock è esclusiva, cioè nessun'altra transazione richiede la risorsa. Questa condizione non è sufficiente per assicurare l'isolamento, perché le ghost updates possono comunque avvenire. 
+
+Alcuni scheduler sono serializzabili senza conflitti, ma solo con 2PL: il sottoinsieme si riduce ulteriormente, perché talvolta il 2PL è troppo stretto per essere gestito facilmente. Il lock è granulare a livello di struttura logica o fisico (pagine intere). 
+
+
+ 
+
+
+
