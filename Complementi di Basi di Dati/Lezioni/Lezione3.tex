@@ -57,5 +57,41 @@ Il buffer è organizzato in pagine, con dimensioni multiple rispetto ai blocchi 
 Il buffer manager media tutte le richieste di lettura e scrittura dei blocchi. Gli indirizzi vengono tradotti, dal disco al buffer e viceversa, e quelli logici diventano fisici. Il numero di pagine disponibili è un parametro definito in fase di creazione del DB, detto buffer pool.
 
 \subsection{Valutazione dei costi}
-% slide 35
+I costi si dividono in spazio e tempo. Lo spazio si indica come il costo di utilizzo della memoria principale; il costo di una query in termini di tempo di esecuzione, invece, viene valutato considerando:
+\begin{enumerate}
+	\item Costi di accesso alla memoria secondaria, per acquisire i dati in memoria centrale e memorizzare i risultati;
+	\item Costi di memorizzazione di files intermedi;
+	\item Costi di elaborazione.
+\end{enumerate}
+Il primo fattore è il più importante: si misura con il numero di blocchi caricati nel buffer durante il calcolo delle operazioni, trascurando i costi di memorizzazione (caricamenti dei blocchi su disco).
+
+Il costo dominante, pertanto, è il numero di operazion di I/O, cioè il trasferimento di blocchi dal disco al buffer, che dev'essere minimizzato sfruttando al minimo le $M$ pagine disponibili.
+
+\subsection{Rappresentazione fisica delle tabelle}
+\subsubsection{Metodi di accesso ai dati}
+La scansione realizza un accesso sequenziale a tutti i record, tramite:
+\begin{itemize}
+	\item Proiezione su insieme di attributi, senza eliminazione dei duplicati;
+	\item Selezione su un predicato semplice del tipo $Ai = v$;
+	\item Inserimento, cancellazione e aggiornamento delle tuple accedute durante lo scan.
+\end{itemize}
+
+L'ordinamento è il metodo per ordinare i dati in memoria principale. I DBMS non possono caricare tutta la base di dati nel buffer, quindi ordinano separatamente e poi effettuano il merge con lo spazio disponibile.
+
+L'accesso diretto può essere eseguito solo se le strutture fisiche (indici, hash) lo permettono.
+
+\subsubsection{Piano di esecuzione fisico}
+Un piano di esecuzione fisico descrive l'implementazione delle operazioni di algebra relazionale. 
+
+La selezione può avere predicati semplici, con congiunzione o disgiunzione di condizione (AND, OR). Quelle semplici vengono svolte utilizzando i metidi di accesso, o la ricarca binaria, ma gli altri casi hanno in più la valutabilità del predicato.
+
+Per valutabilità si intende la selettività, e il coinvolgimento di attributi su cui è definito un indice, che permettono un accesso più efficiente. La selettività è definita come il rapporto tra il numero di record che soddisfano il predicato e il numero totale (relazione).
+
+In altre parole, la selettività è la probabilità che un record soddisfi la condizione su un attributo, assumendo uniformità di distribuzione dei valori. Questo valore viene stimato dal DBMS in base a statistiche raccolte durante l'esecuzione di query. 
+
+L'attributo più selettivo è quello con probabilità minima, e il DBMS ordina i predicati in base alla loro selettività: in questo modo, il totale dei record su cui viene effettuato il controllo diminuisce drasticamente. Normalmente è sufficiente scegliere il primo predicato per avere una query ottimizzata. 
+
+Se qualche predicato non è valutabile durante le operazioni di disgiunzione, è necessario uno scan in cui su ogni n-pla di valuta tutta la selezione disgiuntiva. Altrimenti, si possono anche utilizzare gli indici con eliminazione dei duplicati. 
+
+I due metodi sono più o meno efficienti a seconda di come sono composti i record: quando l'interrogazione è poco selettiva conviene uno scan, perché l'eliminazione dei duplicati è inefficiente.
 
