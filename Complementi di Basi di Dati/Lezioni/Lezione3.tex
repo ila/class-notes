@@ -95,3 +95,12 @@ Se qualche predicato non è valutabile durante le operazioni di disgiunzione, è
 
 I due metodi sono più o meno efficienti a seconda di come sono composti i record: quando l'interrogazione è poco selettiva conviene uno scan, perché l'eliminazione dei duplicati è inefficiente.
 
+JOIN (binario) è un'altra operazione che necessita di estensiva ottimizzazione, essendo molto pesante computazionalmente e frequente. Esistono vari metodi per il calcolo:
+\begin{itemize}
+	\item Nested-loop, per ogni record $r$ in $R$ e per ogni record $s$ in $S$ verificare se $r(A) = s(B)$. Conviene usare il file più piccolo per il ciclo esterno, per ottimizzare l'uso del buffer, con blocchi caricati $b = b_ S + b_R \cdot \lceil b_S / (n - 1)$ dove $n$ è la capienza del buffer;
+	\item Single-loop, variante del nested-loop con una struttura di accesso diretto su $B$ di $S$, influenzato dalla percentuale di record uniti, dalla cardinalità e dal numero di livelli degli indici;
+	\item Merge-scan, che assume le tabelle ordinate in base agli attributi di join e richiede lo scan lineare di ciascun file;
+	\item Hash, con tabelle implementate mediante hash sugli attributi di join (confronto degli hash e unione blocco per blocco).
+\end{itemize}
+
+Il problema è sempre minimizzare il trasferimento di blocchi nel buffer, usando in modo combinato i metodi di accesso ai dati.
