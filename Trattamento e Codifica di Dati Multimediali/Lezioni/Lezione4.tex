@@ -46,15 +46,27 @@ La frequenza normalizzata indica quanto bene si vedono i campioni e la loro vari
 
 Per ricavare la formula più facilmente si possono utilizzare le unità di misura. Un altro modo per arrivare allo stesso risultato è sostituire a $n\Delta t$ la $t$.
 
-% slide 17
+Con 2 campioni al secondo, cioè $f_c = 2$ e $\Delta t = 0.5 = \nicefrac{1}{2}$, la frequenza $f$ in cicli al secondo (Hz) è $\nicefrac{1}{2}$:
+$$f_N \cdot f_c = \frac{1}{12} \frac{\text{cicli}}{\text{campione}} \cdot \frac{2 \text{ campioni}}{\text{sec}} = \frac{1}{6} \frac{\text{cicli}}{\text{sec}}$$
+$$x(n) = A\cos \Big(2\pi \frac{1}{12}n + \frac{\pi}{3}\Big) \implies x(t) = A\cos\Big(2\pi \frac{1}{6}t + \frac{\pi}{3}\Big) \qquad \Delta tn \implies t$$
 
-numero massimo di campioni: 2, quindi frequenza massima = 1/2
+\subsubsection{Frequenze}
+Il range tra minimo e massimo di una frequenza di oscillazione è 1, tutto ciò che è al di fuori dell'intervallo in realtà si trova comunque normalizzato all'interno. Aumentando $\omega$, infatti, dopo un giro (periodo $2\pi$) si torna ad avere la stessa funzione. 
 
-il range massimo min-max è 1, tutto ciò che è al di fuori dell'intervallo in realtà si trova comunque normalizzato all'interno.
+Frequenza minima di oscillazione di una sinusoide a tempo discreto: $f_N = 0 \rightarrow \omega = 0$ \\
+Frequenza massima di oscillazione di una sinusoide a tempo discreto: $f_N = \pm \nicefrac{1}{2} \rightarrow \omega = \pm \pi$ \\
+Frequenza di oscillazione di una sinusoide generica: $f = \frac{1}{\text{n. campioni}} \rightarrow \omega = 2\pi \cdot f_N$
 
-aumentando omega, infatti, dopo un giro (periodo 2pi) si torna ad avere la stessa funzione
-omega + multipli interi di 2pi = omega
+I segnali sinusoidali a tempo discreto con pulsazioni separate da multipli di $2\pi$ sono identici: \\
+$\omega + k2\pi = \omega$ con $k \in \mathbb{Z}$ \\
+$x(n) = \cos(\omega n + \theta)$ \\
+$\cos((\omega + 2k\pi)n + \theta) = \cos(\omega n + \theta)$ \\
+$\cos(\omega n + kn2\pi + \theta) = \cos(\omega n + \theta)$
 
-frequenza di nyquist fn = -1/2 + 1/2
+Per convenzione si utilizza la frequenza di Nyquist, $f_n = [-\nicefrac{1}{2}, \nicefrac{1}{2}]$, oppure intervalli di pulsazione $[-\pi, \pi]$ o $[0, 1] \rightarrow [0, 2\pi]$.
+
+Il segnale è periodico solo se la sua frequenza $f$ è un numero razionale: $f = \nicefrac{k}{N}$.
+
+
 
 Il segnale sinusoidale è periodico se e solo se la sua frequenza normalizzata $f$ è un numero razionale (rapporto fra due interi). I numeri razionali quindi impongono la periodicità. 
