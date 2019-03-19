@@ -133,7 +133,7 @@ Il fattore $\nicefrac{1}{N}$ davanti alla trasformata o all'antitrasformata è u
 
 Un ragionamento analogo si applica per passare da una dimensione a due: la sommatoria è doppia e si divide per entrambi i fattori di normalizzazione. Entrambe le variabili rispettano la periodicità, cioè $F(u, v) = F(u + M, v + N)$ con $\Delta u = 1/M \Delta x$, $\Delta v = 1/N \Delta y$.
 
-\subsubsection{Elaborazione di immagini}
+\subsection{Elaborazione di immagini}
 Il segnale di un'immagine viene scomposto, come visto precedentemente, in modulo e fase. il modulo raccoglie le frequenza di un'immagine, mentre la fase contiene l'informazione posizionale di ogni in un'immagine (le frequenze sono le stesse a prescindere dall'organizzazione spaziale). L'ampiezza $\angle$ contiene informazioni relative alle posizione o meno delle strutture nell'immagine.
 $$F(u, v) = \abs{F(u, v)}e^{j\phi(u, v)}$$
 I pixel possono assumere valore da 0 a 255, mappati in una trasformata di Fourieri discreta. Data la periodicità e la simmetria dello spettro rispetto all'origine, è possibile scegliere il periodo dello spettro centrato sull'origine $(0, 0)$.
@@ -142,22 +142,70 @@ In questo modo, il picco rappresenza la componente continua (valore medio della 
 
 Il processo è reversibile: l'immagine, di solito sotto forma di segnale, se viene ricostruita dalla trasformata è identica all'originale.
 
+Un operatore puntuale ha una corrispondenza biunivoca non indipendente dall'ambiente, cioè ogni pixel dell'immagine originale viene mappato nel modulo nello stesso modo a prescindere dai pixel intorno.
+
+Al contrario, la trasformata di Fourier funziona applicando sommatorie (per il segnale), quindi ogni valore dipende da tutti i precedenti. Ciò si definisce operatore locale: ogni frequenza ha una sua influenza, e sebbene ci possano essere corrispondenza tra linee e forme, ogni pixel nel dominio è ricavato in base a tutti i pixel nel codominio (e viceversa).
+
 L'istogramma di un'immagine a livelli di grigio è una funzione discreta $h(r_k) = n_k$ dove $r_k$ è il livello di grigio \textit{k}-simo, e $n_k$ è il numero di pixel nell'immagine con intensità $r_k$ (per ogni livello).
 
-Lo spettro è il risultato della trasformata, di cui una parte è reale e una immaginaria. Le circonferenze dal centro raccolgono la maggioranza della potenza spettrale totale, e manipolando lo spettro il risultato dell'inversione sarà differente.
+Il numero di campioni stabilisce l'informazione che si può rappresentare: se è sufficientemente alto, la distribuzione dei toni di grigio sarà regolare. Questo non permette di trarre conclusioni sullo spazio, ma semplicemente su quanti campioni hanno un certo valore (e di conseguenza la bontà del quantizzatore).
+
+Se ci sono picchi nella distribuzione, esso è dovuto alla ripetizioni di pattern nell'immagine (come lo sfondo). Il numero di campioni nella trasformata è uguale a quello nell'immagine, e con frequenza di campionamento bassa la $\Delta f$ sarà piccolo e si verificherà l'aliasing. 
+
+Per rimuovere i rumori si acquisiscono porzioni di segnali più lunghe, eventualmente analizzando le loro medie in modo da preservare le componenti più importanti.
+
+Lo spettro è il risultato della trasformata, di cui una parte è reale e una immaginaria. Lavorando sul modulo, è possibile individuare circonferenze che indicano dove si concentra la potenza del segnale: manipolando lo spettro il risultato dell'inversione sarà differente. 
+
+Alcune metodologie di filtraggio comportano l'applicazione di maschere, finestre (monodimensionali, rappresentate come un rettangolo nel piano) a sezione circolare. Modificare lo spettro, quindi, implica ricostruire una diversa immagine che sarà più o meno accurata rispetto all'originale. 
+
+Spesso si possono eliminare le ridondanze senza perdere informazioni. Su questi principi si basano gli algoritmi di compressione (es. JPEG), riducendo la complessità a discapito della qualità.
+
+Si ha che il 99.5\% dello spettro è contenuto in una circonferenza di dimensione limitata.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.45]{Lezioni/Immagini/spettro}
+\end{figure}
+
+Eliminando parte dello spettro e delle frequenze, il filtro diventa parte integrante del segnale che viene antitrasformato: ciò introduce fenomeni di ringing, quindi è necessario osservare anche il comportamento dell'antitrasformata del filtro. 
+
+Per ottenere diversi effetti si selezionano diverse parti dello spettro da tenere, per esempio solo l'interno o l'esterno, o una banda di un certo intervallo (mosaico, smoothing). 
 
 \subsection{Proprietà della trasformata}
-La scomponibilità viene utilizzata per cambiare dimensione. \\
-Un'altra importante proprietà è la linearità: la trasformata di Fourier applicata a una funzione che è combinazione lineare (somma pesata) di funzioni, il risultato è uguale alla trasformata di Fourier di ogni funzione presa singolarmente. 
+Un'importante proprietà è la linearità, che vale per ogni dominio: la trasformata di Fourier applicata a una funzione che è combinazione lineare (somma pesata) di funzioni, il risultato è uguale alla trasformata di Fourier di ogni funzione presa singolarmente. 
 $$F(f)x) + g(x) = F(f(x)) + F(g(x)) = F(u) + G(u)$$
-La separabilità e la linearità permettono di ridurre la complessità della trasformata.
+La linearità permette di ridurre (scomporre) la complessità della trasformata come sovrapposizione di sistemi più semplici e monodimensionali, senza introdurre dispersione del segnale.
 
-Vale anche la traslazione nello spazio (tempo), ma solo per la trasformata discreta: una traslazione equivale a una modulazione nelle frequenze con un esponente complesso.
+Vale anche la traslazione nello spazio (tempo) e nelle frequenze, ma solo per la trasformata discreta: una traslazione equivale a una modulazione nelle frequenze con un esponente complesso. In altre parole, la trasformata del modulo è identica, ma la fase cambia di $x_0$ (sfasamento).
 $$F(f(x + x_0)) = e^{j2\pi ux_0} \qquad F^{-1}(F(u \pm \varpi)) = f(x)e^{\pm j2\pi \varpi x}$$
+A oggetti più grandi nel dominio diretto, corrisponderanno oggetti simili ma compressi nel dominio trasformato e viceversa, a causa dell'aumento delle frequenze. 
 $$\text{Scala: } F(f(ax)) = \frac{1}{\abs{a}} F\Big(\frac{u}{a}\Big) \implies f(\alpha x, \beta y) = \frac{1}{\abs{\alpha \beta}} F\Big(\frac{u}{\alpha}, \frac{v}{\beta}\Big)$$
 $$\text{Inversione: } F(f(-x)) = F(-u)$$
-La trasformata di una funzione reale gode di simmetria Hermitiana: la parte reale e il modulo sono simmetrici rispetto all'origine, mentre la parte immaginaria e la fase sono antisimmetriche rispetto all'origine.
+La trasformata di una funzione reale gode di simmetria Hermitiana: la parte reale e il modulo sono simmetrici rispetto all'origine (lo 0), mentre la parte immaginaria e la fase sono antisimmetriche rispetto all'origine.
+
+Campionando il segnale di partenza, la trasformata diventa periodica e il periodo permette di ricostruire il segnale, a sua volta periodica. 
 $$\text{Periodicità (discreta): } F(u) = F(u + M) \implies F(u) = \frac{1}{M} \sum_{x=0}^{M-1} f(x)e^{-j\frac{2\pi}{M}ux} \quad u = 0, \dots, M - 1$$
-Altre proprietà sono già state enunciate, come l'esistenza dell'inversa della trasformata discreta, la separabilità e la reversibilità.
+Altre proprietà sono già state enunciate, come l'esistenza dell'inversa della trasformata discreta e la reversibilità.
+$$\text{Separabilità: } F(u, v) = \frac{1}{NM} \sum_{x=0}^{N-1} \sum_{y=0}^{M-1} f(x, y) e^{-j2\pi \big(\frac{ux}{N} + \frac{vy}{N}\big)}$$
 $$\text{Valore medio di una trasformata discreta: } F(0) = \frac{1}{M} \sum{x=0}^{M-1} f(x) = \overline{f}(x)$$
 $F(u_0)$ è il peso con cui l'onda complessa $e^{j2\pi u_0x}$ di frequenza $u_0$ concorre a formare il segnale $f(x)$. Se $f(x)$ è un'onda complessa di frequenza $u_k$, $F(u)$ sarà 0 per ogni frequenza diversa da $u_k$.
+
+Nel dominio del coseno trasformato non ci saranno solo le $\delta$ se il segnale non è periodico e infinito, ma ci sarà anche l'effetto del \textit{sinc} (finestra). $sinc(x) = \frac{\sin(x)}{x}$, con un fattore $\pi$ a per normalizzarla [immagine: Georg-Johann]. 
+
+\begin{wrapfigure}{L}{0.45\textwidth}
+	\vspace{-15pt}
+	\includegraphics[width=0.45\textwidth]{Lezioni/Immagini/sinc.png}
+	\vspace{-30pt}
+\end{wrapfigure}
+
+Questa funzione rappresenta il limite con $x$ che tende a 0 della funzione seno, cioè 1. Nel processamento dei segnali è la trasformata di Fourier della funzione rettangolare (finestra) non scalata, ricostruendo il segnale continuo a partire dai campioni.
+
+Per il seno, c'è una $\delta$ positiva e una negativa, e se trasformando entrambe diventano positive non c'è più la possibilità di distinguerlo dal coseno. In realtà le due funzioni sono la stessa traslata (proprietà di traslazione). Bisogna però ricordare che la $\delta$ positiva della parte immaginaria in realtà corrisponde alla parte negativa.
+
+L'altezza di $\delta$ nel punto 0 è uguale all'altezza del segnale, che varia sempre meno fino a diventare costante. La trasformata di una costante, quindi, è rappresentabile come un coseno le cui $\delta$ si sovrappongono nel centro (limite della funzione, con frequenza che tende a 0).
+
+La finestra di osservazione nel tempo ha frequenza $\delta$, con due picchi di seno e coseno, e il contributo di \textit{sinc} cresce con l'aumento dell'ampiezza della finestra (ringing). Al contrario, \textit{sinc} si avvicina sempre di più a $\delta$ con il restringimento.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{Lezioni/Immagini/finestra_sinc}
+\end{figure}

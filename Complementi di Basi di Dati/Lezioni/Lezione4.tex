@@ -1,0 +1,6 @@
+\section{Ottimizzazione algebrica}
+L'algebra relazionale è caratterizzata da molte regole di trasformazione di equivalenza, che corrispondono a trasformazioni nell'albero applicate tramite euristiche (strategie approssimate) con lo scopo di ridurre il tempo di esecuzione.
+
+Si ricorda che la più importante regola è l'anticipazione della selezione rispetto al join, che ha un impatto rilevante sulla complessità. Il costo del join è proporzionale alle dimensioni dei file e di conseguenza al numero di blocchi caricati nel buffer, quindi selezioni e proiezioni migliorano la performance.
+
+Si cerca di applicare queste operazioni il prima possibile, in modo da ridurre progressivamente il numero di tuple coinvolte nel join, e applicando in ordine i predicati più selettivi.
