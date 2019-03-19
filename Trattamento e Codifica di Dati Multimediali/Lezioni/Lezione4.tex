@@ -53,9 +53,9 @@ $$x(n) = A\cos \Big(2\pi \frac{1}{12}n + \frac{\pi}{3}\Big) \implies x(t) = A\co
 \subsubsection{Frequenze}
 Il range tra minimo e massimo di una frequenza di oscillazione è 1, tutto ciò che è al di fuori dell'intervallo in realtà si trova comunque normalizzato all'interno. Aumentando $\omega$, infatti, dopo un giro (periodo $2\pi$) si torna ad avere la stessa funzione. 
 
-Frequenza minima di oscillazione di una sinusoide a tempo discreto: $f_N = 0 \rightarrow \omega = 0$ \\
-Frequenza massima di oscillazione di una sinusoide a tempo discreto: $f_N = \pm \nicefrac{1}{2} \rightarrow \omega = \pm \pi$ \\
-Frequenza di oscillazione di una sinusoide generica: $f = \frac{1}{\text{n. campioni}} \rightarrow \omega = 2\pi \cdot f_N$
+Frequenza minima di oscillazione di una sinusoide a tempo discreto: $f_N = 0 \implies \omega = 0$ \\
+Frequenza massima di oscillazione di una sinusoide a tempo discreto: $f_N = \pm \nicefrac{1}{2} \implies \omega = \pm \pi$ \\
+Frequenza di oscillazione di una sinusoide generica: $f = \frac{1}{\text{n. campioni}} \implies \omega = 2\pi \cdot f_N$
 
 I segnali sinusoidali a tempo discreto con pulsazioni separate da multipli di $2\pi$ sono identici: \\
 $\omega + k2\pi = \omega$ con $k \in \mathbb{Z}$ \\
@@ -65,8 +65,4 @@ $\cos(\omega n + kn2\pi + \theta) = \cos(\omega n + \theta)$
 
 Per convenzione si utilizza la frequenza di Nyquist, $f_n = [-\nicefrac{1}{2}, \nicefrac{1}{2}]$, oppure intervalli di pulsazione $[-\pi, \pi]$ o $[0, 1] \rightarrow [0, 2\pi]$.
 
-Il segnale è periodico solo se la sua frequenza $f$ è un numero razionale: $f = \nicefrac{k}{N}$.
-
-
-
-Il segnale sinusoidale è periodico se e solo se la sua frequenza normalizzata $f$ è un numero razionale (rapporto fra due interi). I numeri razionali quindi impongono la periodicità. 
+Il segnale sinusoidale è periodico solo se la sua frequenza normalizzata $f$ è un numero razionale (rapporto tra due interi): $f = \nicefrac{k}{N}$. I numeri razionali quindi impongono la periodicità. 
