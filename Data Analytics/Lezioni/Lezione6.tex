@@ -1,0 +1,45 @@
+\section{Network centrality}
+La conoscenza della struttura di una rete permette di calcolare e catturare particolari carattteristiche, come la centralità in termini di singoli nodi e di intera rete.
+
+Il concetto di centralità è strettamente dipendente dal contesto e dallo scopo, e non è univoco: ogni definizione dà informazioni diverse rispetto alle altre, e si distingue in base alle tipologie di nodo. Un nodo può essere più o meno centrale rispetto a un altro in base al criterio di misurazione (indegree, betweenness, \dots). 
+
+Ognuna di questi parametri può essere più o meno informativo a seconda delle applicazioni nella vita reale, ma in generale si parla di misure locali. Il confronto tra reti di grandezza differente è possibile normalizzando i valori. 
+
+La centralizzazione di una rete mette a confronto il nodo con centralità più alta con tutti gli altri. Per determinarla (per esempio con il grado), viene usata la formula di Freeman:
+$$C_D = \frac{\sum_{i=1}^{N} C_D(n^*) - C_D(i)}{(N - 1) (N - 2)}$$
+Il denominatore rappresenta la più grande somma di differenze ottenibile in una rete analoga (caso limite), mentre il numeratore è il valore pratico della centralità, cioè la differenza normalizzata tra il nodo con grado massimo e tutti gli altri.
+
+Il range varia nell'intervallo $[0, 1]$ dove 1 rappresenta una rete a stella e 0 una rete ad anello: la prima ha un nodo centrale unico con collegamenti solo con esso, mentre la seconda è completamente decentralizzata. 
+
+La centralizzazione in base al grado è una misura puramente locale, che può variare molto in base alla struttura del grafo, quindi potrebbe non essere sufficiente a descrivere l'influenza di un nodo sull'intera rete. 
+
+Per effettuare analisi in base allo shortest-path si utilizza la betweenness centrality. Naturalmente anche questa è dipendente dalla struttura, e quantifica quanto un nodo può essere un  ``ponte" nei cammini verso gli altri.
+$$C_B(i) = \sum_{j \neq k}\frac{g_{jk}(i)}{g_{jk}}$$
+$$C'_B(i) = \frac{C_B(i)}{(n - 1) (n - 2) / 2}$$
+Il calcolo è simile a quello con il grado, mentre la seconda formula rappresenta la centralità normalizzata. Considerando un grafo orientato e diretto, il coefficiente di normalizzazione cambia perché è necessario considerare la direzionalità. $j$ può essere uguale a $k$ per tenere conto di tutti gli archi differenti.
+
+La closeness centrality si basa sulla lunghezza media dello shortest path tra un vertice $a$ e tutti gli altri, e rappresenta l'efficienza di esso nello scambio di informazioni. 
+$$C_C(i) = \Bigg[\frac{\sum_{j=1}^{N} d(A, j)}{N - 1}\Bigg]^{-1}$$
+In altre parole, vengono considerate tutte le possibili distanze e divise per il totale dei nodi (normalizzazione con il numero di shortest-path possibili), per poi invertire il valore in modo da rappresentare una distanza breve come una centralità alta. 
+
+Di solito, gli indicatori di centralità sono correlati positivamente. Quando uno di essi è più alto rispetto agli altri, la rete ha proprietà interessanti (nodi ego).
+
+Non tutti i nodi sono equivalenti: un vertice $A$ è importante se è collegato ad altri vertici importanti (PageRank). In questo modo, la vicinanza a nodi importanti dà un peso alla centralità. Questo concetto viene rappresentato con gli autovalori:
+$$x_i = \frac{1}{\lambda} \sum_{k} a_{ki} x_k \implies \lambda x = xA$$
+Un nodo con molti collegamenti non ha necessariamente una centralità alta rispetto agli autovalori, perché il peso può essere minimo, e viceversa. La matrice $A$ è di adiacenza, e i coefficienti di centralità corrispondono agli autovettori.
+
+\subsection{PageRank}
+Dividendo il valore della centralità per l'outdegree (nodi uscenti), si evita la trasmissione della enorme centralità di un singolo nodo a tutti quelli adiacenti. Questo concetto è ampiamente utilizzato dall'algoritmo PageRank.
+
+Si ha, per ogni coppia di nodi, che un arco $(i, j)$ è una referenza, mentre un arco $(j, i)$ è una raccomandazione. Se esiste una referenza, c'è la probabilità che i due nodi siano in qualche modo legati tra di loro (dal punto di vista del contenuto).
+
+Se un nodo ha un rank elevato, avrà più impatto su quelli adiacenti (cede un po' della sua capacità), mentre se un nodo non è centrale quelli adiacenti non vengono penalizzati. Il grafo è diretto e orientato, definendo il coefficiente come:
+$$P(i) = \sum_{(i, j) \in E} \frac{P(j)}{O_j}$$
+Si effettua una sommatoria per tutti i nodi, rapportando il numero di archi entranti $P$ con il numero di archi uscenti $J$. In forma algebrica, questa formula è un sistema di $n$ equazioni e variabili dato da $P = A^TP$.
+
+La matrice è riducibile, stocastica e periodica, e la soluzione iterativa del sistema corrisponde agli autovalori della matrice di adiacenza normalizzata. Al fine di garantire la convergenza, 1 dev'essere l'autovalore maggiore e $P$ 
+
+Una catena di Markov è un sistema le cui variabili cambiano nel tempo. Ogni stato del sistema al tempo $t$, quindi, dipende dallo stato $t - 1$ ed esiste una distribuzione (grafo) di probabilità in grado di rappresentare le variazioni.
+
+Il grafo del Web rappresentato come catena di Markov ha come archi la probabilità di transizione da una pagina all'altra, e PageRank simula tutti i possibili percorsi di navigazione. 
+
