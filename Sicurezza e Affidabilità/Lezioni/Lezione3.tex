@@ -140,3 +140,37 @@ int fun (int param) {
 
 \subsection{Combinational Testing}
 
+Una tecnica di testing funzionale è il \textit{combinational testing}, che è identificata da due step: \begin{itemize}
+    \item passo di decomposizione \\ il problema viene partizionato in maniera da poter essere più facilmente gestibile. La specifica viene trasformata in una lista di elementi (\textit{test obligations}) che la rappresentano;
+    \item passo di aggregazione \\ i dati estratti precedentemente vengono aggregati (o \textit{combinati}, termine che da il nome alla tecnica) in maniera tale da ottenere dei casi di test intelligenti oltre che completi.
+\end{itemize}
+
+Per ragionare su come ottenere il risultato suggerito da questi due step, useremo tre tecniche: \begin{itemize}
+    \item Category-partition testing \\ si cerca di risolvere il problema della scomposizione della specifica nei suoi valori interessanti
+    \item Pairwise testing \\ ricombina tutti i possibili input per cercare di risolvere il problema dell'esplosione combinatoria
+    \item Catalog-based testing \\ approccio più sistematico che può essere integrato con l'analisi della specifica, si cerca che tipo di valori si devono andare a cercare
+\end{itemize}
+
+\begin{figure}[H]
+\caption{Tipi di test ed approccio}
+\begin{center}
+\begin{tabular}{p{5cm} | p{5cm}}
+    Passo di decomposizione & Passo di aggregazione \\ \hline
+    \begin{itemize}
+        \item Category-partition testing
+        \item Catalog-based testing
+    \end{itemize}
+    & \begin{itemize}
+        \item Pariwise testing
+    \end{itemize}
+\end{tabular}
+\end{center}
+\end{figure}
+
+\subsubsection{Pairwise Testing}
+
+Lo scopo di questo step non è solamente considerare la lista pura dei comportamenti estratta dalla specifica, ma piuttosto le combinazioni di questi comportamenti. Questo è quindi il \textit{pairwise testing}.
+
+\begin{example}{}{Display Control}
+    Si immagini di avere cinque parametri (1 colonna = 1 parametro del sistema). La specifica non ci è data a sapere, ma abbiamo già estratto tutti i valori significativi. Questi parametri sono stati rivelati in fase di test. 
+\end{example}
