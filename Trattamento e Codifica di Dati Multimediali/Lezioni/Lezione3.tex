@@ -189,7 +189,10 @@ $$\text{Separabilità: } F(u, v) = \frac{1}{NM} \sum_{x=0}^{N-1} \sum_{y=0}^{M-1
 $$\text{Valore medio di una trasformata discreta: } F(0) = \frac{1}{M} \sum{x=0}^{M-1} f(x) = \overline{f}(x)$$
 $F(u_0)$ è il peso con cui l'onda complessa $e^{j2\pi u_0x}$ di frequenza $u_0$ concorre a formare il segnale $f(x)$. Se $f(x)$ è un'onda complessa di frequenza $u_k$, $F(u)$ sarà 0 per ogni frequenza diversa da $u_k$.
 
-Nel dominio del coseno trasformato non ci saranno solo le $\delta$ se il segnale non è periodico e infinito, ma ci sarà anche l'effetto del \textit{sinc} (finestra). $sinc(x) = \frac{\sin(x)}{x}$, con un fattore $\pi$ a per normalizzarla [immagine: Georg-Johann]. 
+\subsection{\textit{sinc}}
+$sinc$ è un filtro passa-basso, utile per preservare la parte centrale di segnali con basse frequenze. 
+
+Nel dominio del coseno trasformato non ci saranno solo le $\delta$ se il segnale non è periodico e infinito, ma ci sarà anche l'effetto del \textit{sinc} (finestra), dove $sinc(x) = \frac{\sin(x)}{x}$, con un fattore $\pi$ a per normalizzarla [immagine: Georg-Johann]. 
 
 \begin{wrapfigure}{L}{0.45\textwidth}
 	\vspace{-15pt}
