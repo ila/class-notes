@@ -24,12 +24,18 @@ In altre parole, vengono considerate tutte le possibili distanze e divise per il
 
 Di solito, gli indicatori di centralità sono correlati positivamente. Quando uno di essi è più alto rispetto agli altri, la rete ha proprietà interessanti (nodi ego).
 
+La reciprocità è la capacità di una rete diretta di avere doppi link (direzioni opposte) tra i vertici. Questo problema è fondamentale per analizzare la centralità e capire eventuali pattern o errori nelle stime. 
+
+La densità di una rete è il rapporto tra il numero di archi esistenti e il numero massimo di archi possibili $n(n - 1) / 2$. Questo è utile per identificare comunità, cioè gruppi di nodi con densità molto diversa tra di loro rispetto al resto del grafo.
+
+L'attaccamento preferenziale è la maggiore centralità di un nodo rispetto ai vicini (non alla rete intera), ed è un fenomeno che permette di individuare popolarità, qualità e altri attributi delle pagine. 
+
 Non tutti i nodi sono equivalenti: un vertice $A$ è importante se è collegato ad altri vertici importanti (PageRank). In questo modo, la vicinanza a nodi importanti dà un peso alla centralità. Questo concetto viene rappresentato con gli autovalori:
 $$x_i = \frac{1}{\lambda} \sum_{k} a_{ki} x_k \implies \lambda x = xA$$
 Un nodo con molti collegamenti non ha necessariamente una centralità alta rispetto agli autovalori, perché il peso può essere minimo, e viceversa. La matrice $A$ è di adiacenza, e i coefficienti di centralità corrispondono agli autovettori.
 
 \subsection{PageRank}
-Dividendo il valore della centralità per l'outdegree (nodi uscenti), si evita la trasmissione della enorme centralità di un singolo nodo a tutti quelli adiacenti. Questo concetto è ampiamente utilizzato dall'algoritmo PageRank.
+Dividendo il valore della centralità per l'outdegree (nodi uscenti), si evita la trasmissione della enorme centralità di un singolo nodo a tutti quelli adiacenti. Questo concetto, insieme alle catene di Markov, è ampiamente utilizzato dall'algoritmo PageRank.
 
 Si ha, per ogni coppia di nodi, che un arco $(i, j)$ è una referenza, mentre un arco $(j, i)$ è una raccomandazione. Se esiste una referenza, c'è la probabilità che i due nodi siano in qualche modo legati tra di loro (dal punto di vista del contenuto).
 
@@ -37,9 +43,33 @@ Se un nodo ha un rank elevato, avrà più impatto su quelli adiacenti (cede un p
 $$P(i) = \sum_{(i, j) \in E} \frac{P(j)}{O_j}$$
 Si effettua una sommatoria per tutti i nodi, rapportando il numero di archi entranti $P$ con il numero di archi uscenti $J$. In forma algebrica, questa formula è un sistema di $n$ equazioni e variabili dato da $P = A^TP$.
 
-La matrice è riducibile, stocastica e periodica, e la soluzione iterativa del sistema corrisponde agli autovalori della matrice di adiacenza normalizzata. Al fine di garantire la convergenza, 1 dev'essere l'autovalore maggiore e $P$ 
+Il grafo del Web rappresentato come catena di Markov ha come archi la probabilità di transizione da una pagina all'altra, e PageRank simula tutti i possibili percorsi di navigazione. Ogni nodo è uno stato, e i link sono le probabilità di transizione. 
 
-Una catena di Markov è un sistema le cui variabili cambiano nel tempo. Ogni stato del sistema al tempo $t$, quindi, dipende dallo stato $t - 1$ ed esiste una distribuzione (grafo) di probabilità in grado di rappresentare le variazioni.
+La distribuzione di probabiità iniziale è uniforme, ma a seconda del contesto cambieranno la matrice di transizione e gli stati. Per simulare il processo, vengono stimati il numero di outlink da ogni nodo per poi calcolare la probabilità di random surfing ($\nicefrac{1}{O_i}$), per poi inserire i valori nella matrice.
 
-Il grafo del Web rappresentato come catena di Markov ha come archi la probabilità di transizione da una pagina all'altra, e PageRank simula tutti i possibili percorsi di navigazione. 
+Si ha $\sum_{i=0}^{n} p_0(i) = 1$, e $\sum_{j=1}^{n} A_{ij}  = 1$ assumendo che ogni pagina all'inizio abbia la stessa importanza, e di non avere informazioni aggiuntive. Se questa proprietà è soddisfatta, la matrice è stocastica. 
+
+Una catena di Markov definita da una matrice stocastica è caratterizzata da una distribuzione stazionaria (converge a $\pi$) se $A$ è irriducibile e aperiodica. 
+
+Applicando questo concetto al web, non è possibile avere tutte e 3 le caratteristiche, essendoci pagine non raggiungibili (non hanno archi uscenti), quindi queste vengono rimosse oppure viene assunta una probabilità uniforme. Esiste anche la probabilità di fare salti completamente random all'interno della pagina web. 
+
+Il ranking (centralità) di una pagina può essere calcolato risolvendo un sistema di equazioni lineari, formato dalla probabilità di una transizione volontaria sommata al random jump dove le incognite sono le probabilità e la loro somma è 1. La soluzione iterativa del sistema corrisponde agli autovalori della matrice di adiacenza normalizzata. 
+
+\subsubsection{Catene di Markov}
+Un processo stocastico è una collezione indicizzata (ordinata) di variabili $X_t$ casuali raccolte da una serie di osservazioni, dove $t$ di solito denota il tempo. Le variabili rappresentano caratteristiche da modellare, e sono discrete o continue.
+
+Uno stato è un numero finito di valori che può assumere $X_t$, che possono realizzarsi quindi in modo diverso nel tempo. Un processo stocastico soddisfa la proprietà Markoviana se:
+$$P(X_{t+1} = j\ |\ X_0 = k_0, X_1 = k_1, \dots, X_{t+1} = k_{i-1}, X_t = i) = P(X_{t+1} = j\ |\ X_t = i) \quad \forall\ t$$
+
+Ogni stato del sistema al tempo $t$, quindi, dipende solo dallo stato $t - 1$ ed esiste una distribuzione (grafo) di probabilità in grado di rappresentare le variazioni. Le probabilità condizionali si definiscono one-step transition probabilities, e sono stazionarie se la probabilità resta costante. 
+
+Un processo stocastico è una catena di Markov a stati finiti se:
+\begin{enumerate}
+	\item Ha un numero finito di stati;
+	\item Gode della proprietà Markoviana al primo ordine;
+	\item La distribuzione di probabilità è stazionaria;
+	\item Esiste un set (vettore) di probabilità iniziali per ogni stato.
+\end{enumerate}
+
+Per avere una descrizione completa è necessario specificare le probabilità di transizione attraverso una matrice, che rappresenta la probabilità di passare da uno stato $i$ a uno stato $j$. Si ha $\pi$ come distribuzione delle probabilità iniziali (uniforme, di solito). Elevando la matrice alla $n$, cioè rappresentando i cambiamenti nel tempo, il risultato tenderà a essere stazionario con il crescere di $n$.
 
