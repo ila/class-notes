@@ -1,0 +1,42 @@
+\subsection{Esercizi}
+Dato il segnale a tempo discreto $x(n) = 6,4 \cos (\nicefrac{\pi}{n})$, trovare il numero (intero) di bit necessari per la conversione da analogico a digitale tale che:
+\begin{enumerate}
+	\item $\Delta = 0,1$: \\
+	$0,1 \cdot 2^b \geq 12,8 \rightarrow 2^b \geq \frac{12,8}{0,1} = 128 \rightarrow b = 7$ \\
+	$SNR_q = 1,76 + 6,02b = 43,9 dB$
+	\item $\Delta = 0,02$: \\
+	$0,02 \cdot 2^b \geq 12,8 \rightarrow 2^b \geq \frac{128}{0,02} = 640 \rightarrow b = 9 \lor 10$ \\
+	Il valore scelto dev'essere sempre il maggiore (10) altrimenti si verifica saturazione. \\
+	$SNR_q = 1,76 + 6,02b = 61,96 dB$ se fosse ottimale;
+	$SNR_q = 10\log_{10} \frac{(6,4)^2}{0,02 / 12} = 57,88 dB$ nel caso vero.
+	\end{enumerate}
+Bisogna sempre rispettare $D_s \leq D_q$, pertanto $D_s = 2 \cdot 6,4 = 12,8$. La dinamica del quantizzatore è $\Delta 2^b$. 
+
+Il rapporto segnale-rumore del secondo caso è minore di quello ideale, ma comunque maggiore del primo, quindi la seconda $\Delta$ è più efficiente.
+
+Con b = 10, 2A = 12,8, trovare la $\Delta$ tale che il rapporto segnale-rumore sia ottimo.\\
+$Dq = Ds \rightarrow \Delta = \frac{12,8}{1024} = 0,0125$
+
+Frequenza massima 15kHz, densità spettrale (potenza) uniforme: $P = \abs{F(\delta(x))}$
+Il range in kHz è $[-15, +15]$ e ha una distribuzione uniforme, quindi sarà rappresentato con una finestra. 
+Se la frequenza di campionamento è minore di 30, ci saranno fenomeni di aliasing e sotto-campionamento. 
+Con $f_c = 27 kHz$, la finestra occupata sarà $[-13,5, 13,5]$ e la replica si posizionerà nella fascia non utilizzata in modo simmetrico rispetto all'estremo dell'intervallo. Le frequenze più alte verranno erroneamente convertite in frequenze basse.
+
+Rapporto segnale-distorsione: applicando la definizione di rapporto segnale-rumore, è possibile calcolare l'integrale: $S = \int_{-f_c/2}^{f_c/2}\abs{x(f)}^2ndf$
+$D = \int_{f_c/2}^{\infty} \abs{x(h)}^2 df +  \int_{-\infty}^{f_c/2}\abs{x(f)}^2ndf$
+$SNR_c = 10\log_{10} \frac{P_R}{P_R} = \frac{27u}{3u} = 9,54 dB$
+
+Due segnali analogici, $x(t) = 5\sin(60\pi t)$ e $y(t) = 2\cos(60\pi t) - 3\sin(40\pi t)$, vengono sommati e campionati con una frequenza di campionamento $f_c = 50 Hz$. 
+
+Seno e coseno non hanno distinzione nella trasformata, quindi è necessario rappresentare la parte reale e la parte immaginaria nella rappresentazione. 
+$60\pi t = 2\pi 30t$ quindi la parte reale avrà due picchi a $[-30, 30]$ alti 1 (2/2), mentre la parte immaginaria avrà gli stessi alti $5 / 2$, uno positivo e uno negativo.
+
+Lo stesso procedimento si applica al seno, per ottenere il segnale prima del campionamento. C'è aliasing, perchè $50 < 2 * 30$. 
+
+Il primo picco nella parte reale trasla fino a $+20$, e il secondo esce dall'intervallo. Il periodo base è largo $50 Hz$, e va osservato centrato in 0 con un'ampiezza di $[-25, +25]$. La seconda replica va da 30 a 30 - 50, cioè -20. La parte immaginaria ha un range $[-25, +\infty]$.
+
+Il segnale frainteso con aliasing diventa $z'(t) = 2\cos(40\pi t) - 8\sin(40\pi t)$.
+
+Caratterizzare ($\Delta$, numero di bit) un quantizzatore ideale per il segnale, in modo che il rapporto segnale-rumore sia circa 96 dB.
+
+Se il segnale ha un range maggiore del quantizzatore ideale, per esempio ottenuto sommando più sinusoidali, esso satura.

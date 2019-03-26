@@ -61,15 +61,30 @@ Al contrario, se le variazioni del segnale sono molto ampie, il range sarà gran
 
 Un quantizzatore è carattererizzato da una dinamica di ingresso, cioé un massimo range di valori ammissibili. Se il segnale supera gli estremi, esso viene modificato attraverso la saturazione o la saturazione con azzeramento.
 
-% slide 8
+L'intervallo di copertura, definito dalla risoluzione e dal passo, è quindi $D_q = \Delta L = \Delta 2^n$. Si utilizza un range dinamico per avere un numero flessibile di livelli rappresentabili, convertibile in decibel: l'obiettivo è il riempimento di tutti i livelli.
 
-Si utilizza un range dinamico per avere un numero flessibile di livelli rappresentabili, convertibile in decibel: l'obiettivo è il riempimento di tutti i livelli.
+Il range dinamico è il rapporto tra il numero minimo e massimo di valori rappresentabili (espressi dal numero di bit):
+$$20\log_{10} L$$
+Se la risoluzione è 16 bit, il range dinamico è $20\log_{10} 2^{16} \approx 96 dB$.
 
-Le strategie di quantizzazione sono il troncamento e l'approssimazione: entrambe causano un errore, e di conseguenza lo sfasamento dei gradini rispetto alla diagonale. 
+Le strategie di quantizzazione sono il troncamento ($\Delta$)e l'approssimazione ($\frac{\Delta}{2}$): entrambe causano un errore, e di conseguenza lo sfasamento dei gradini rispetto alla diagonale. 
 
+Si definisce errore (rumore) di quantizzazione la differenza tra il valore quantizzato e il valore reale del campione:
+$$\varepsilon_q(n) = x_q(n) - x(n)$$
 L'incidenza dell'errore nel segnale è misurata come SRN (Signal-Noise Ratio, potenza), e tipicamente si misura in dB. Il valore finale, naturalmente, non è influenzato solamente dalla quantizzazione ma anche da fattori esterni, quindi è difficile avere stime oggettive della dinamica del quantizzatore.
 
+La qualità del segnale quantizzato si esprime come rapporto della potenza $P_S$ media del segnale a tempo discreto $x(n)$ e la potenza media dell'errore di quantizzazione $P_N$.
+$$SNR_Q = 10\log_{10}\frac{P_S}{P_N}$$
 Le valutazioni sono eseguite in valore assoluto, per eliminare la possibilità di annullamento dei termini. La potenza del rumore è legata al modulo della sequenza. 
+$$P_N = \frac{1}{N}\sum_{n=0}^{N-1}\abs{\varepsilon_q(n)}^2 \qquad P_S = \frac{1}{N}\abs{x(n)}^2$$
+Se il rumore è semplice e il segnale ha ampiezza nella dinamica del quantizzatore, varia nell'intervallo $\pm \nicefrac{\Delta}{2}$, ed è equiprobabile e casuale con valor medio nulla (distribuzione uniforme). La potenza del rumore equivale alla varianza di $\varepsilon$.
 
-Se il rumore è semplice, varia nell'intervallo $\pm \nicefrac{\Delta}{2}$, ed è equiprobabile e casuale (distribuzione uniforme). 
+La situazione ideale ha un rapporto segnale-rumore ottimale (uguaglianza), cioè esso si adatta perfettamente ai livelli e la dinamica del quantizzatore è uguale a quella del segnale. Il range di valori è pari a $2A$, per un segnale sinusoidale.
+
+% slide 15
+
+La distanza dei livelli, di conseguenza, sarà $\nicefrac{2A}{2^b}$, essendo la potenza del rumore strettamente legata all'ampiezza del segnale (aumenta in proporzione al numero di bit).
+
+Sostituendo nella formula generale, si ottiene una nuova rappresentazione: 
+% formula slide 18
 
