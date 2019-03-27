@@ -26,30 +26,6 @@ L'aliasing è appunto il fenomeno per cui il segnale originale non è ricostruib
 
 Quando il segnale è campionato, la variabile tempo/spazio non è più esplicita e la frequenza $f_N$ rappresenta il numero di cicli per campione.
 
-\subsection{Esempio}
-$$x(n) = A\cos(\omega n + \theta)$$
-\begin{figure}[h]
-	\centering
-	\includegraphics[scale=0.56]{Lezioni/Immagini/esempio1}
-\end{figure}
-
-$\omega = 2\pi f_N$, dove $\omega$ è la pulsazione e $f_N$ la frequenza normalizzata, cioè il numero di cicli al secondo (continuo), con campioni al posto dei secondi nel mondo campionato.
-
-Per capire la frequenza $f_N$ del segnale rappresentato, bisogna guardare quanti cicli ci sono per campioni (o quanti campioni ci sono in un ciclo, cioè prima che il pattern si ripeta) e calcolare l'inverso. In questo caso un periodo è 12 campioni, quindi $f_N = 1/12$.
-
-La frequenza al secondo (Hz) è ottenibile sapendo quanta distanza c'è tra un campione e l'altro, altrimenti per ogni rappresentazione ci sarebbero infinite sinusoidi.
-
-La pulsazione $\omega$ è uguale a $2\pi f_N$, quindi $\frac{2\pi}{12} = \frac{\pi}{6}$. \\
-Lo sfasamento con anticipo di 2 campioni si trova effettuando la proporzione: un periodo è $2\pi$, se 12 campioni sono in$2\pi$ allora $2\pi : 12 = \theta : 2 \rightarrow \theta = \frac{\pi}{3}$.
-
-La frequenza normalizzata indica quanto bene si vedono i campioni e la loro variazione in un periodo, per poi decidere la finestra di osservazione. La frequenza dipende dal numero di campioni al secondo ($f_c$): se la frequenza di campionamento è $f_c = 1$ campione/secondo, si ha che $f = 1/12$ ciclo/secondo, cioè $f = f_c \cdot f_N$.
-
-Per ricavare la formula più facilmente si possono utilizzare le unità di misura. Un altro modo per arrivare allo stesso risultato è sostituire a $n\Delta t$ la $t$.
-
-Con 2 campioni al secondo, cioè $f_c = 2$ e $\Delta t = 0.5 = \nicefrac{1}{2}$, la frequenza $f$ in cicli al secondo (Hz) è $\nicefrac{1}{2}$:
-$$f_N \cdot f_c = \frac{1}{12} \frac{\text{cicli}}{\text{campione}} \cdot \frac{2 \text{ campioni}}{\text{sec}} = \frac{1}{6} \frac{\text{cicli}}{\text{sec}}$$
-$$x(n) = A\cos \Big(2\pi \frac{1}{12}n + \frac{\pi}{3}\Big) \implies x(t) = A\cos\Big(2\pi \frac{1}{6}t + \frac{\pi}{3}\Big) \qquad \Delta tn \implies t$$
-
 \subsection{Frequenze}
 Il range tra minimo e massimo di una frequenza di oscillazione è 1, tutto ciò che è al di fuori dell'intervallo in realtà si trova comunque normalizzato all'interno. Aumentando $\omega$, infatti, dopo un giro (periodo $2\pi$) si torna ad avere la stessa funzione. 
 

@@ -1,4 +1,39 @@
-\subsection{Esercizi}
+\section{Esercizi}
+
+\subsection{Campionamento}
+\subsection{Esempio}
+$$x(n) = A\cos(\omega n + \theta)$$
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.56]{Lezioni/Immagini/esempio1}
+\end{figure}
+
+$\omega = 2\pi f_N$, dove $\omega$ è la pulsazione e $f_N$ la frequenza normalizzata, cioè il numero di cicli al secondo (continuo), con campioni al posto dei secondi nel mondo campionato.
+
+Per capire la frequenza $f_N$ del segnale rappresentato, bisogna guardare quanti cicli ci sono per campioni (o quanti campioni ci sono in un ciclo, cioè prima che il pattern si ripeta) e calcolare l'inverso. In questo caso un periodo è 12 campioni, quindi $f_N = 1/12$.
+
+La frequenza al secondo (Hz) è ottenibile sapendo quanta distanza c'è tra un campione e l'altro, altrimenti per ogni rappresentazione ci sarebbero infinite sinusoidi.
+
+La pulsazione $\omega$ è uguale a $2\pi f_N$, quindi $\frac{2\pi}{12} = \frac{\pi}{6}$. \\
+Lo sfasamento con anticipo di 2 campioni si trova effettuando la proporzione: un periodo è $2\pi$, se 12 campioni sono in$2\pi$ allora $2\pi : 12 = \theta : 2 \rightarrow \theta = \frac{\pi}{3}$.
+
+La frequenza normalizzata indica quanto bene si vedono i campioni e la loro variazione in un periodo, per poi decidere la finestra di osservazione. La frequenza dipende dal numero di campioni al secondo ($f_c$): se la frequenza di campionamento è $f_c = 1$ campione/secondo, si ha che $f = 1/12$ ciclo/secondo, cioè $f = f_c \cdot f_N$.
+
+Per ricavare la formula più facilmente si possono utilizzare le unità di misura. Un altro modo per arrivare allo stesso risultato è sostituire a $n\Delta t$ la $t$.
+
+Con 2 campioni al secondo, cioè $f_c = 2$ e $\Delta t = 0.5 = \nicefrac{1}{2}$, la frequenza $f$ in cicli al secondo (Hz) è $\nicefrac{1}{2}$:
+$$f_N \cdot f_c = \frac{1}{12} \frac{\text{cicli}}{\text{campione}} \cdot \frac{2 \text{ campioni}}{\text{sec}} = \frac{1}{6} \frac{\text{cicli}}{\text{sec}}$$
+$$x(n) = A\cos \Big(2\pi \frac{1}{12}n + \frac{\pi}{3}\Big) \implies x(t) = A\cos\Big(2\pi \frac{1}{6}t + \frac{\pi}{3}\Big) \qquad \Delta tn \implies t$$
+
+\subsection{Convoluzione}
+Per rappresentare una convoluzione è necessario conoscere la posizione dello 0 sull'asse $x$, e rappresentare sia i campioni di $h(m)$ che di $f(m)$. Si ricorda che $\Delta m$ esiste solo quando l'argomento si annulla.
+
+Il segnale $h(m)$ viene traslato e ribaltato rispetto all'asse $x$ con $n = -\infty, \dots, +\infty$ (anche se la proprietà è commutativa quindi il risultato sarebbe identico utilizzando $f(m)$. 
+
+$y(n)$ è la funzione che si ottiene quando il segnale ottenuto assume valore $n$. \\
+Si ha $y(n) = \sum_{-\infty}^{max+\infty} x(m)h(n - m)$.
+
+
 Dato il segnale a tempo discreto $x(n) = 6,4 \cos (\nicefrac{\pi}{n})$, trovare il numero (intero) di bit necessari per la conversione da analogico a digitale tale che:
 \begin{enumerate}
 	\item $\Delta = 0,1$: \\

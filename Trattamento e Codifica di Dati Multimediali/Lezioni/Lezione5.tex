@@ -33,14 +33,6 @@ Un prodotto nello spazio-tempo, quindi, corrisponde a una convoluzione di trasfo
 La convoluzione è un operatore lineare, verificabile attraverso la relativa proprietà:
 $$f(x) * [\alpha g_1(x) + \beta g_2(x)] = \alpha[f(x) * g_1(x)] + \beta[f(x) * g_2(x)]$$
 
-\subsection{Esempio}
-Per rappresentare una convoluzione è necessario conoscere la posizione dello 0 sull'asse $x$, e rappresentare sia i campioni di $h(m)$ che di $f(m)$. Si ricorda che $\Delta m$ esiste solo quando l'argomento si annulla.
-
-Il segnale $h(m)$ viene traslato e ribaltato rispetto all'asse $x$ con $n = -\infty, \dots, +\infty$ (anche se la proprietà è commutativa quindi il risultato sarebbe identico utilizzando $f(m)$. 
-
-$y(n)$ è la funzione che si ottiene quando il segnale ottenuto assume valore $n$. \\
-Si ha $y(n) = \sum_{-\infty}^{max+\infty} x(m)h(n - m)$
-
 \section{Quantizzazione}
 La quantizzazione è un processo di discretizzazione dell'ampiezza: i segnali a tempo discreto sono convertiti a valori discret (digitali), cioé appartenenti a un insieme limitato di possibili scelte.
 
@@ -77,14 +69,27 @@ La qualità del segnale quantizzato si esprime come rapporto della potenza $P_S$
 $$SNR_Q = 10\log_{10}\frac{P_S}{P_N}$$
 Le valutazioni sono eseguite in valore assoluto, per eliminare la possibilità di annullamento dei termini. La potenza del rumore è legata al modulo della sequenza. 
 $$P_N = \frac{1}{N}\sum_{n=0}^{N-1}\abs{\varepsilon_q(n)}^2 \qquad P_S = \frac{1}{N}\abs{x(n)}^2$$
-Se il rumore è semplice e il segnale ha ampiezza nella dinamica del quantizzatore, varia nell'intervallo $\pm \nicefrac{\Delta}{2}$, ed è equiprobabile e casuale con valor medio nulla (distribuzione uniforme). La potenza del rumore equivale alla varianza di $\varepsilon$.
+Se il rumore è semplice e il segnale ha ampiezza nella dinamica del quantizzatore, varia nell'intervallo $\pm \nicefrac{\Delta}{2}$, ed è equiprobabile e casuale con valor medio nulla (distribuzione uniforme). La potenza del rumore equivale alla varianza di $\varepsilon$, variabile casuale.
 
 La situazione ideale ha un rapporto segnale-rumore ottimale (uguaglianza), cioè esso si adatta perfettamente ai livelli e la dinamica del quantizzatore è uguale a quella del segnale. Il range di valori è pari a $2A$, per un segnale sinusoidale.
-
-% slide 15
-
+$$P_N = \sigma^2_\varepsilon = \frac{\Delta^2}{12} = \frac{A^2/3}{2^{2b}} \qquad P_S = \frac{A^2}{2}$$
+$$x_a(t) = A\cos(\omega_0t) \text{ segnale sinusoidale analogico}$$
+$$P_S = \frac{1}{N} \sum_{n=0}^{N-1}\abs{x(n)}^2 \text{ segnale sinusoidale campionato}$$
 La distanza dei livelli, di conseguenza, sarà $\nicefrac{2A}{2^b}$, essendo la potenza del rumore strettamente legata all'ampiezza del segnale (aumenta in proporzione al numero di bit).
 
-Sostituendo nella formula generale, si ottiene una nuova rappresentazione: 
-% formula slide 18
+Conoscendo il modo di calcolare $P_S$ e $P_N$, insieme alla dinamica del quantizzatore $D_q = 2^b\Delta$, si ottiene:
+$$SNR_q = 20\log\frac{\sqrt{P_S}}{D_q} + 10,8 + 6,02b$$
+Il range del segnale sinusoidale è $D = 2A$, e con $b$ bit di quantizzatore in $"^b$ livelli è possibile ricavare una nuova rappresentazione sostituendo nella formula generale:
+$$SNR_Q = 1,76 + 6,02b$$
+Per un insieme di segnali più ampio che si distribuisce sull'intero range dinamico del quantizzatore, si somma 1,25 invece che 1.76. Un incremento di un bit porta a un incremento di circa 6 dB, cioè l'intensità del segnale raddoppia rispetto all'intensità del rumore.
 
+Dato che la quantizzazione provoca una perdita irreversibile di informazione, tenendo conto dell'errore, è importante stabilire in quali condizioni la distorsione introdotta è minima. Anche se il campionamento è ideale, la conversione D/A può invertire solo quest'ultimo senza considerare il rumore, quindi $x_r(t) \neq x(t)$.
+
+Maggiore è la risoluzione (bit), più il segnale si avvicina all'originale, e l'ottimo del quantizzatore è il numero minimo dei livelli per avere una distorsione accettabile.
+
+L'operazione che permette di ricostruire il segnale analogico $x(t)$ a partire dalla sequenza $x(NT_c)$ è detta ricostruzione. Essa è fedele se:
+\begin{itemize}
+	\item Non c'è quantizzazione;
+	\item Il campionamento è avvenuto nel rispetto del teorema di Shannon.
+\end{itemize}
+Nei convertitori digitale/analogico i punti del segnale vengono interpolati per generare il segnale analogico ricostruito. L'accuratezza della ricostruzione dipende dalla qualità del processo di conversione.
