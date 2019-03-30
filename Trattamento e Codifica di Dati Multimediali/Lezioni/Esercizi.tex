@@ -1,7 +1,8 @@
-\section{Esercizi}
+\section{Esempi ed esercizi}
+
+% aggiungere batch 1
 
 \subsection{Campionamento}
-\subsection{Esempio}
 $$x(n) = A\cos(\omega n + \theta)$$
 \begin{figure}[h]
 	\centering
@@ -20,7 +21,7 @@ Lo sfasamento con anticipo di 2 campioni si trova effettuando la proporzione: un
 La frequenza normalizzata indica quanto bene si vedono i campioni e la loro variazione in un periodo, per poi decidere la finestra di osservazione. La frequenza dipende dal numero di campioni al secondo ($f_c$): se la frequenza di campionamento è $f_c = 1$ campione/secondo, si ha che $f = 1/12$ ciclo/secondo, cioè $f = f_c \cdot f_N$.
 
 Per ricavare la formula più facilmente si possono utilizzare le unità di misura. Un altro modo per arrivare allo stesso risultato è sostituire a $n\Delta t$ la $t$.
-
+\newpage
 Con 2 campioni al secondo, cioè $f_c = 2$ e $\Delta t = 0.5 = \nicefrac{1}{2}$, la frequenza $f$ in cicli al secondo (Hz) è $\nicefrac{1}{2}$:
 $$f_N \cdot f_c = \frac{1}{12} \frac{\text{cicli}}{\text{campione}} \cdot \frac{2 \text{ campioni}}{\text{sec}} = \frac{1}{6} \frac{\text{cicli}}{\text{sec}}$$
 $$x(n) = A\cos \Big(2\pi \frac{1}{12}n + \frac{\pi}{3}\Big) \implies x(t) = A\cos\Big(2\pi \frac{1}{6}t + \frac{\pi}{3}\Big) \qquad \Delta tn \implies t$$
@@ -33,45 +34,91 @@ Il segnale $h(m)$ viene traslato e ribaltato rispetto all'asse $x$ con $n = -\in
 $y(n)$ è la funzione che si ottiene quando il segnale ottenuto assume valore $n$. \\
 Si ha $y(n) = \sum_{-\infty}^{max+\infty} x(m)h(n - m)$.
 
+% finire
 
-Dato il segnale a tempo discreto $x(n) = 6,4 \cos (\nicefrac{\pi}{n})$, trovare il numero (intero) di bit necessari per la conversione da analogico a digitale tale che:
+\subsection{Quantizzazione}
+\subsubsection{}
+Dato il segnale a tempo discreto $x(n) = 6,4 \cos (\nicefrac{\pi}{10}n)$, trovare il numero (intero) di bit necessari per la conversione da analogico a digitale tale che:
 \begin{enumerate}
 	\item $\Delta = 0,1$: \\
 	$0,1 \cdot 2^b \geq 12,8 \rightarrow 2^b \geq \frac{12,8}{0,1} = 128 \rightarrow b = 7$ \\
 	$SNR_q = 1,76 + 6,02b = 43,9 dB$
 	\item $\Delta = 0,02$: \\
 	$0,02 \cdot 2^b \geq 12,8 \rightarrow 2^b \geq \frac{128}{0,02} = 640 \rightarrow b = 9 \lor 10$ \\
-	Il valore scelto dev'essere sempre il maggiore (10) altrimenti si verifica saturazione. \\
+	$2^9 = 540 \qquad 2^10= 1024$ \\
+	Il valore scelto dev'essere sempre il maggiore (10) altrimenti si verifica saturazione. Il numero perfetto sarebbe una potenza che soddisfa esattamente l'equazione $D_S = D_q$, ma non sempre è possibile averne uno. \\
 	$SNR_q = 1,76 + 6,02b = 61,96 dB$ se fosse ottimale;
 	$SNR_q = 10\log_{10} \frac{(6,4)^2}{0,02 / 12} = 57,88 dB$ nel caso vero.
 	\end{enumerate}
+
 Bisogna sempre rispettare $D_s \leq D_q$, pertanto $D_s = 2 \cdot 6,4 = 12,8$. La dinamica del quantizzatore è $\Delta 2^b$. 
 
-Il rapporto segnale-rumore del secondo caso è minore di quello ideale, ma comunque maggiore del primo, quindi la seconda $\Delta$ è più efficiente.
+Il rapporto segnale-rumore ($SNR_q$) del secondo caso è minore di quello ideale, ma comunque maggiore del primo, quindi la seconda $\Delta$ è più efficiente.
 
-Con b = 10, 2A = 12,8, trovare la $\Delta$ tale che il rapporto segnale-rumore sia ottimo.\\
+\subsubsection{}
+Con $b = 10$, $2A = 12,8$, trovare la $\Delta$ tale che il rapporto segnale-rumore sia ottimo. Sapendo che la frequenza massima è $15 kHz$ ma la frequenza campionata è $27 kHz$, calcolare il rapporto segnale-rumore.
+
 $Dq = Ds \rightarrow \Delta = \frac{12,8}{1024} = 0,0125$
 
-Frequenza massima 15kHz, densità spettrale (potenza) uniforme: $P = \abs{F(\delta(x))}$
+Se la frequenza massima è $15 kHz$, la densità spettrale (potenza) uniforme è $P = \abs{F(\delta(x))}$. \\
 Il range in kHz è $[-15, +15]$ e ha una distribuzione uniforme, quindi sarà rappresentato con una finestra. 
 Se la frequenza di campionamento è minore di 30, ci saranno fenomeni di aliasing e sotto-campionamento. 
-Con $f_c = 27 kHz$, la finestra occupata sarà $[-13,5, 13,5]$ e la replica si posizionerà nella fascia non utilizzata in modo simmetrico rispetto all'estremo dell'intervallo. Le frequenze più alte verranno erroneamente convertite in frequenze basse.
 
-Rapporto segnale-distorsione: applicando la definizione di rapporto segnale-rumore, è possibile calcolare l'integrale: $S = \int_{-f_c/2}^{f_c/2}\abs{x(f)}^2ndf$
-$D = \int_{f_c/2}^{\infty} \abs{x(h)}^2 df +  \int_{-\infty}^{f_c/2}\abs{x(f)}^2ndf$
-$SNR_c = 10\log_{10} \frac{P_R}{P_R} = \frac{27u}{3u} = 9,54 dB$
+Con $f_c = 27 kHz$, la finestra occupata sarà $[-13,5,\: 13,5]$ e la replica si posizionerà nella fascia non utilizzata in modo simmetrico rispetto all'estremo dell'intervallo. Le frequenze più alte verranno erroneamente convertite in frequenze basse.
 
+La replica si posiziona a $-15 kkHz + 27kHz = 12 kHz$. \\
+Di conseguenza, la parte corretta sarà $[-12, +12]$.
+
+Non è possibile trovare il rumore delle frequenze che si sovrappongono da $12 kHz$ a $13,5 kHz$ perché è parte integrante del segnale.
+
+Rapporto segnale-distorsione: applicando la definizione di rapporto segnale-rumore, è possibile calcolare l'integrale. \\
+Si ha $S$ come periodo che va da $-\nicefrac{f_c}{2}$ a $\nicefrac{f_c}{2}$, quindi:
+$$S = \int_{-f_c/2}^{f_c/2}\abs{x(f)}^2ndf \quad \implies \quad S = 2\int_{0}^{13,5} df = 27u$$
+
+$$D = \int_{f_c/2}^{\infty} \abs{x(h)}^2 df +  \int_{-\infty}^{f_c/2}\abs{x(f)}^2ndf \quad \implies \quad D = 2\int_{-\infty}^{-13,5} df = 2\int_{13,5}^{15} df = 3u$$
+
+$$SNR_c = 10\log_{10} \frac{P_S = S}{P_R = D} = \frac{27u}{3u} = 9,54 dB$$
+
+\subsection{Frequenze}
+\subsubsection{}
 Due segnali analogici, $x(t) = 5\sin(60\pi t)$ e $y(t) = 2\cos(60\pi t) - 3\sin(40\pi t)$, vengono sommati e campionati con una frequenza di campionamento $f_c = 50 Hz$. 
+\begin{enumerate}
+	\item Rappresentare graficamente i due segnali sommati;
+	\item Rappresentare il segnale con aliasing;
+	\item Caratterizzare ($\Delta$, numero di bit) un quantizzatore ideale per il segnale, in modo che il rapporto segnale-rumore sia circa $96 dB$;
+	\item Trovare la frequenza normalizzata.
+\end{enumerate}
+La somma di funzioni è:
+$$z(t) = 5\sin(60\pi t) + 2\cos(60\pi t) - 3\sin(40\pi t)$$
+Seno e coseno non hanno distinzione nella trasformata, quindi è necessario rappresentare la parte reale (coseno) e la parte immaginaria (seno). 
 
-Seno e coseno non hanno distinzione nella trasformata, quindi è necessario rappresentare la parte reale e la parte immaginaria nella rappresentazione. 
-$60\pi t = 2\pi 30t$ quindi la parte reale avrà due picchi a $[-30, 30]$ alti 1 (2/2), mentre la parte immaginaria avrà gli stessi alti $5 / 2$, uno positivo e uno negativo.
+Un seno può quindi essere confuso al più con un altro seno avente frequenze minori, mai con un coseno.
 
-Lo stesso procedimento si applica al seno, per ottenere il segnale prima del campionamento. C'è aliasing, perchè $50 < 2 * 30$. 
+$60\pi t = 2\pi 30t$ \\
+La parte reale avrà due picchi a $[-30, +30]$ alti 1 ($\nicefrac{2}{2}$), mentre la parte immaginaria avrà gli stessi, alti $\nicefrac{5}{2}$, uno positivo e uno negativo. 30 cicli al secondo sono $30Hz$.
 
-Il primo picco nella parte reale trasla fino a $+20$, e il secondo esce dall'intervallo. Il periodo base è largo $50 Hz$, e va osservato centrato in 0 con un'ampiezza di $[-25, +25]$. La seconda replica va da 30 a 30 - 50, cioè -20. La parte immaginaria ha un range $[-25, +\infty]$.
+Lo stesso procedimento si applica al seno, per ottenere il segnale prima del campionamento. C'è aliasing, perché $50 < 2 \cdot 30$. 
 
-Il segnale frainteso con aliasing diventa $z'(t) = 2\cos(40\pi t) - 8\sin(40\pi t)$.
+Il primo picco nella parte reale trasla fino a $+20$, e il secondo esce dall'intervallo. Il periodo base è largo $50 Hz$, e va osservato centrato in 0 con un'ampiezza di $[-25, +25]$. La seconda replica va da 30 a $(30 - 50)$, cioè $-20$. La parte immaginaria ha un range $[-25, +\infty]$.
 
-Caratterizzare ($\Delta$, numero di bit) un quantizzatore ideale per il segnale, in modo che il rapporto segnale-rumore sia circa 96 dB.
-
+Il segnale frainteso con aliasing diventa:
+$$z'(t) = 2\cos(40\pi t) - 8\sin(40\pi t)$$
 Se il segnale ha un range maggiore del quantizzatore ideale, per esempio ottenuto sommando più sinusoidali, esso satura.
+
+Per avere un rapporto segnale-rumore di $96 db$, si ha che $SNR_Q = 1,76 + 6,02b \approx 96db$. \\
+Di conseguenza $b = 16$, $\Delta = \frac{10}{2^b}$ ma il segnale satura a causa dell'aliasing.
+
+La frequenza normalizzata è $F_N = \frac{\text{cicli}}{\text{campione}} = \frac{F}{f_c}$ (dove $F$ è il coefficiente che moltiplica $2\pi t$), cioè rispettivamente $\nicefrac{3}{5}$, $\nicefrac{3}{5}$ e $\nicefrac{2}{5}$ per le sinusoidali. I primi due valori, però, non sono nell'intervallo $[-1/2, +1/2]$ (frequenza di Nyquist) quindi va sottratto 1. 
+
+Se il coseno ha un coefficiente negativo, bisogna ricordare che la funzione è pari, quindi ha lo stesso aspetto a prescindere dal segno.
+
+La nuova funzione normalizzata è:
+$$z(t) = -5\sin\Big(2\pi \frac{2}{5}n\Big) + 2\cos\Big(2\pi \frac{2}{5}n\Big) - 3\sin\Big(2\pi \frac{2}{5}n\Big)$$
+Le due funzioni seno si possono semplificare scrivendo: 
+$$z(t) = +2\cos\Big(2\pi \frac{2}{5}n\Big) - 8\sin\Big(2\pi \frac{2}{5}n\Big)$$
+Bisogna notare che $n$ è al posto di $t$ avendo trasformato dal dominio del tempo a quello dei campioni. 
+
+$f = \frac{2}{5} \frac{\text{cicli}}{\text{campione}} \cdot 50 \frac{\text{campioni}}{\text{secondo}} = 20 \frac{\text{cicli}}{\text{secondo}}$ \\
+$\Delta t = \nicefrac{1}{f_c}$, con $F_N = 25Hz$ l'intervallo sarà $[-25, +25]$.
+
+
