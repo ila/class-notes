@@ -1,11 +1,12 @@
 \section{Analisi di Fourier}
-L'analisi di Fourier decompone il segnale in costituenti sinusoidali di differenti frequenze. Il segnale non è più nel dominio tempo-spazio, ma delle frequenze: i dati sono gli stessi, cambia solo la rappresentazione.
+L'analisi di Fourier decompone il segnale in costituenti sinusoidali di differenti frequenze. Il segnale non è più nel dominio tempo-spazio, ma delle \textbf{frequenze}: i dati sono gli stessi, cambia solo la rappresentazione.
 
 \textit{Ogni funzione periodica e a quadrato sommabile può essere espressa come somma infinita e pesata di funzioni seno e coseno (combinazioni di funzioni armoniche).}
 
-Si ricorda che una sequenza periodica è $x(n) = x(n + T)$. Una funzione armonica è una funzione periodica del tipo:
+Si ricorda che una sequenza \textbf{periodica} è $x(n) = x(n + T)$. Una funzione \textbf{armonica} è una funzione periodica del tipo:
 $$y = A\sin(\varpi x + \varphi) \qquad y = A\cos(\varpi x + \varphi)$$
-Dove $A$ è l'ampiezza, $\varpi$ è la pulsazione, $\varphi$ è la fase. Si ha che $\varpi = 2\pi/T$ dove $1/T$ è la frequenza, e $\pi$ è $180^{\circ}$.
+Dove $A$ è l'ampiezza, $\varpi$ è la pulsazione, $\varphi$ è la fase. \\
+Si ha che $\varpi = 2\pi/T$ dove $1/T$ è la frequenza, e $\pi$ è $180^{\circ}$.
 
 Sviluppando i seni e i coseni si ha, con $a = A\sin(\varphi)$ e $b = A\cos(\varphi)$: \\
 $y = A\sin(\varpi x + \varphi) = a\cos (\varpi x) + b\sin(\varpi x)$ \\
@@ -18,7 +19,7 @@ Le armoniche vengono combinate una per volta, avvicinandosi man mano alla funzio
 \end{figure}
 
 \subsection{Serie di Fourier}
-La serie di Fourier è una formula utile per approssimare la scomposizione. Rappresenta una funzione periodica mediante combinazione lineare di funzioni sinusoidali.
+La serie di Fourier è una formula utile per approssimare la scomposizione. Rappresenta una funzione periodica mediante \textit{combinazione lineare di funzioni sinusoidali}.
 $$f(x) = \frac{a_0}{2} + \sum_{k=1}^{\infty} a_k \cos\Big(\frac{2\pi}{N}kx\Big) + b_k\sin\Big(\frac{2\pi}{N}kx\Big)$$
 $$N \rightarrow \text{periodo} \qquad (1/N) \rightarrow \text{frequenza fondamentale } f_0 \qquad (1/N)k \rightarrow \text{frequenze multiple } kf_0$$
 
@@ -47,14 +48,14 @@ I suoni elementari hanno andamento sinusoidale, periodico e con estensione indef
 	\vspace{-50pt}
 \end{wrapfigure}
 
-Un segnale si definisce complesso quando è formato da più funzioni sinusoidali combinate, invece che una sola.
+Un segnale si definisce \textbf{complesso} quando è formato da più funzioni sinusoidali combinate, invece che una sola.
 
-Si può dimostrare che, fatte alcune ipotesi di regolarità sull'andamento della forma d'onda, un generico suono complesso può essere descritto come una combinazione di suoni elementari (armoniche).
+Si può dimostrare che, fatte alcune ipotesi di regolarità sull'andamento della forma d'onda, un generico suono complesso può essere descritto come una \textit{combinazione di suoni elementari} (armoniche).
 
 Le armoniche sono funzioni che, combinate fra loro, permettono di determinare il timbro degli strumenti musicali. Insieme costituiscono forme d'onda. 
 
 \subsection{Onda quadra}
-L'onda quadra è un caso particolare in cui tutte le armoniche pari sono nulle, e l'onda quadra è data dalla forma delle componenti $F_0, 3F_0, 5F_0, \dots$ cioè 200 Hz, 600 Hz, 1 Kz eccetera. Si ricorda che l'ampiezza di conseguenza è $\nicefrac{1}{3}, \nicefrac{1}{5}, \dots$ cioè la parte dispari della sommatoria.
+L'onda quadra è un caso particolare in cui tutte le armoniche pari sono nulle, e l'onda quadra è data dalla forma delle componenti $F_0, 3F_0, 5F_0, \dots$ cioè 200 Hz, 600 Hz, 1 Kz eccetera. Si ricorda che l'ampiezza di conseguenza è $\nicefrac{1}{3}, \nicefrac{1}{5}, \dots$ cioè la parte \textbf{dispari} della sommatoria.
 
 Ognuna di queste componenti ha un'ampiezza diversa rispetto a quella dell'armonica fondamentale. La funzione è asimmetrica, e i termini pari sono appunto i coseni: ci sono solo seni non nulli. 
 
@@ -66,10 +67,10 @@ Ognuna di queste componenti ha un'ampiezza diversa rispetto a quella dell'armoni
 
 Esempio: un'onda quadra con periodo 5 ms può essere ottenuta sommando onde sinusoidali di opportuna frequenza, ampiezza e fase. Il contributo più rilevante è dato dalla prima sinusoide, si frequenza pari a quella dell'onda quadra (200 Hz, frequenza fondamentale $F_0$).
 
-Per costruire l'onda quadra sono necessarie anche altre componenti elementari di frequenza maggiore, le armoniche multiple di $F_0$. \\
+Per costruire l'onda quadra sono necessarie anche altre componenti elementari di frequenza maggiore, cioè tutte le armoniche multiple della frequenza $F_0$. \\
 
 \subsection{Numeri complessi e serie di Fourier}
-I numeri complessi sono rappresentabili su un piano cartesiano come l'intersezione tra numeri reali sull'asse $x$ e numeri complessi sull'asse $y$. Ogni numero complesso ha quindi una parte reale $a$ e una immaginaria $b$.
+I numeri complessi sono rappresentabili su un piano cartesiano come l'intersezione tra numeri reali sull'asse $x$ e numeri complessi sull'asse $y$. Ogni numero complesso ha quindi una parte \textbf{reale} $a$ e una \textbf{immaginaria} $b$.
 $$z = ai+b \qquad \abs{z} = \sqrt{a^2 + b^2} = \pi$$
 
 \begin{wrapfigure}{I}{0.43\textwidth}
@@ -81,7 +82,7 @@ $$z = ai+b \qquad \abs{z} = \sqrt{a^2 + b^2} = \pi$$
 Forma polare:  \\ 
 $a = \pi\cos(\theta)$ \\ 
 $b = \pi\sin(\theta)$ \\ 
-$\theta = \arctan\Big(\frac{b}{a}\Big)$
+$\theta = \arctan\big(\frac{b}{a}\big)$
 
 Le coordinate polari corrispondono a quelle cartesiane (proiezione). 
 
@@ -104,16 +105,16 @@ Il coefficiente $\frac{A_n}{2}$ (altezza del segnale sull'asse $y$) è dato appu
 \subsection{Trasformata di Fourier di funzioni continue}
 Per passare dalle funzioni periodiche a quelle reali, la sommatoria diventa un integrale. La trasformata di Fourier serve per rapppresentare le funzioni continue come sinusoidi.
 
-Ogni funzione continua $f(x)$ anche se non periodica (purché abbia area finita) può essere espressa come integrale di sinusoidi complesse opportunamente pesate. L'antitrasformata ha dominio spaziale (temporale, diretto) mentre la trasformata ha dominio delle frequenze.
+Ogni funzione continua $f(x)$ anche se non periodica (purché abbia area finita) può essere espressa come \textit{integrale di sinusoidi complesse opportunamente pesate}. L'antitrasformata ha dominio spaziale (temporale, diretto) mentre la trasformata ha dominio delle frequenze.
 $$\text{Antitrasformata di Fourier: } f(x) = \int_{-\infty}^{\infty} F(u)e^{j2\pi ux} dx$$
 $$\text{Trasformata di Fourier: } F(u) = \int_{-\infty}^{\infty} f(x)e^{-j2\pi ux} dx$$
-$F(u)$ sostituisce il coefficiente discreto $R_k$, $u$ è la frequenza. La trasformata di Fourier non si può applicare a tutte le funzioni, ma solo a quelle con quadrato sommabile (trovare la formula) e continue.
+$F(u)$ sostituisce il coefficiente discreto $R_k$, $u$ è la frequenza. La trasformata di Fourier non si può applicare a tutte le funzioni, ma solo a quelle con quadrato sommabile e \textbf{continue}.
 
-Dalla trasformata di Fourier, la funzione originiaria può essere ricostruita senza perdita di informazione attraverso il processo inverso: è possibile spostarsi dal dominio spaziale a quello delle frequenze e poi tornare indietro senza aver perso informazione.
+Dalla trasformata di Fourier, la funzione originiaria può essere ricostruita \textbf{senza perdita di informazione} attraverso il processo inverso: è possibile spostarsi dal dominio spaziale a quello delle frequenze e poi tornare indietro senza aver perso informazione.
 
 Esiste un valore della trasformata (non più $\delta$) per ogni funzione continua. Invertendo la funzione, quindi, se è a supporto finito non ci sarà $2\delta$.
 
-Piuttosto che guardare parte reale e immaginaria, si considerano modulo e fase, ricavabili direttamente. Il modulo indica la potenza del segnale, e la fase assicura la biunivocità della corrispondenza. 
+Piuttosto che parte reale e immaginaria, si considerano modulo e fase, ricavabili direttamente. Il modulo indica la \textbf{potenza} del segnale, e la fase assicura la \textbf{biunivocità} della corrispondenza. 
 $$F(u) = \digamma[f(x)] = \Re(u) + j\Im(u) = \abs{F(u)}e^{j\phi(u)}$$
 $$\text{Spettro: } \abs{F(u)} = [\Re(u)^2 + \Im(u)^2]^{\nicefrac{1}{2}}$$
 $$\text{Fase: } \phi(u) = \tan^{-1} \Big[\frac{\Im(u)}{\Re(u)}\Big]$$
@@ -123,7 +124,7 @@ La trasformata di Fourier è un operatore scomponibile, quindi per passare da un
 \subsection{Trasformata di Fourier di funzioni discrete}
 Il primo step è il campionamento: in questo caso si utilizza la sommatoria, ma la funzione continua è rappresentata da un numero discreto di campioni. La funzione è definita per campioni $i$, e la variabile indipendente $x$ assume valore complesso $i\Delta x$.
 $$F(u) = \int_{-\infty}^{+\infty} f(x)e^{-j2\pi ux} dx \Longrightarrow F(u) = \sum_{i=-\infty}^{\infty} f(i)e^{-j2\pi ui\Delta x}$$
-Limitando la funzione spazialmente, il passo $\Delta x$ per convenzione diventa $\nicefrac{1}{N}$, e la sommatoria arriva fino a $N - 1$ invece che infinito. $f(i)$ è la funzione campionata (a partire da $f(x)$ continua): la trasformata è periodica. Si ha $f(i) = f(x_0 + i\Delta x)$.
+Limitando la funzione spazialmente, il passo $\Delta x$ per convenzione diventa $\nicefrac{1}{N}$, e la sommatoria arriva fino a $N - 1$ invece che infinito. $f(i)$ è la funzione campionata (a partire da $f(x)$ continua): la trasformata è \textbf{periodica}. Si ha $f(i) = f(x_0 + i\Delta x)$.
 $$F(u) = \frac{1}{N} \sum_{i=0}^{N-1} f(i)e^{-j2\pi u \frac{1}{N}i}$$
 Per campionare le funzioni $f(x)$ e $F(u)$ si applicano le trasformate di Fourier discrete (DFT). Il segnale campionato è periodico, quindi la funzione inversa è comunque periodica con distanza $\nicefrac{1}{\Delta x}$. Se il passo tende a 0, la funzione tende a infinito (senza repliche) e viceversa. 
 
@@ -134,19 +135,21 @@ Il fattore $\nicefrac{1}{N}$ davanti alla trasformata o all'antitrasformata è u
 Un ragionamento analogo si applica per passare da una dimensione a due: la sommatoria è doppia e si divide per entrambi i fattori di normalizzazione. Entrambe le variabili rispettano la periodicità, cioè $F(u, v) = F(u + M, v + N)$ con $\Delta u = 1/M \Delta x$, $\Delta v = 1/N \Delta y$.
 
 \subsection{Elaborazione di immagini}
-Il segnale di un'immagine viene scomposto, come visto precedentemente, in modulo e fase. il modulo raccoglie le frequenza di un'immagine, mentre la fase contiene l'informazione posizionale di ogni in un'immagine (le frequenze sono le stesse a prescindere dall'organizzazione spaziale). L'ampiezza $\angle$ contiene informazioni relative alle posizione o meno delle strutture nell'immagine.
-$$F(u, v) = \abs{F(u, v)}e^{j\phi(u, v)}$$
-I pixel possono assumere valore da 0 a 255, mappati in una trasformata di Fourieri discreta. Data la periodicità e la simmetria dello spettro rispetto all'origine, è possibile scegliere il periodo dello spettro centrato sull'origine $(0, 0)$.
+Il segnale di un'immagine viene scomposto, come visto precedentemente, in modulo e fase. Il modulo raccoglie le frequenza di un'immagine, mentre la fase contiene l'informazione posizionale di ogni in un'immagine (le frequenze sono le stesse a prescindere dall'organizzazione spaziale).
 
-In questo modo, il picco rappresenza la componente continua (valore medio della funzione), e le frequenze crescono allontanandosi dal picco. Per convenzione lo spettro (in alto a sinistra) si trasla in modo da essere al centro, e le alte frequenze sono verso gli angoli esterni.
+L'ampiezza $\angle$ contiene informazioni relative alle posizione o meno delle strutture nell'immagine.
+$$F(u, v) = \abs{F(u, v)}e^{j\phi(u, v)}$$
+I pixel possono assumere valore da 0 a 255, mappati in una \textit{trasformata di Fourieri discreta}. Data la periodicità e la simmetria dello spettro rispetto all'origine, è possibile scegliere il periodo dello spettro centrato sull'origine $(0, 0)$.
+
+In questo modo, il picco rappresenta la \textbf{componente continua} (valore medio della funzione), e le frequenze crescono allontanandosi dal picco. Per convenzione lo spettro (in alto a sinistra) si trasla in modo da essere al centro, e le alte frequenze sono verso gli angoli esterni.
 
 Il processo è reversibile: l'immagine, di solito sotto forma di segnale, se viene ricostruita dalla trasformata è identica all'originale.
 
 Un operatore puntuale ha una corrispondenza biunivoca non indipendente dall'ambiente, cioè ogni pixel dell'immagine originale viene mappato nel modulo nello stesso modo a prescindere dai pixel intorno.
 
-Al contrario, la trasformata di Fourier funziona applicando sommatorie (per il segnale), quindi ogni valore dipende da tutti i precedenti. Ciò si definisce operatore locale: ogni frequenza ha una sua influenza, e sebbene ci possano essere corrispondenza tra linee e forme, ogni pixel nel dominio è ricavato in base a tutti i pixel nel codominio (e viceversa).
+Al contrario, la trasformata di Fourier funziona applicando \textbf{sommatorie} (per il segnale), quindi ogni valore dipende da tutti i precedenti. Ciò si definisce \textbf{operatore locale}: ogni frequenza ha una sua influenza, e sebbene ci possano essere corrispondenza tra linee e forme, ogni pixel nel dominio è ricavato in base a tutti i pixel nel codominio (e viceversa).
 
-L'istogramma di un'immagine a livelli di grigio è una funzione discreta $h(r_k) = n_k$ dove $r_k$ è il livello di grigio \textit{k}-simo, e $n_k$ è il numero di pixel nell'immagine con intensità $r_k$ (per ogni livello).
+L'\textit{istogramma di un'immagine a livelli di grigio} è una funzione discreta $h(r_k) = n_k$ dove $r_k$ è il livello di grigio \textit{k}-simo, e $n_k$ è il numero di pixel nell'immagine con intensità $r_k$ (per ogni livello).
 
 Il numero di campioni stabilisce l'informazione che si può rappresentare: se è sufficientemente alto, la distribuzione dei toni di grigio sarà regolare. Questo non permette di trarre conclusioni sullo spazio, ma semplicemente su quanti campioni hanno un certo valore (e di conseguenza la bontà del quantizzatore).
 
@@ -154,7 +157,7 @@ Se ci sono picchi nella distribuzione, esso è dovuto alla ripetizioni di patter
 
 Per rimuovere i rumori si acquisiscono porzioni di segnali più lunghe, eventualmente analizzando le loro medie in modo da preservare le componenti più importanti.
 
-Lo spettro è il risultato della trasformata, di cui una parte è reale e una immaginaria. Lavorando sul modulo, è possibile individuare circonferenze che indicano dove si concentra la potenza del segnale: manipolando lo spettro il risultato dell'inversione sarà differente. 
+Lo \textbf{spettro} è il risultato della trasformata, di cui una parte è reale e una immaginaria. Lavorando sul modulo, è possibile individuare circonferenze che indicano dove si concentra la potenza del segnale: manipolando lo spettro il risultato dell'inversione sarà differente. 
 
 Alcune metodologie di filtraggio comportano l'applicazione di maschere, finestre (monodimensionali, rappresentate come un rettangolo nel piano) a sezione circolare. Modificare lo spettro, quindi, implica ricostruire una diversa immagine che sarà più o meno accurata rispetto all'originale. 
 
@@ -170,6 +173,7 @@ Eliminando parte dello spettro e delle frequenze, il filtro diventa parte integr
 
 Per ottenere diversi effetti si selezionano diverse parti dello spettro da tenere, per esempio solo l'interno o l'esterno, o una banda di un certo intervallo (mosaico, smoothing). 
 
+% rivisto fino a qui
 \subsection{Proprietà della trasformata}
 Un'importante proprietà è la linearità, che vale per ogni dominio: la trasformata di Fourier applicata a una funzione che è combinazione lineare (somma pesata) di funzioni, il risultato è uguale alla trasformata di Fourier di ogni funzione presa singolarmente. 
 $$F(f)x) + g(x) = F(f(x)) + F(g(x)) = F(u) + G(u)$$
