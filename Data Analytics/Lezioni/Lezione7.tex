@@ -1,0 +1,54 @@
+\section{Community detection}
+Non esiste una definizione formale di comunità, ma il concetto si riferisce alla struttura (aspetto topologico e relazionale) di sottocomponenti dense di un grafo. Talvolta sono considerati anche gli attributi dei nodi, per effettuare inferenze sulla loro appartenenza.
+
+I dati sono in formato collegato con attributi discreti, e le applicazioni si basano sulle proprietà dei grafi.
+
+Scoprire come funzionano le comunità e identificarle permette di capirne il funzionamento e le relazioni tra individui con le stesse caratteristiche. Anche i diversi gruppi interagiscono tra di loro, e possono essere correlati, fornendo informazioni sullo schema globale.
+
+Le reti sociali online sono rappresentate da nodi che comunicano strutturalmente e condivisioni o produzioni di contenuti simili. Questa proprietà distingue la tipologia di rete rispetto alle altre, e viene utilizzata per il sentiment analysis. Predirre quali vertici potrebbero essere connessi (link prediction) è uno dei potenziali usi.
+
+A seconda del risultato cercato, ci sono due distinzioni di comunità: disgiunte o overlapping, con nodi che appartengono a uno o più sottoinsiemi.
+
+Ci sono quattro diverse famiglie di algoritmi:
+\begin{itemize}
+	\item Node-centric community, in cui ogni nodo deve soddisfare proprietà. Serve per identificare cliques, raggiungibilità e grado;
+	\item Group-centric community, in cui tutto il gruppo deve soddisfare proprietà (es. densità). Viene usato per garantire un livello di coesione su grafi di dimensioni ridotte;
+	\item Network-centric community, in cui si considera l'intera rete da suddividere in $n$ (prefissato) insiemi disgiunti. L'obiettivo è il partizionamento in base a similarità, spazio latente (spettro) o massimizzazione della modularità;
+	\item Hierarchy-centric community, organizzando la rete secondo una struttura gerarchica.
+\end{itemize}
+Una clique è un insieme di nodi in cui ognuno è adiacente agli altri (es. triangolo). La ricerca può essere incentrata su quelle di dimensione massima o su tutte in generale, e il brute-force è impratico: si stabilisce una grandezza minima $k$, quindi un grado dei nodi almeno pari a $k - 1$. 
+
+Questo approccio ha delle limitazioni, come la scarsa frequenza di cliques anche in grafi complessi. La rimozione degli archi rischia di tagliare potenziali gruppi. 
+
+Un altro criterio è la raggiungibilità in $k$ step (archi), per individuare una rete in cui la maggiore distanza tra ogni coppia di nodi sia minore o uguale a $k$. 
+
+Una quasi-clique è una sottostruttura con i nodi che soddisfano alcune caratteristiche come la densità minima $\gamma$:
+$$\frac{2\abs{E_s}}{\abs{V_s}(\abs{V_s} - 1)} \geq \gamma$$
+Il problema per trovae $\gamma$ è di ottimizzazione, cioè stabilire quanti nodi possono appartenere a una quasi-clique tramite algoritmi greedy.
+
+La similarità è definita dalla tipologia di interazioni: due nodi sono strutturalmente equivalenti se sono connessi agli stessi vicini. Il concetto può essere esteso dal primo ordine, essendo molto severo e poco probabile. 
+
+Le similarità vengono individuate applicando le formule (coseno sul continuo, Jaccard sul discreto) ai singoli vettori della matrice di adiacenza. 
+$$cos(\theta) = \frac{A \cdot B}{||A|| \cdot ||B||} \qquad J(A, B) = \frac{|A \cap B|}{|A \cup B|}$$
+
+Per le reti più grandi vengono utilizzati gli algoritmi di clustering, di cui il più famoso è $k$-means: esso trova centroidi e comunità in rappresentazioni sferiche nello spazio geometrico, ma fallisce con densità o forme diverse. 
+
+La matrice di adiacenza può essere modificata in modo da avere suddivisioni più chiare, oppure i nodi centrali saranno stabiliti in base al grado e non solo il peso degli archi (matrice Laplaciana).
+
+Spectral è un ulteriore algoritmo che consiste nella ricerca dei gruppi tramite pre-processing, computazione di autovettori e autovalori e organizzazione in possibili community. 
+
+Alcune connessioni si possono creare grazie a un fattore casuale, e non danno informazioni significative quindi dovrebbero essere rimosse nello studio dei gruppi. Una rete con link motivati è strutturalmente molto diversa da una costruita con criteri random.
+
+Il concetto di modularità $[-1, +1]$  definisce appunto questa differenza. 
+$$\frac{1}{2E} \sum_{C} \sum_{i \in C, j \in C} \Big(A_{ij} - \frac{d_id_j}{2E}\Big) z_{ij}$$
+Vengono considerate tutte le possibili coppie di nodi in relazione alla probabilità di una connessione random rispetto alla presenza o meno di un arco. $z_{ij} = 1$ se i nodi sono nella stessa community.
+
+Più è ampia la differenza tra la probabilità casuale e la matrice di adiacenza, più una relazione tra vertici è forte (non è dovuta al caso). La modularità globale è pari a 0 quando tutti i nodi sono all'interno di un unico cluster, e se ne calcola lo spettro. 
+
+
+
+
+
+
+
+
