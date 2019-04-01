@@ -173,4 +173,65 @@ Lo scopo di questo step non è solamente considerare la lista pura dei comportam
 
 \begin{example}{}{Display Control}
     Si immagini di avere cinque parametri (1 colonna = 1 parametro del sistema). La specifica non ci è data a sapere, ma abbiamo già estratto tutti i valori significativi. Questi parametri sono stati rivelati in fase di test. 
+
+    \begin{tabular}{c | c | c | c | c}
+        Display Mode & Language & Fonts & Color & Screen Size \\ \hline
+        full-graphics & English & Minimal & Monochrome & Hand-held \\
+        text-only & French & Standard & Color-map & Laptop \\
+        limited-bandwidth & Spanish & Document-loaded & 16-bit & full-size \\
+        & Portuguese & & True-color &
+    \end{tabular}
+
+    Vien da sè che per poter testare tutte le possibili combinazioni delle varie specifiche, bisognerebbe fare $3 \times 4 \times 3 \times 4 \times 3 = 432$ test!
+
+    Il \textit{pairwise testing} suggerisce un approccio, che pensa a come ogni parametro ingeragisce con uno degli altri (andando ad analizzare come interagisce con tutti).
+
+    Nel nostr esempio, ci interessa: \begin{itemize}
+        \item come i valori del parametro \textit{Display Mode} possono interagire con tutti i valori del parametro \textit{Language}
+        \item come i valori del parametro \textit{Display Mode} possono interagire con tutti i valori del parametro \textit{Font}
+        \item come i valori del parametro \textit{Display Mode} possono interagire con tutti i valori del parametro \textit{Color}
+        \item come i valori del parametro \textit{Display Mode} possono interagire con tutti i valori del parametro \textit{Screen Size}
+    \end{itemize}
+
+    I casi di test suggeriti dalla tecnica diventa il seguente: \\
+
+    \begin{tabular}{c | c | c | c | c}
+        Display Mode & Language & Fonts & Color & Screen Size \\ \hline
+        English & Monochrome & Full-graphics & Minimal & Hand-held \\
+        English & Color-map & Text-only & Standard & Full-size \\
+        English & 16-bit & Limited-bandwidth & - & Full-size \\
+        English & True-color & Text-only & Document-loaded & Laptop \\
+        French & Monochrome & Limited-bandwidth & Standard & Laptop \\
+        French & Color-map & Full-graphics & Document-loaded & Full-size \\
+        French & 16-bit & Text-only & Minimal & - \\
+        French & True-color & - & - & Hand-held \\
+        Spanish & Monochrome & - & Document-loaded & Full-size \\
+        Spanish & Color-map & Limited-bandwidth & Minimal & Hand-held \\
+        Spanish & 16-bit & Full-graphics & Standard & Laptop \\
+        Spanish & True-color & Text-only & - & Hand-held \\
+        Portuguese & Monochrome & Text-only & - & - \\
+        Portuguese & Color-map & - & Minimal & Laptop \\
+        Portuguese & 16-bit & Limited-bandwidth & Document-loaded & Hand-held \\
+        Portuguese & True-color & Full-graphics & Minimal & Full-size \\
+        Portuguese & True-color & Limited-bandwidth & Standard & Hand-held
+    \end{tabular}
+
+    I casi suggeriti sono quindi 17, e sono sufficienti per fare in modo che tutti i valori di un parametro siano stati testati in coppia con tutti i valori di qualsiasi altro parametro.
 \end{example}
+
+\subsection{Category-Partitioning Testing}
+
+L'obiettivo di questa tecnica è quello di trasformare la specifica in un modello che contenga i parametri interessanti da considerare e le scelte da fare per ognuno dei parametri.
+
+Category-partition è un lavoro di decomposizione: dalla specifica si cerca di arrivare ad una lista di cose su cui è più facile ragionare.
+
+In generale, si può pensare alla tecnica come l'esecuzione dei seguenti step: \begin{enumerate}
+    \item Si esegue un passo di decomposizione (dalla specifica si estra un concetto)
+    \item Si lavora solo su quel concetto e si estraggono i valori di interesse 
+    \item Si ritorna sulla specifica e ci si chiede se c'è altro da considerare \begin{itemize}
+        \item[Si.] Si estrae un altro concetto \begin{itemize}
+            \item Si torna al punto 2
+        \end{itemize} 
+        \item[No.] Finisce 
+    \end{itemize}
+\end{enumerate}
