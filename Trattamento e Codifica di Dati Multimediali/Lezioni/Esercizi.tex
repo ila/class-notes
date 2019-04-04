@@ -124,6 +124,23 @@ $\Delta t = \nicefrac{1}{f_c}$, con $F_N = 25Hz$ l'intervallo sarà $[-25, +25]$
 \subsection{Trasformate di Fourier}
 \subsubsection{}
 
+\subsection{Relazioni I/O}
+% slide 11
+Se non ci fosse il modulo, il segnale sarebbe una rampa: in questo caso ha una forma di V, a tempo discreto. 
+
+1) è l'identità, 3*delta(n+3), 2*delta(n+2), 1*delta(n+1), ... mettendo a 0 l'argomento \\
+2) segnale in ritardo (in anticipo non è possibile), uguale a sopra ma cambia l'origine \\
+3) funzione mediana su 3 valori, in cui la mediana considera il valore centrale tra campioni in ordine crescente, sequenza bilatera con parte causale e anticausale
+
+La mediana non è un operatore lineare
+
+
+Esempio 2:
+Il sistema 1 è non lineare e anticausale (n\^4 non esiste ancora). \\
+Il sistema 2 è lineare e causale.
+
+
+Risposta all'impulso: $u(n)$ è un gradino a cui viene tolta una parte, quindi resta una finestra a cui viene applicata la convoluzione. Media, filtro passa-basso con un $sinc$ nel dominio trasformato.
 
 
 

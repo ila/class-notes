@@ -1,7 +1,9 @@
 \section{Sistemi lineari}
-Un sistema fisico è un apparato che riceve in input un segnale e ne produce un altro in output. Questa interazione è descritta da una funzione (operatore), le cui caratteristiche determinano il segnale in uscita. 
+Un sistema fisico è un apparato che riceve in input un segnale e ne produce un altro in output. Questa interazione è descritta da una funzione (operatore), le cui caratteristiche determinano il segnale in uscita. Il processo contiene una relazione di ingresso-uscita, o causa-effetto.
 $$y(t) = S[x(t)]$$
-Il campionamento è un esempio di sistema, applicando un campionatore che legge istanti discreti in base al passo $\Delta t$. 
+Il campionamento con periodo o frequenza è un esempio di sistema, applicando un campionatore che legge istanti continui e li trasforma in discreti in base al passo $\Delta t$. 
+
+Un altro esempio è il quantizzatore, che associa al segnale $f(t)$ il segnale $Q(t)$ dove $Q$ indica l'elemento in $V = \{x_1, \dots, x_n\}$ più vicino al numero reale $x$ (valori finiti).
 
 I sistemi possono avere più ingressi e uscite, come la somma $g(t) = f(t) + h(t)$. Mettendo insieme più sistemi semplici, ne vengono generati di più complessi in diversi combinazioni di componenti elementari:
 \begin{itemize}
@@ -10,42 +12,80 @@ I sistemi possono avere più ingressi e uscite, come la somma $g(t) = f(t) + h(t
 	\item Retroazione (il risultato dipende dai valori precedenti), in cui l'output di un sistema viene modificato da un'altra funzione e torna come input della precedente.
 \end{itemize}
 
-Un sistema a tempo discreto è un dispositivo che trasforma una sequenza $x(n)$ in ...
-L'operatore è descrivibile tramite una sequenza.
+Un sistema a tempo discreto è un dispositivo che trasforma una sequenza $x(n)$ in ingresso in una sequenza di uscita $y(n)$, attraverso un operatore $L[\cdot]$ (relazione di I/O). L'operatore è descrivibile tramite una sequenza, che definisce le proprietà del sistema.
 
-Un sistema complesso lineare può sempre essere scomposto in componenti semplici, e questo principio può essere applicato anche sugli input (più sistemi) con lo stesso operatore sui segnali.
+\subsection{Composizioni}
+\subsubsection{Cascata}
+Dati due sistemi $S1 : F1 \rightarrow F2$ e $S2 : F2 \rightarrow F3$, la loro composizione sequenziale è il sistema $S3 : F1 \rightarrow F3$ ottenuta ponendo in ingresso a S2 la risposta di $s1$.
 
+\subsubsection{Parallela}
+Dati due sistemi $S1 : F1 \rightarrow F2$ e $S2 : F2 \rightarrow F3$, la loro composizione parallela è il sistema che ha come risposta la somma delle risposte di $S1$ e $S2$.
+
+Perché si possa definire la composizione parallela, deve succedere che la somma di due segnali in $F2$ sia ancora un segnale in $F2$.
+
+\subsubsection{Retroazione}
+Dati due sistemi $S1 : F1 \rightarrow F2$ e $S2 : F2 \rightarrow F3$, il sistema ottenuto per retroazione è il sistema $S3$ che ha ingresso $f$ e uscita $g$ ottenuta ponendo in ingresso a $S1$ la differenza tra $f$ e la risposta di $S2$ a $g$.
+
+\subsection{Tempo-invarianza}
+Un sistema complesso lineare può sempre essere scomposto in componenti semplici, e questo principio può essere applicato anche sugli input (più sistemi) con lo stesso operatore sui segnali. La relazione I/O soddisfa il principio di sovrapposizione degli effetti. 
+
+Dato il segnale in ingresso $x(n) = \alpha_1x_1(n) + \alpha_2x_2(n)$, la risposta a una combinazione lineare di ingressi è la combinazione lineare delle risposte del sistema ai singoli ingressi.
+$$L[x(n)] = L[\alpha_1x_1(n) + \alpha_2x_2(n)] = \alpha_1L[x_1(n)] + \alpha_2L[x_2(n)]$$
+% principio di sovr.
 Un'altra proprietà dei sistemi è la tempo-invarianza: sono stazionari e rispondono nello stesso modo in istanti differenti, quindi l'output è lo stesso anche con ritardo. 
 
-Causali: presuppongono il campione corrente e i successivi, solo parte positiva; \\
-Anticausali: considera il campione corrente e i precedenti, non fisicamente realizzabile. \\
-Bilatero: ha sia parte causale che anticausale.
+La relazione I/O produce un segnale di uscita $y(n)$ che dipende solo dalla forma del segnale di ingresso $x(n)$:
+$$L[x(n - n_0)] = y(n - n_0)$$
+Se l'ingresso al sistema è ritardato o anticipato di una quantità $n_0$, allora anche la risposta viene ritardata o anticipata di $n_0$.
 
-I sistemi possono avere memoria, la cui grandezza è il numero di campioni che vengono immagazzinati per calcolare i risultati successivi. 
+Sistemi causali: presupponendo il campione attuale e i successivi, la risposta corrente $x(n)$ non dipende dai valori futuri $x(n + n_0)$ con costante intera $n_0 > 0$ (solo parte positiva).
 
-Un sistema si dice passivo quando l'energia dell'output è minore o uguale all'energia dell'input. Questo si rappresenta con il modulo quadro, osservando la conservazione.
+Sistemi anticausali: considerando il campione corrente e i precedenti, la risposta corrente $y(n)$ non dipende dai valori passati $x(n - n_0)$ con costante intera $n_0 > 0$ (solo parte positiva). Non  sono fisicamente realizzabili.
 
-I sistemi lineari tempo invariante sono definiti da operazioni I/O che soddisfano contemporaneamente la linearità e la stazionarietà.
-Se i coefficienti sono costanti, il segnale è stazionario perché non cambia in funzione al peso.
+I sistemi bilateri hanno sia parte causale che anticausale.
 
-L'output è espresso come combinazione lineare di tutti i valori (reali, costanti positive o negative) della sequenza di input $x(n)$, che è combinazione lineare della stessa sequenza di output, a partire dal primo campione ritardato. 
+I sistemi possono avere memoria, la cui grandezza è il numero di campioni che vengono immagazzinati per calcolare i risultati successivi. La risposta corrente in questo caso dipende dai valori dell'ingresso negli istanti di tempo precedenti a quello corrente $n$ (altrimenti sono statici).
 
-Queste operazioni possono essere raccolte come sommatoria:
-% sommatoria
+Un sistema a tempo discreto si dice passivo quando l'energia $E_y$ dell'output $y(n)$ è minore o uguale all'energia $E_x$ dell'input $x(n)$. Questo si rappresenta con il modulo quadro, osservando la conservazione. 
+$$\sum_{n=-\infty}^{+\infty}\abs{y(n)}^2 \leq \sum_{n=-\infty}^{+\infty}\abs{x(n)}^2 < \infty$$
+Se la relazione precedente vale con il segno di uguaglianza, allora il sistema è detto senza perdite, in quanto conserva l'energia del segnale di ingresso.
 
-La y non parte da zero perchè y(n) dovrebbe dipendere da y(n). 
-Se l'equazione è ricorsiva, la memoria è infinita.
+\subsection{Sistemi LTR}
+I sistemi lineari tempo invariante (LTI) sono definiti da operazioni I/O che soddisfano contemporaneamente la linearità e la stazionarietà. Se i coefficienti sono costanti, il segnale è stazionario perché non cambia in funzione al peso.
 
-Un'altra modalità per descrivere un sistema lineare a tempo invariante è la risposta all'impulso: la relazione I/O non è particolarmente complicata perché si indica la reazione alla delta (funzione semplice), dove il peso è il valore della sequenza in quel campione. Essendo lineare a tempo invariante, i segnali sono indipendenti dal tempo e esprimibili come combinazioni lineari. 
+L'analisi dei LTI può essere condotta in tre diversi modi:
+\begin{enumerate}
+	\item Relazione I/O (qualsiasi sistema);
+	\item Equazione lineare alle differenze a coefficienti costanti (LTI causale);
+	\item Risposta all'impulso nel dominio del tempo e delle frequenze (sistema LP).
+\end{enumerate}
 
-$h$ è il kernel, la sequenza che descrive il comportamento del filtro (risposta del sistema all'impulso). La formula si può ritrovare come convoluzione della sequenza con il filtro.
+In particolare per il caso di equazione alle differenze, l'output è espresso come combinazione lineare di tutti i valori (coefficienti reali, costanti positive o negative) della sequenza di input $x(n)$, che è combinazione lineare della stessa sequenza di output, a partire dal primo campione ritardato. 
+$$y(n) = -\alpha_1y(n-1) - \alpha_2y(n - 2) - \dots - \alpha_My(n - M) + \beta_0x(n) + \beta_1x(n - 1) + \dots + \beta_Nx(n - N)$$
+L'uscita $y(n)$ dipende sia dai valori che l'ingresso $x(n)$ assume in un arco temporale fino a $N$ istanti precedenti all'istante di tempo discreto $n$, sia dai valori assunti dal segnale di uscita $y(n)$ fino a $M$ istanti di tempo precedenti a quello corrente $n$.
 
-Se i segnali sono causali e limitati, il numero di valori sarà finito. 
+Queste operazioni possono essere raccolte come sommatoria con coefficienti costanti indipendenti dal tempo:
+$$y(n) = \sum_{k=0}^{N} \beta_kx(n - k) - \sum_{j=1}^{M} \alpha_jy(n - j)$$
+La y non parte da zero perchè altrimenti $y(n)$ dovrebbe dipendere da se stessa. Se l'equazione è ricorsiva (almeno un coefficiente $\alpha_j$ diverso da zero), la memoria è infinita.
 
+Un'altra modalità per descrivere un sistema lineare a tempo invariante è la risposta all'impulso: la relazione I/O è semplice perché si indica la reazione alla $\delta$, dove il peso è il valore della sequenza in quel campione. Essendo lineare a tempo invariante, i segnali sono indipendenti dal tempo e esprimibili come combinazioni lineari. 
+
+L'analisi della risposta del sistema all'impulso permette di valutare la risposta a regime, al fine di semplificarne l'analisi tempo-frequenza rappresentando la sequenza come somma di $\delta$ traslate e pesate.
+$$x(n) = \sum_{i=-\infty}^{+\infty}x(i)\delta(n-i)$$
+Per la proprietà di sovrapposizione degli effetti (linearità) e di stazionarietà, si ha:
+$$y(n) = L\Big[\sum_{i=-\infty}^{\infty}x(i)\delta(n - i)\Big] = \sum_{i=-\infty}^{\infty}x(i)L[\delta(n - i)] = \sum_{i=-\infty}^{\infty}x(i)h(n - i) = x * h$$
+$h$ è il kernel, la sequenza che descrive il comportamento del filtro (risposta del sistema all'impulso). La formula si può ritrovare come convoluzione lineare discreta della sequenza con il filtro.
+
+Se i segnali sono causali e limitati, il numero di valori sarà finito. La risposta all'impulso $h(n)$ è nulla per istanti di tempi $n < 0$, e l'uscita dipende dal valore corrente del segnale d'ingresso $x(n)$ e dei campioni già presenti nel sistema. 
+
+Se la risposta all'impulso $h(n)$ ha supporto temporale finito $N_h$, l'uscita del sistema LTI è:
+$$y(n) = x(n) * h(n) = \sum_{i=0}^{N_h-1}h(i)x(n - i)$$
 L'operatore di convoluzione è commutativo e associativo, quindi applicabile ai sistemi lineari a tempo invariante a cascata ottenendo lo stesso risultato.
 
-L'interazione del segnale nel sistema è il prodotto delle trasformate di Fourier, semplificando la convoluzione. $H$ è la risposta dell'impulso, che interagisce con $X$ per generare $Y$.  
+Per la proprietà distributiva, due LTI $h_1(n)$ e $h_2(n)$ connessi in parallelo possono essere sostituiti da un singolo sistema $h(n) = h_1(n) + h_2(n)$.
 
+% da qui
+L'interazione del segnale nel sistema è il prodotto delle trasformate di Fourier, semplificando la convoluzione. $H$ è la risposta dell'impulso, che interagisce con $X$ per generare $Y$.  
 
 Dato un generico sistema con una funzione $h(e^{j\omega})$, un filtro taglia alcune componenti in frequenza del segnale di ingresso lasciandone passare altre, secondo quanto specificato attraverso la risposta. Le frequenze nell'intervallo vengono moltiplicate per 1, le altre per 0. Ci sono diverse tipologie di filtri ideali: passa-basso, passa-alto, passa-banda o attenua-banda, che corrispondono alla funzione $sinc$ che è anticausale, pertanto non rappresentabile. 
 
@@ -54,41 +94,3 @@ Un sistema rispetta la stabilità BIBO se per ogni ingresso con energia limitata
 Un filtro reale, in confronto a uno ideale, non ha zone ben precise di banda passante e probita: la transizione non è immediata, esiste una zona di transizione e le frequenze non hanno peso uguale bensì fluttuazioni con ampiezza variabile. 
 
 La frequenza di taglio è la frequenza per la quale la potenza è il 50\% rispetto al massimo, quindi c'è un'attenuazione della metà. Serve per identificare la fine della banda passante.
-
-\section{Equazioni alle differenze}
-I LTI possono essere rappresantati in modi differenti, tra cui la combinazione lineare con coefficienti costanti nel tempo (invariante). 
-
-Accumulatore: memoria infinita, generalmente si assegna un valore all'istante di partenza. 
-
-Il ritardo sulla y indica di che ordine è il sistema: il primo ordine, per esempio, ha ricorsione con un campione in ritardo. 
-
-La media cumulativa è un sistema ricorsivo non stazionario, con normalizzazione effettuata in base a un parametro non costante. 
-
-La radice quadrata non è un sistema lineare: non esistono sommatorie, ma il termine y compare al denominatore quindi non è rappresentabile come combinazione lineare. 
-
-La risposta all'impulso viene descritta attraverso la convoluzione, come sequenza finita o infinita. I primi non hanno la ricorsione, sono campioni combinati con pesi: i valori di h sono i coefficienti di x (bk). \\
-Se la sommatoria va a infinito, non c'è una diretta corrispondenza con il dominio delle frequenze, quindi è inutile cercare y(n) guardando la risposta ma si utilizza il dominio trasformato.
-
-
-
-
-\subsection{Esempio}
-Se non ci fosse il modulo, il segnale sarebbe una rampa: in questo caso ha una forma di V, a tempo discreto. 
-
-1) è l'identità, 3*delta(n+3), 2*delta(n+2), 1*delta(n+1), ... mettendo a 0 l'argomento \\
-2) segnale in ritardo (in anticipo non è possibile), uguale a sopra ma cambia l'origine \\
-3) funzione mediana su 3 valori, in cui la mediana considera il valore centrale tra campioni in ordine crescente, sequenza bilatera con parte causale e anticausale
-
-La mediana non è un operatore lineare
-
-
-Esempio 2:
-Il sistema 1 è non lineare e anticausale (n\^4 non esiste ancora). \\
-Il sistema 2 è lineare e causale.
-
-
-Risposta all'impulso: $u(n)$ è un gradino a cui viene tolta una parte, quindi resta una finestra a cui viene applicata la convoluzione. Media, filtro passa-basso con un $sinc$ nel dominio trasformato.
-
-
-
-
