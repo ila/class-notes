@@ -1,0 +1,94 @@
+\section{Sistemi lineari}
+Un sistema fisico è un apparato che riceve in input un segnale e ne produce un altro in output. Questa interazione è descritta da una funzione (operatore), le cui caratteristiche determinano il segnale in uscita. 
+$$y(t) = S[x(t)]$$
+Il campionamento è un esempio di sistema, applicando un campionatore che legge istanti discreti in base al passo $\Delta t$. 
+
+I sistemi possono avere più ingressi e uscite, come la somma $g(t) = f(t) + h(t)$. Mettendo insieme più sistemi semplici, ne vengono generati di più complessi in diversi combinazioni di componenti elementari:
+\begin{itemize}
+	\item Composizione sequenziale (a cascata), che combina più sistemi di cui l'output di uno è l'input di un altro (come processo di digitalizzazione);
+	\item Composizione parallela, in cui lo stesso input viene immesso in più sistemi diversi;
+	\item Retroazione (il risultato dipende dai valori precedenti), in cui l'output di un sistema viene modificato da un'altra funzione e torna come input della precedente.
+\end{itemize}
+
+Un sistema a tempo discreto è un dispositivo che trasforma una sequenza $x(n)$ in ...
+L'operatore è descrivibile tramite una sequenza.
+
+Un sistema complesso lineare può sempre essere scomposto in componenti semplici, e questo principio può essere applicato anche sugli input (più sistemi) con lo stesso operatore sui segnali.
+
+Un'altra proprietà dei sistemi è la tempo-invarianza: sono stazionari e rispondono nello stesso modo in istanti differenti, quindi l'output è lo stesso anche con ritardo. 
+
+Causali: presuppongono il campione corrente e i successivi, solo parte positiva; \\
+Anticausali: considera il campione corrente e i precedenti, non fisicamente realizzabile. \\
+Bilatero: ha sia parte causale che anticausale.
+
+I sistemi possono avere memoria, la cui grandezza è il numero di campioni che vengono immagazzinati per calcolare i risultati successivi. 
+
+Un sistema si dice passivo quando l'energia dell'output è minore o uguale all'energia dell'input. Questo si rappresenta con il modulo quadro, osservando la conservazione.
+
+I sistemi lineari tempo invariante sono definiti da operazioni I/O che soddisfano contemporaneamente la linearità e la stazionarietà.
+Se i coefficienti sono costanti, il segnale è stazionario perché non cambia in funzione al peso.
+
+L'output è espresso come combinazione lineare di tutti i valori (reali, costanti positive o negative) della sequenza di input $x(n)$, che è combinazione lineare della stessa sequenza di output, a partire dal primo campione ritardato. 
+
+Queste operazioni possono essere raccolte come sommatoria:
+% sommatoria
+
+La y non parte da zero perchè y(n) dovrebbe dipendere da y(n). 
+Se l'equazione è ricorsiva, la memoria è infinita.
+
+Un'altra modalità per descrivere un sistema lineare a tempo invariante è la risposta all'impulso: la relazione I/O non è particolarmente complicata perché si indica la reazione alla delta (funzione semplice), dove il peso è il valore della sequenza in quel campione. Essendo lineare a tempo invariante, i segnali sono indipendenti dal tempo e esprimibili come combinazioni lineari. 
+
+$h$ è il kernel, la sequenza che descrive il comportamento del filtro (risposta del sistema all'impulso). La formula si può ritrovare come convoluzione della sequenza con il filtro.
+
+Se i segnali sono causali e limitati, il numero di valori sarà finito. 
+
+L'operatore di convoluzione è commutativo e associativo, quindi applicabile ai sistemi lineari a tempo invariante a cascata ottenendo lo stesso risultato.
+
+L'interazione del segnale nel sistema è il prodotto delle trasformate di Fourier, semplificando la convoluzione. $H$ è la risposta dell'impulso, che interagisce con $X$ per generare $Y$.  
+
+
+Dato un generico sistema con una funzione $h(e^{j\omega})$, un filtro taglia alcune componenti in frequenza del segnale di ingresso lasciandone passare altre, secondo quanto specificato attraverso la risposta. Le frequenze nell'intervallo vengono moltiplicate per 1, le altre per 0. Ci sono diverse tipologie di filtri ideali: passa-basso, passa-alto, passa-banda o attenua-banda, che corrispondono alla funzione $sinc$ che è anticausale, pertanto non rappresentabile. 
+
+Un sistema rispetta la stabilità BIBO se per ogni ingresso con energia limitata anche l'output ha ampiezza limitata (non va a infinito), concetto legato alla somma in modulo. $sinc$ tende a infinito, quindi non è stabile. 
+
+Un filtro reale, in confronto a uno ideale, non ha zone ben precise di banda passante e probita: la transizione non è immediata, esiste una zona di transizione e le frequenze non hanno peso uguale bensì fluttuazioni con ampiezza variabile. 
+
+La frequenza di taglio è la frequenza per la quale la potenza è il 50\% rispetto al massimo, quindi c'è un'attenuazione della metà. Serve per identificare la fine della banda passante.
+
+\section{Equazioni alle differenze}
+I LTI possono essere rappresantati in modi differenti, tra cui la combinazione lineare con coefficienti costanti nel tempo (invariante). 
+
+Accumulatore: memoria infinita, generalmente si assegna un valore all'istante di partenza. 
+
+Il ritardo sulla y indica di che ordine è il sistema: il primo ordine, per esempio, ha ricorsione con un campione in ritardo. 
+
+La media cumulativa è un sistema ricorsivo non stazionario, con normalizzazione effettuata in base a un parametro non costante. 
+
+La radice quadrata non è un sistema lineare: non esistono sommatorie, ma il termine y compare al denominatore quindi non è rappresentabile come combinazione lineare. 
+
+La risposta all'impulso viene descritta attraverso la convoluzione, come sequenza finita o infinita. I primi non hanno la ricorsione, sono campioni combinati con pesi: i valori di h sono i coefficienti di x (bk). \\
+Se la sommatoria va a infinito, non c'è una diretta corrispondenza con il dominio delle frequenze, quindi è inutile cercare y(n) guardando la risposta ma si utilizza il dominio trasformato.
+
+
+
+
+\subsection{Esempio}
+Se non ci fosse il modulo, il segnale sarebbe una rampa: in questo caso ha una forma di V, a tempo discreto. 
+
+1) è l'identità, 3*delta(n+3), 2*delta(n+2), 1*delta(n+1), ... mettendo a 0 l'argomento \\
+2) segnale in ritardo (in anticipo non è possibile), uguale a sopra ma cambia l'origine \\
+3) funzione mediana su 3 valori, in cui la mediana considera il valore centrale tra campioni in ordine crescente, sequenza bilatera con parte causale e anticausale
+
+La mediana non è un operatore lineare
+
+
+Esempio 2:
+Il sistema 1 è non lineare e anticausale (n\^4 non esiste ancora). \\
+Il sistema 2 è lineare e causale.
+
+
+Risposta all'impulso: $u(n)$ è un gradino a cui viene tolta una parte, quindi resta una finestra a cui viene applicata la convoluzione. Media, filtro passa-basso con un $sinc$ nel dominio trasformato.
+
+
+
+

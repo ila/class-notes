@@ -45,6 +45,20 @@ Vengono considerate tutte le possibili coppie di nodi in relazione alla probabil
 
 Più è ampia la differenza tra la probabilità casuale e la matrice di adiacenza, più una relazione tra vertici è forte (non è dovuta al caso). La modularità globale è pari a 0 quando tutti i nodi sono all'interno di un unico cluster, e se ne calcola lo spettro. 
 
+\subsection{Struttura gerarchica}
+Le community possono avere nodi organizzati in strutture gerarchiche agglomerative o divisive, per ottenere una nuova prospettiva di analisi.
+
+Ci sono diversi approcci: quello divisivo partiziona ricorsivamente l'insieme in sottoinsiemi (community) fino ad arrivare ai singoli nodi, con criteri network-centric. 
+
+Un esempio è legato al concetto di betweenness tra gli archi, calcolando il numero di shortest-path per ogni coppia di nodi che passano per quell'arco per stimare la centralità dei collegamenti. La rete viene tagliata iterativamente individuando composizioni con tante connessioni interne ma poche esterne, e archi inter-community (Girvan-Newman).
+
+Un'altra metodologia è il clustering gerarchico agglomerativo, in cui si parte dai singoli nodi che vengono raggruppati in base a un criterio arbitrario (modularità, similarità, \dots).
+
+Le performance si possono misurare tramite valutazione con ground truth, la quale tiene conto di veri/falsi positivi/negativi. 
+
+La purezza è un identificatore che indica quanto bene una community può rappresentare un'intera classe, calcolata osservando le etichette delle istanze:
+$$\text{Purity} = \frac{1}{N} \sum_{i=1}^{k} \underset{j}{max} |C_i \cap L_j|$$
+
 
 
 
