@@ -53,8 +53,52 @@ La radice quadrata non è un sistema lineare: non esistono sommatorie, ma il ter
 	\includegraphics[scale=0.3]{Lezioni/Immagini/radice}
 \end{figure}
 
-\subsection{Risposta all'impulso}
-% slide 14
+\section{Risposta all'impulso}
+La risposta all'impulso viene descritta attraverso un prodotto di convoluzione, come sequenza finita o infinita. I primi casi non hanno la ricorsione, sono campioni combinati con pesi: i valori di $h$ sono i coefficienti di $x$.
 
-La risposta all'impulso viene descritta attraverso la convoluzione, come sequenza finita o infinita. I primi non hanno la ricorsione, sono campioni combinati con pesi: i valori di h sono i coefficienti di x (bk). \\
-Se la sommatoria va a infinito, non c'è una diretta corrispondenza con il dominio delle frequenze, quindi è inutile cercare y(n) guardando la risposta ma si utilizza il dominio trasformato.
+In base alla risposta all'impulso, i sistemi possono essere divisi in due gruppi: FIR (Finite Impulse Response) e IIR (Infinite Impulse Response). 
+
+\subsection{FIR}
+$$h(n) = \begin{cases}
+\neq 0 & \quad 0 \leq n \leq M - 1 \\
+= 0 & \quad n < 0 \land n \geq M
+\end{cases}$$
+
+La risposta di un sistema FIR a un generico segnale è allora:
+$$y(n) = x(n) * h(n) = \sum_{i = 0}^{\infty} h(i)x(n - i) = \sum_{i = 0}^{M-1} h(i) x(n - i)$$
+Per un sistema FIR, l'output a qualsiasi istante $n$ è semplicemente la somma di una combinazione lineare pesata degli $M$ valori più recenti della sequenza di input.
+
+Il sistema agisce come una finestra che vede solo $M$ valori recenti, quindi ha memoria $M$. \\
+I sistemi FIR possono essere sempre realizzati in modo non ricorsivo, essendo in funzione di $M$ campioni pesati per la risposta all'impulso $h(n)$. Questo deriva dal fatto che una LTI non ricorsiva dipende solo da un numero finito di istanti nel passato.
+
+\subsection{IIR}
+$$h(n) = \begin{cases}
+\neq 0 & \quad n \geq n_0 \\
+= 0 & \quad n < n_0
+\end{cases}$$
+
+La risposta di un sistema IIR causale a un generico segnale è allora:
+$$y(n) = x(n) * h(n) = \sum_{i = 0}^{\infty} h(i)x(n - i)$$
+L'output a qualsiasi istante $n$ dipende da tutti i valori della sequenza di input: il sistema ha memoria infinita e non è realizzabile, perché richiederebbe infinite locazioni di memoria. 
+
+Se la sommatoria va a infinito, non c'è una diretta corrispondenza con il dominio delle frequenze, quindi non si individua $y(n)$ guardando la risposta ma si utilizzano le equazioni alle differenze e il dominio trasformato.
+
+\subsubsection{Prima forma diretta}
+Realizza un'equazione lineare alle differenze del primo ordine a coefficienti costanti, utilizzando due unità di ritardo (memoria) distinte come se fossero due sistemi a cascata. Il primo sistema non è ricorsivo, mentre il secondo lo è.
+$$y(n) = -\alpha_1y(n-1) + \beta_0x(n) + \beta_1x(n-1)$$
+Per la proprietà commutativa, scambiando l'ordine dei sistemi il risultato non cambia, ma è necessario introdurre una variabile ausiliaria.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{Lezioni/Immagini/diretta1}
+\end{figure}
+
+\subsubsection{Seconda forma diretta}
+$$\omega(n) = -\alpha_1\omega(n-1) + x(n) \qquad y(n) = \beta_0\omega(n) + \beta_1\omega(n-1)$$
+Le due unità di ritardo hanno entrambe in input $\omega(n)$ e in output $\omega(n-1)$, e possono quindi essere rappresentati con un'unica unità di ritardo. Ciò è efficiente nelle applicazioni pratiche in termini di memoria. 
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{Lezioni/Immagini/diretta2}
+\end{figure}
+Il passaggio dalla prima forma diretta alla seconda si può estendere al caso di una generica equazione alle differenze di ordine $N$:
+$$y(n) = \sum_{k=0}^{M}\beta_kx(n-k) - \sum_{j=1}^{N}\alpha_jy(n-j)$$
+Questa forma richiede $N + M$ unità di ritardo e $M + N + 1$ moltiplicazioni. La seconda forma diretta è data dalla cascata di un sistema ricorsivo seguita da un sistema non ricorsivo, con $max(N, M)$ ritardi.
