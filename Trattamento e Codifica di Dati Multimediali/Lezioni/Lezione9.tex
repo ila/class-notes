@@ -1,0 +1,43 @@
+\section{Sistemi LTI e trasformata zeta}
+\subsection{Stabilità BIBO}
+La stabilità BIBO di un sistema LTI impone che la risposta all'impulso $h(n)$ sia sommabile in modulo. Se il sistema è causale, la condizione si traduce nel dominio $z$ imponendo che la funzione di trasferimento $H(z)$ abbia poli contenuti nella circonferenza di raggio unitario del piano $z$. 
+
+Le caratteristiche della sequenza dipendono dalla posizione dei poli: la convergenza, e conseguentemente la stabilità, sono determinate dall'appartenenza al cerchio unitario.
+
+I poli all'esterno del cerchio $\abs{z} = 1$ ...
+Poli multipli sul cerchio unitario conducono a una crescita di tipo polinomiale. 
+
+Riassumendo:
+\begin{itemize}
+	\item Se il sistema è causale, condizione necessaria e sufficiente per la stabilità BIBO è che $H(z)$ abbia tutti i poli contenuti nella circonferenza di raggio unitario;
+	\item ...
+\end{itemize}
+
+Quando il polinomio è espresso tramite potenze negative, se c'è una costante essa corrisponde all'assenza di ritardo, quindi sia al numeratore che al denominatore si somma 1 per indicare l'istante corrente. 
+
+Tutte le volte che la soluzione non è a coefficienti reali, è presente il complesso coniugato. I monomi vengono espressi in termini di potenze negative di $z$.
+
+\subsection{Filtri}
+Avendo a disposizione la trasformata con i poli e gli zeri, conoscendo le proprietà di continuità della funzione analitica è possibile conoscere l'andamento delle frequenze.
+
+Se un polo reale è molto vicino al cerchio di raggio unitario, si ha che il denominatore si annulla con valori prossimi a $\rho = 1$, ma a $z = 1$ c'è un picco e la risposta cresce in funzione alla posizione del polo. In altre parole, ogni polo ha un'influenza sulle frequenze a seconda della loro vicinanza.
+ 
+Introducendo un fattore di normalizzazione $1 - \alpha$, è possibile confrontare i filtri con valore di picco (guadagno) unitario.
+
+Per enfatizzare le basse frequenze, è sufficiente inserire degli zeri per farle crescere di valore. Creando monomi con radici e aggiungendole al numeratore e al denominatore, si creano filtri in grado di alzare o abbassare le frequenze manipolando le posizioni di poli e zeri.
+
+Nella realtà bisogna considerare che è impossibile azzerare completamente una parte di frequenza, ma ci saranno delle oscillazioni più o meno ampie.
+
+Tanto più i poli sono vicini all'asse reale, più influenzano le frequenze basse (filtro passa-basso).
+
+Se la frequenza è causale, il numero di zeri non deve superare il numero di poli.
+% foto sistemi
+Ricostruendo la frequenza a partire dal filtro, si ha $H(z) = k \frac{z}{denz - \alpha} = \frac{k}{1 - \alpha z^{-1}}$ con $k$ costante. Se il guadagno è unitario, $\abs{H(z)_{f=0 \land z=1} = 1}$ da cui $k = 1 - \alpha$ (filtro con sempre la stessa altezza).
+
+\subsection{Sistema inverso}
+Un sistema inverso ha lo scopo di compensare i poli e gli zeri, ed è un sistema che inverte il comportamento di un altro sistema LTI tale che la risposta rimanga inalterata.
+
+Il numeratore di uno dev'essere uguale al denominatore dell'altro e viceversa, e la funzione di trasferimento è pari a una costante unitaria nel piano $z$ (identità).
+
+
+

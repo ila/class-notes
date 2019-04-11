@@ -95,10 +95,12 @@ Per la proprietà commutativa, scambiando l'ordine dei sistemi il risultato non 
 \subsubsection{Seconda forma diretta}
 $$\omega(n) = -\alpha_1\omega(n-1) + x(n) \qquad y(n) = \beta_0\omega(n) + \beta_1\omega(n-1)$$
 Le due unità di ritardo hanno entrambe in input $\omega(n)$ e in output $\omega(n-1)$, e possono quindi essere rappresentati con un'unica unità di ritardo. Ciò è efficiente nelle applicazioni pratiche in termini di memoria. 
+Il passaggio dalla prima forma diretta alla seconda si può estendere al caso di una generica equazione alle differenze di ordine $N$:
+$$y(n) = \sum_{k=0}^{M}\beta_kx(n-k) - \sum_{j=1}^{N}\alpha_jy(n-j)$$
+
+\newpage
+Ciò richiede $N + M$ unità di ritardo e $M + N + 1$ moltiplicazioni. La seconda forma diretta è data dalla cascata di un sistema ricorsivo seguita da uno non ricorsivo, con $max(N, M)$ ritardi.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.4]{Lezioni/Immagini/diretta2}
 \end{figure}
-Il passaggio dalla prima forma diretta alla seconda si può estendere al caso di una generica equazione alle differenze di ordine $N$:
-$$y(n) = \sum_{k=0}^{M}\beta_kx(n-k) - \sum_{j=1}^{N}\alpha_jy(n-j)$$
-Questa forma richiede $N + M$ unità di ritardo e $M + N + 1$ moltiplicazioni. La seconda forma diretta è data dalla cascata di un sistema ricorsivo seguita da un sistema non ricorsivo, con $max(N, M)$ ritardi.

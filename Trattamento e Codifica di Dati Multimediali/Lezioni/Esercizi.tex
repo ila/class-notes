@@ -144,7 +144,11 @@ Il sistema 2 è lineare e causale.
 Risposta all'impulso: $u(n)$ è un gradino a cui viene tolta una parte, quindi resta una finestra a cui viene applicata la convoluzione. Media, filtro passa-basso con un $sinc$ nel dominio trasformato.
 
 
-
+\subsection{FIR}
+$$H(z) = 1 - z^{-2} + 2z^{-3}$$
+Quando l'input è $x(n) = u(n)$, si ha:
+$h(n) = \delta(n) - \delta(n-2) + 2\delta(n-3)$ \\
+$y(n) = x(n) - x(n-2) + 2x(n-3) = \delta(n) + \delta(n-1) + u(n-3)$
 
 
 

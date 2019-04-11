@@ -30,7 +30,7 @@ In particolare, è importante trovare i valori di $\rho$ che indicano la converg
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.35]{Lezioni/Immagini/zdft}
+	\includegraphics[scale=0.3]{Lezioni/Immagini/zdft}
 \end{figure}
 
 \subsection{Trasformate e ROC}
@@ -38,9 +38,9 @@ La trasformata zeta definisce una relazione biunivoca tra la sequenza $x(n)$ e u
 
 Esistono relazioni specifiche tra la tipologia di una generica sequenza $x(n)$ e la ROC della relativa trasformata $z$:
 \begin{itemize}
-	\item Le sequenze $x(n)$ bilatere hanno supporto che si estende sia su istanti di tempo discreto negativi che positivi;
-	\item Le sequenze causali possiedono coefficienti identicamente nulli per istanti di tempo negativi, origine esclusa;
-	\item Le sequenze causali possiedono coefficienti identicamente nulli per istanti di tempo positivi.
+	\item Le sequenze $x(n)$ bilatere hanno supporto su istanti di tempo discreto negativi e positivi;
+	\item Le sequenze causali possiedono coefficienti identicamente nulli per istanti di tempo negativi;
+	\item Le sequenze anticausali possiedono coefficienti identicamente nulli per istanti di tempo positivi.
 \end{itemize}
 
 \subsubsection{Impulso $\delta$}
@@ -56,9 +56,22 @@ Il risultato è ottenuto scomponendo le sommatorie e trovando i valori per cui i
 $$X(z) = \sum_{-\infty}^{\infty}u(n)z^{-n} = \sum_{0}^{\infty}z^{-n} = \sum_{0}^{\infty}\big(z^{-1}\big)^n = \frac{1}{1 - z^{-1}}$$
 In una sequenza a gradino, la ROC corrisponde all'esterno della circonferenza di raggio unitario, cioè $\big[\abs{z^{-1}} < 1 \geq \abs{z} > 1\big]$. La stessa formula vale per il gradino anticausale, e la corrispondenza biunivoca si ritrova perché la ROC cambia in $\abs{z} < 1$.
 
-% slide 11
-\subsubsection{Finestra}
-Finestra: caratterizzata da un esponenziale $\alpha^n$, di cui viene considerata solo una parte. La $x(z)$ è un rapporto tra polinomi, e la $h(z)$ sarà simile. La trasformata converge per $z \neq 0$.
+\subsection{ROC per sequenze finite}
+Le sequenze $x(n)$ con supporto finito sono i segnali a tempo discreto che possiedono un numero finito di coefficienti non nulli. Queste ammettono sempre una trasformata $X(z)$ esprimibile in forma chiusa come un polinomio composto da un numero finito di variabili del tipo $z^k$, $z^{-k}$ con $k$ intero.
+$$X(z) = \sum_{n=-M}^{L} x(n)z^{-n}$$
+\begin{wrapfigure}{R}{0.6\textwidth}
+	% \vspace{-15pt}
+	\includegraphics[width=0.6\textwidth]{Lezioni/Immagini/roc}
+	\vspace{-40pt}
+\end{wrapfigure}
+
+La trasformata converge per qualunque $z$ nel piano complesso, eccetto il punto $z = 0$ se esistono termini del tipo $z^{-k}$ con $k > 0$, e il punto $z = \infty$ se esistono termini del tipo $z^{+k}$ con $k > 0$.
+
+ROC per segnali bilateri di durata finita: intero piano complesso $\mathbb{C}$ tranne $[z = 0 \land z = \infty]$.
+
+ROC per sequenze finite e causali: intero piano complesso $\mathbb{C}$ tranne $[z = 0]$.
+
+ROC per sequenze finite e anticausali: intero piano complesso $\mathbb{C}$ tranne $[z = \infty]$.
 
 Essendoci polinomi, sia il numeratore che il denominatore potrebbero annullarsi: nel primo caso si chiamano zeri, altrimenti poli. Per individuare i valori si può raccogliere i fattori arrivando all'ordine 1 nel denominatore.
 
@@ -82,5 +95,6 @@ I coefficienti nell'equazione alle differenze corrispondono ai coefficienti nell
 
 Il sistema è stabile se la trasformata di Fourier è interna alla regione di convergenza. 
 
+I sistemi FIR hanno risposta d'impulso limitata, e si può immediatamente passare alla rappresentazione tramite equazione alle differenze dato che i coefficienti sono gli stessi. I sistemi non sono ricorsivi.
 
 
