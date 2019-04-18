@@ -1,10 +1,7 @@
 \section{Trasformata zeta}
-La trasformata zeta aiuta l'analisi di stabilità e causalità delle frequenze dei sistemi lineari a tempo invariante con i relativi filtri, essendo più ampia rispetto alla trasformata di Fourier. La trasformata discreta non è sufficiente in alcune situazioni perché:
-\begin{enumerate}
-	\item Non sempre esiste;
-	\item Descrive solo comportamenti di sistemi LTI scarichi;
-	\item Presume condizioni iniziali nulle.
-\end{enumerate}
+La trasformata zeta aiuta l'analisi di stabilità e causalità delle frequenze dei sistemi lineari a tempo invariante con i relativi filtri, essendo più ampia rispetto alla trasformata di Fourier. 
+
+La trasformata discreta non è sufficiente in alcune situazioni perché non sempre esiste, descrive solo comportamenti di sistemi LTI scarichi e presume condizioni iniziali nulle.
 
 La trasformata zeta è la parte discreta (digitale) della trasformata di Laplace, ed è rappresentata da una sommatoria con l'estensione delle frequenze nel mondo complesso, esprimibile in coordinate polari con un termine $\rho$ qualsiasi che determina la distanza dall'origine. L'operatore è lineare.
 
@@ -27,11 +24,6 @@ Deve valere la condizione di sommabilità in modulo, quindi la convergenza varia
 La regione ROC dipende solo dal modulo $\rho$ delle pulsazioni complesse $z$, e non dalla loro fase: questo comporta le circonferenze come luoghi dei punti $z$ a modulo costante.
 $$ \sum_{-\infty}^{\infty}\abs{x(n)\rho^{-n}} < \infty \implies  \sum_{-\infty}^{\infty}\abs{x(n)}\rho^{-n} < \infty$$
 In particolare, è importante trovare i valori di $\rho$ che indicano la convergenza, e si ha che i valori sulla circonferenza di raggio unitario $\rho = 1$ sono i valori della trasformata di Fourier di frequenza 0. Quando c'è un ritardo, la regione sarà individuata con $[z \neq 0]$.
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[scale=0.3]{Lezioni/Immagini/zdft}
-\end{figure}
 
 \subsection{Trasformate e ROC}
 La trasformata zeta definisce una relazione biunivoca tra la sequenza $x(n)$ e una funzione della variabile complessa $z$. La biunivocità è garantita solo se si specifica la ROC di $X(z)$ e l'espressione analitica della trasformata.
@@ -67,34 +59,90 @@ $$X(z) = \sum_{n=-M}^{L} x(n)z^{-n}$$
 
 La trasformata converge per qualunque $z$ nel piano complesso, eccetto il punto $z = 0$ se esistono termini del tipo $z^{-k}$ con $k > 0$, e il punto $z = \infty$ se esistono termini del tipo $z^{+k}$ con $k > 0$.
 
-ROC per segnali bilateri di durata finita: intero piano complesso $\mathbb{C}$ tranne $[z = 0 \land z = \infty]$.
-
-ROC per sequenze finite e causali: intero piano complesso $\mathbb{C}$ tranne $[z = 0]$.
-
-ROC per sequenze finite e anticausali: intero piano complesso $\mathbb{C}$ tranne $[z = \infty]$.
-
 Essendoci polinomi, sia il numeratore che il denominatore potrebbero annullarsi: nel primo caso si chiamano zeri, altrimenti poli. Per individuare i valori si può raccogliere i fattori arrivando all'ordine 1 nel denominatore.
 
+ROC per segnali di durata finita:
+\begin{itemize}
+	\item ROC per segnali bilateri di durata finita: intero piano complesso $\mathbb{C}$ tranne $[z = 0 \land z = \infty]$;
+	\item ROC per sequenze finite e causali: intero piano complesso $\mathbb{C}$ tranne $[z = 0]$;
+	\item ROC per sequenze finite e anticausali: intero piano complesso $\mathbb{C}$ tranne $[z = \infty]$.
+\end{itemize}
 In questo caso i campioni infiniti vengono rappresentati come rapporto finito di polinomi infiniti.
 
-C'è una parte in comune $z = \alpha$ che annulla sia denominatore che numeratore, quindi gli zeri corrispondenti si semplificano e la sequenza resta finita. Ci sono $N - 1$ poli per $z = 0$.
+\newpage
+\subsection{Poli e zeri}
+I poli sono le radici del numeratore e gli zeri sono le radici del numeratore (possono trovarsi anche nelle pulsazioni complesse). Il loro numero è uguale.
 
-Gli zeri si posizionano in modo uniforme a intervalli distanti uguali, nelle pulsazioni complesse. 
+ \begin{wrapfigure}{L}{0.4\textwidth}
+ 	% \vspace{-15pt}
+ 	\includegraphics[width=0.4\textwidth]{Lezioni/Immagini/circonferenza}
+ 	\vspace{-40pt}
+ \end{wrapfigure}
 
-Serie geometrica:
+Il numero di poli e quello degli zeri corrisponono all'ordine del polinomio che li origina (quindi inizialmente possono essere diversi, ma vengono poi bilanciati con poli/zeri aggiuntivi).
+$$X(z) = \frac{1 - \alpha^Nz^{-N}}{1 - \alpha z^{-1}} = z^{-N+1} \frac{z^N - \alpha^N}{z - \alpha}$$
 
-In altre parole, sequenze causali = esterno della circonferenza, sequenze anticausali = interno.
+C'è una parte in comune $z = \alpha$ che annulla sia denominatore che numeratore, quindi gli zeri corrispondenti si semplificano e la sequenza resta finita. Ci sono $N - 1$ poli (e zeri) per $z = 0$.
 
-L'importante è ragionare sui poli, che determinano la convergenza in base alla causalità. Il numero di poli e zeri corrisponde all'ordine, che può essere diverso tra numeratore e denominatore.
+Le radici si posizionano in modo uniforme a intervalli distanti uguali, nelle pulsazioni complesse, su una circonferenza di raggio $\alpha$ (polinomio di ordine $N$, $z^N - \alpha^N$).
 
-La frequenza è legata alla posizione angolare, quindi essendo i poli in zero la loro influenza si riflette su tutte le frequenze o nessuna: il contributo è nullo.
+\subsection{ROC per sequenze infinite}
+Le sequenze $x(n)$ illimitate sono i segnali a tempo discreto che possiedono un supporto temportale illimitato, ma convergono solo in una distinta parte dei piano complesso. 
 
-Studiando i poli si analizza la regione in cui la funzione viene amplificata e cresce in valore, gli zeri dove diminuisce. Insieme quindi danno l'andamento delle frequenze.
+\begin{wrapfigure}{R}{0.65\textwidth}
+	\vspace{-35pt}
+	\includegraphics[width=0.65\textwidth]{Lezioni/Immagini/rocinf}
+	\vspace{-35pt}
+\end{wrapfigure}
 
-I coefficienti nell'equazione alle differenze corrispondono ai coefficienti nella trasformata, considerando il cambiamento di segno. Al numeratore c'è la parte non ricorsiva, e al denominatore quella ricorsiva. Se non c'è il denominatore, la sequenza è FIR.
+Regione di convergenza per sequenze causali: \\
+$\abs{z} > d_M$, dove $d_M$ è il modulo del polo più distante dall'origine.
 
-Il sistema è stabile se la trasformata di Fourier è interna alla regione di convergenza. 
+Esempio: sequenza gradino con ROC $\abs{z} > 1$.
 
-I sistemi FIR hanno risposta d'impulso limitata, e si può immediatamente passare alla rappresentazione tramite equazione alle differenze dato che i coefficienti sono gli stessi. I sistemi non sono ricorsivi.
+Regione di convergenza per sequenze anticausali: \\
+$\abs{z} < d_M$, dove $d_M$ è il modulo del polo più vicino all'origine. 
 
+Esempio: sequenza gradino con ROC $\abs{z} < 1$.
+
+Per definizione, la regione di convergenza non può contenere poli. Le sequenze causali, quindi, hanno poli all'esterno della circonferenza, mentre le sequenze anticausali all'interno.
+
+\subsection{Trasformata zeta razionale}
+Nei casi pratici di interesse, la funzione $X(z)$ è una funzione razionale di due polinomi: $X(z) = \frac{N(z)}{D(z)}$.
+$N(z)$ e $D(z)$ sono due polinomi nella variabile $p_n$ e $p_d$. Scrivendo i due polinomi in forma estesa, si ottiene:
+$$X(z) = \frac{\beta_0 + \beta_1z^{-1} + \dots + \beta_{p_n}}{z^{-p_n}}{\alpha_0 + \alpha_1z^{-1} + \dots + \alpha_{p_d}z^{-p_d}}$$
+Esprimendo in termini di potenze positive di $z$ e fattorizzando i due polinomi in base alle rispettive radici elementari, si ottiene:
+$$X(z) = \frac{\beta_0}{\alpha_0}\big(z^{p_d - p_n}\big) \frac{\prod_{p_n}^{i=1}(z-c_i)}{\prod_{p_d}^{i=1}(z-d_i)}$$
+I coefficienti $c_i \forall\ i = 1, \dots, p_n$ sono gli zeri non nulli di $X(z)$, mentre i coefficienti $d_i \forall\ i = 1, \dots, p_n$ sono i poli non nulli di $X(z)$.
+
+Ci sono $p_n - p_d$ poli in $z = 0$ nel caso in cui $p_n > p_d$. \\
+Ci sono $p_d - p_n$ poli in $z = 0$ nel caso in cui $p_d > p_n$. 
+
+\section{Analisi dei sistemi}
+I sistemi LTI a tempo discreto possono essere descritti da equazioni lineari alle differenze a coefficienti costanti:
+$$y(n) = -\alpha_1y(n-1) - \alpha_2y(n - 2) - \dots - \alpha_My(n - M) + \beta_0x(n) + \beta_1x(n - 1) + \dots + \beta_Nx(n - N)$$
+Applicando la trasformata di Fourier discreta a ogni termine si ottiene:
+$$Y\big(e^{j\omega}\big) = -\alpha_1Y\big(e^{j\omega}\big)e^{-j\omega} - \dots - \alpha_MY\big(e^{j\omega}\big)e^{-j\omega M} + $$
+$$ + \beta_0 X\big(e^{j\omega}\big) + \beta_1X\big(e^{j\omega}\big)e^{-j\omega} + \dots + \beta_NX\big(e^{j\omega}\big)e^{-j\omega N}$$
+Si ricorda che $F\big(f(x - x_o)\big) = e^{-j2\pi ux_0} F(u)$. Raccogliendo tutti i termini $Y\big(e^{j\omega}\big)$ e $X\big(e^{j\omega}\big)$, si ha:
+$$Y\big(e^{j\omega}\big) \big(1 + \alpha_1e^{-j\omega} + \dots + \alpha_Me^{-j\omega M}\big) = X\big(e^{j\omega}\big) \big(\beta_0 + \beta_1e^{-j\omega} + \dots + \beta_Ne^{-j\omega N}\big)$$
+
+Per il teorema della convoluzione, $y(n) = x(n) * h(n) \leftrightarrow Y(e^{j\omega}) = X(e^{j\omega})H(e^{j\omega})$.
+
+La risposta in frequenza $H(e^{j\omega})$ di un sistema LTI espresso tramite le equazioni alla differenze, può essere calcolata come segue:
+$$H(e^{j\omega}) = \frac{Y(e^{j\omega})}{X(e^{j\omega})} = \frac{\big(\beta_0 + \beta_1e^{-j\omega} + \dots + \beta_Ne^{-j\omega N}\big)}{\big(1 + \alpha_1e^{-j\omega} + \dots + \alpha_Me^{-j\omega M}\big)}$$
+Questo per la relazione che lega trasformata di Fourier e zeta: \\
+$\sum_{n=-\infty}^{\infty} x(n)z^{-n} = \sum_{n=-\infty}^{\infty} \big(x(n)\rho^{-n}\big)e^{-j\omega n}$.
+
+La regone di convergenza della funzione $Y(z)$ coincide, nel caso generale, quando non avvengono cancellazioni tra poli e zeri in $X(z)$ e $H(z)$, con l'intersezione tra le regioni delle due funzioni.
+
+Essendo la funzione di trasferimento $H(e^{j\omega})$ razionale, allora anche $H(z)$ lo è, quindi si può esprimere con una funzione razionale del tipo:
+$$H(z) = \frac{Y(z)}{X(z)} = \frac{\big(\beta_0 + \beta_1z^{-1} + \dots + \beta_Nz^{-N}\big)}{\big(1 + \alpha_1z^{-1} + \dots + \alpha_Mz^{-M}\big)}$$
+Essa corrisponde all'equazione alle differenze, e al caso generale di un sistema LTI.
+
+Un sistema LTI causale e non ricorsivo di tipo FIR ha una funzione di trasferimento del tipo: \\
+$H(z) = \beta_0 + \beta_1z^{-1} + \dots + \beta_Nz^{-N}$.
+
+Un sistema LTI causale e puramente ricorsivo di tipo IIR ha una funzione di trasferimento del tipo:
+$H(z) = \frac{1}{(1 + \alpha_1z^{-1} + \dots + \alpha_Mz^{-M})}$.
 

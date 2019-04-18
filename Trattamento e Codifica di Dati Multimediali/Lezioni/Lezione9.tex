@@ -1,4 +1,17 @@
 \section{Sistemi LTI e trasformata zeta}
+La funzione di trasferimento $H(z)$ può essere espressa in termini delle radici dei polinomi al numeratore e al numeratore fattorizzando i due polinomi $N(z)$ e $D(z)$:
+% formula slide 30
+
+La frequenza è legata alla posizione angolare, quindi essendo i poli in zero la loro influenza si riflette su tutte le frequenze o nessuna: il contributo è nullo.
+
+Studiando i poli si analizza la regione in cui la funzione viene amplificata e cresce in valore, gli zeri dove diminuisce. Insieme quindi danno l'andamento delle frequenze.
+
+I coefficienti nell'equazione alle differenze corrispondono ai coefficienti nella trasformata, considerando il cambiamento di segno. Al numeratore c'è la parte non ricorsiva, e al denominatore quella ricorsiva. Se non c'è il denominatore, la sequenza è FIR.
+
+Il sistema è stabile se la trasformata di Fourier è interna alla regione di convergenza. 
+
+I sistemi FIR hanno risposta d'impulso limitata, e si può immediatamente passare alla rappresentazione tramite equazione alle differenze dato che i coefficienti sono gli stessi. I sistemi non sono ricorsivi.
+
 \subsection{Stabilità BIBO}
 La stabilità BIBO di un sistema LTI impone che la risposta all'impulso $h(n)$ sia sommabile in modulo. Se il sistema è causale, la condizione si traduce nel dominio $z$ imponendo che la funzione di trasferimento $H(z)$ abbia poli contenuti nella circonferenza di raggio unitario del piano $z$. 
 
@@ -38,6 +51,13 @@ Ricostruendo la frequenza a partire dal filtro, si ha $H(z) = k \frac{z}{denz - 
 Un sistema inverso ha lo scopo di compensare i poli e gli zeri, ed è un sistema che inverte il comportamento di un altro sistema LTI tale che la risposta rimanga inalterata.
 
 Il numeratore di uno dev'essere uguale al denominatore dell'altro e viceversa, e la funzione di trasferimento è pari a una costante unitaria nel piano $z$ (identità).
+
+\subsection{Sistemi passa-tutto}
+Questi filtri non modificano le frequenze del segnale, ma effettuano altre operazioni (ritardo, anticipo), e dev'esserci una precisa relazione tra i poli e gli zeri. La risposta all'impulso è sempre costante.
+
+I coefficienti del polinomio al numeratore sono in ordine inverso rispetto a quelli del denominatore, e ciò viene garantito imponendo il modulo quadro unitario. Raccogliendo $z$, il numeratore resta invariato e il denominatore viene invertito. 
+
+Un polo, quindi, è il reciproco di uno zero (e viceversa). Se uno è all'interno della circonferenza, l'altro è fuori.
 
 
 
