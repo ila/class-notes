@@ -1,51 +1,95 @@
 \section{Sistemi LTI e trasformata zeta}
 La funzione di trasferimento $H(z)$ può essere espressa in termini delle radici dei polinomi al numeratore e al numeratore fattorizzando i due polinomi $N(z)$ e $D(z)$:
-% formula slide 30
+$$H(z) = \frac{N(z)}{D(z)} = Kz^{M-N} \frac{(z-c_1)(z-c_2) \dots (z-c_N)}{(z-d_1)(z-d_2)\dots(z-d_N)}$$
+La risposta di un sistema LTI viene analizzata attraverso i poli e gli zeri della funzione di trasferimento $H(z)$.
 
-La frequenza è legata alla posizione angolare, quindi essendo i poli in zero la loro influenza si riflette su tutte le frequenze o nessuna: il contributo è nullo.
+I coefficienti nell'equazione alle differenze corrispondono ai coefficienti nella trasformata, considerando il cambiamento di segno. Al numeratore c'è la parte non ricorsiva, e al denominatore quella ricorsiva. Se non c'è il denominatore, la sequenza è FIR (risposta all'impulso finita).
 
-Studiando i poli si analizza la regione in cui la funzione viene amplificata e cresce in valore, gli zeri dove diminuisce. Insieme quindi danno l'andamento delle frequenze.
+I sistemi FIR hanno risposta d'impulso limitata, e si può immediatamente passare alla rappresentazione tramite equazione alle differenze dato che i coefficienti sono gli stessi. I sistemi non sono ricorsivi, dato che i FIR possono essere sempre realizzati con sistemi non ricorsivi.
 
-I coefficienti nell'equazione alle differenze corrispondono ai coefficienti nella trasformata, considerando il cambiamento di segno. Al numeratore c'è la parte non ricorsiva, e al denominatore quella ricorsiva. Se non c'è il denominatore, la sequenza è FIR.
+Essi sono in funzione di soli $M$ campioni della sequenza di ingresso, pesati per la risposta all'impulso $h(n)$: dipendono solo da un numero finito di elementi del passato. Dato $h(n)$, si ha subito la trasformata zeta.
+$$\{\underset{\Uparrow}1, 2, 0, 4\} \qquad h(n) = \sum_{j=0}^{N-1}\beta_j\delta(n - j) = \delta(n) + 2\delta(n - 1) + 4\delta(n - 3)$$
+$$y(n) = \sum_{k=-\infty}^{+\infty} h(k)x(n-k) = \sum_{k=0}^{3}h(k)x(n-k)$$
+$$y(n) = x(n) + 2x(n-1) + 4x(n-3) \qquad H(z) = 1+2z^{-1} + 4z^{-3}$$
+
+% foto fir
+
+Studiando i poli si analizza la regione in cui la funzione viene amplificata e cresce in valore, gli zeri dove diminuisce. Insieme quindi danno l'andamento delle frequenze. Un paio di poli complessi e coniugati corrisponde a segnali causali con comportamento a oscillazione.
+
+La frequenza è legata alla posizione angolare, quindi se i poli si trovano nello zero la loro influenza si riflette su tutte le frequenze o nessuna: il contributo è nullo.
 
 Il sistema è stabile se la trasformata di Fourier è interna alla regione di convergenza. 
 
-I sistemi FIR hanno risposta d'impulso limitata, e si può immediatamente passare alla rappresentazione tramite equazione alle differenze dato che i coefficienti sono gli stessi. I sistemi non sono ricorsivi.
+% foto risposte
 
 \subsection{Stabilità BIBO}
-La stabilità BIBO di un sistema LTI impone che la risposta all'impulso $h(n)$ sia sommabile in modulo. Se il sistema è causale, la condizione si traduce nel dominio $z$ imponendo che la funzione di trasferimento $H(z)$ abbia poli contenuti nella circonferenza di raggio unitario del piano $z$. 
+La stabilità BIBO di un sistema LTI impone che la risposta all'impulso $h(n)$ sia sommabile in modulo: $\sum_{n=-\infty}^{\infty}\abs{h(n)} < \infty$. Se il sistema è causale, la condizione si traduce nel dominio $z$ imponendo che la funzione di trasferimento $H(z)$ abbia poli contenuti nella circonferenza di raggio unitario del piano $z$. 
 
 Le caratteristiche della sequenza dipendono dalla posizione dei poli: la convergenza, e conseguentemente la stabilità, sono determinate dall'appartenenza al cerchio unitario.
 
-I poli all'esterno del cerchio $\abs{z} = 1$ ...
-Poli multipli sul cerchio unitario conducono a una crescita di tipo polinomiale. 
+I poli all'esterno del cerchio $\abs{z} = 1$ conducono a una risposta all'impulso $h(n)$ con crescita esponenziale, e l'uscita del sistema LTI potrebbe divergere anche in presenza di segnali $x(n)$ d'ingresso costanti. Poli multipli sul cerchio unitario conducono a una crescita di tipo polinomiale.
+
+Poli semplici su $\abs{z} = 1$ possono condurre a una risposta divergente, e dunque a un sistema LTI non stabile secondo la definizione BIBO.
+
+$H(z) = \frac{z}{z-3}$ ha un polo in $z = 3$, infatti ha $h(n) = 3^nu(n)$. \\
+$H(z) = \frac{1}{z(z-1)^2}$ ha un polo di ordine 2 in $z = 1$, e risposta all'impulso $h(n) = u(n)$ di tipo rampa, quindi è instabile. \\
+$H(z) = \frac{z}{(z-1)}$ ha un polo semplice in $z = 1$, e risposta all'impulso $h(n) = u(n)$ costante (con modulo che tende a infinito).
 
 Riassumendo:
 \begin{itemize}
-	\item Se il sistema è causale, condizione necessaria e sufficiente per la stabilità BIBO è che $H(z)$ abbia tutti i poli contenuti nella circonferenza di raggio unitario;
-	\item ...
+	\item Se il sistema è causale, condizione necessaria e sufficiente per la stabilità BIBO è che la funzione di trasferimento $H(z)$ abbia tutti i poli contenuti nella circonferenza di raggio unitario;
+	\item Se il sistema è causale, condizione necessaria e sufficiente per la stabilità BIBO è che la funzione di trasferimento $H(z)$ abbia tutti i poli all'esterno della circonferenza di raggio unitario, cioè con $\abs{z} > 1$;
+	\item Se il sistema è bilatero, condizione necessaria e sufficiente per la stabilità BIBO richiede che la circonferenza di raggio unitario $\abs{z = 1}$ sia contenuta nell'anello circolare che identifica la regione di convergenza ROC nella funzione di trasferimento del sistema.
 \end{itemize}
+
+In altre parole, la circonferenza di raggio unitario dev'essere sempre contenuta nella regione di convergenza per garantire la stabilità del sistema. 
+
+La condizione di stabilità implica che sia sempre possibile identificare la risposta in frequenza $H(e^{j\omega})$, essendo la circonferenza $\abs{z} = 1$ contenuta nella regione di convergenza di $H(z)$.
+
+Un sistema LTI fisicamente realizzabile deve possedere una risposta all'impulso $h(n)$ causale e con coefficienti reali. Ciò significa che:
+\begin{enumerate}
+	\item La regione di convergenza $H(z)$ corrisponde all'esterno di un cerchio di raggio minore del polo di $H(z)$ di valore assoluto massimo (causalità);
+	\item Per ogni polo e zero complesso, deve essere presente anche il rispettivo complesso coniugato. Poli e zeri sull'asse reale possono essere singoli: hanno parte immaginaria nulla, quindi coincidono con i propri complessi coniugati (coefficienti reali).
+\end{enumerate}
 
 Quando il polinomio è espresso tramite potenze negative, se c'è una costante essa corrisponde all'assenza di ritardo, quindi sia al numeratore che al denominatore si somma 1 per indicare l'istante corrente. 
 
 Tutte le volte che la soluzione non è a coefficienti reali, è presente il complesso coniugato. I monomi vengono espressi in termini di potenze negative di $z$.
 
-\subsection{Filtri}
+\section{Filtri con poli e zeri}
 Avendo a disposizione la trasformata con i poli e gli zeri, conoscendo le proprietà di continuità della funzione analitica è possibile conoscere l'andamento delle frequenze.
 
 Se un polo reale è molto vicino al cerchio di raggio unitario, si ha che il denominatore si annulla con valori prossimi a $\rho = 1$, ma a $z = 1$ c'è un picco e la risposta cresce in funzione alla posizione del polo. In altre parole, ogni polo ha un'influenza sulle frequenze a seconda della loro vicinanza.
+
+I poli devono essere posizionati in prossimità del cerchio di raggio unitario nelle pulsazioni complesse $z$ corrispondenti alle componenti armoniche nel segnale d'ingresso $x(n)$ che devono essere enfatizzate.
+
+Gli zeri devono essere posizionati vicino ai punti $z$ del cerchio di raggio unitario corrispondenti alle componenti armoniche del segnale d'ingresso $x(n)$ che devono essere attenuate.
+
+Per la stabilità e la realizzabilità fisica (causalità), tutti i poli del filtro devono cadere nella circonferenza di raggio unitario, mentre gli zeri possono essere posizionati in qualunque punto del piano. Entrambi devono essere presenti a coppie complesse e coniugate.
+
+% rivedere?
+Introducendo un fattore di normalizzazione $1 - \alpha$, è possibile confrontare i filtri con valore di picco (guadagno) unitario. Se la frequenza è causale, il numero di zeri non deve superare il numero di poli.
+% foto sistemi
+Ricostruendo la frequenza a partire dal filtro, si ha $H(z) = k \frac{z}{z - \alpha} = \frac{k}{1 - \alpha z^{-1}}$ con $k$ costante. Se il guadagno è unitario, $\abs{H(z)_{f=0 \land z=1} = 1}$ da cui $k = 1 - \alpha$ (filtro con sempre la stessa altezza).
+
+Solitamente la massima oscillazione $\delta_2$ permessa in banda proibita viene espressa in dB attraverso l'oscillazione $R-P$, dove $R_p = -10\log(\delta_2^2)$. 
+
+La banda proibita è data dall'insieme delle frequenze per le quali il guadagno è inferiore a un'opportuna soglia di attenzione, che normalmente viene stabilita in funzione dell'applicazione. Indicando con $v_s$ la frequenza di stop e con $v_c$ la frequenza di taglio, le frequenze comprese tra esse costituiscono la banda di transizione.
+
+\subsection{Passa-basso}
+Tanto più i poli sono vicini all'asse reale, più influenzano le frequenze basse (filtro passa-basso).
+ % foto filtro passa basso
  
-Introducendo un fattore di normalizzazione $1 - \alpha$, è possibile confrontare i filtri con valore di picco (guadagno) unitario.
+ I poli del filtro devono essere posizionati nelle pulsazioni complesse $z$ corrispondenti alle frequenze della banda passante di $H(e^{j\omega})$: $\abs{\omega} \in [\omega_t, \pi]$.
+ 
+ Gli zeri devono essere posizionati in prossimità, oppure sul cerchio $\abs{z} = 1$ nelle pulsazioni complesse $z$ corrispondenti alle frequenze $\abs{\omega} \in [\omega_t, \pi]$.
+ 
+ % slide 20
 
 Per enfatizzare le basse frequenze, è sufficiente inserire degli zeri per farle crescere di valore. Creando monomi con radici e aggiungendole al numeratore e al denominatore, si creano filtri in grado di alzare o abbassare le frequenze manipolando le posizioni di poli e zeri.
 
 Nella realtà bisogna considerare che è impossibile azzerare completamente una parte di frequenza, ma ci saranno delle oscillazioni più o meno ampie.
 
-Tanto più i poli sono vicini all'asse reale, più influenzano le frequenze basse (filtro passa-basso).
-
-Se la frequenza è causale, il numero di zeri non deve superare il numero di poli.
-% foto sistemi
-Ricostruendo la frequenza a partire dal filtro, si ha $H(z) = k \frac{z}{denz - \alpha} = \frac{k}{1 - \alpha z^{-1}}$ con $k$ costante. Se il guadagno è unitario, $\abs{H(z)_{f=0 \land z=1} = 1}$ da cui $k = 1 - \alpha$ (filtro con sempre la stessa altezza).
 
 \subsection{Sistema inverso}
 Un sistema inverso ha lo scopo di compensare i poli e gli zeri, ed è un sistema che inverte il comportamento di un altro sistema LTI tale che la risposta rimanga inalterata.
