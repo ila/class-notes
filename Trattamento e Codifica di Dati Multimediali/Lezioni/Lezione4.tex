@@ -1,22 +1,22 @@
 \section{Campionamento}
-Il campionamento è un processo che legge valori distanziati l'uno dall'altro con un passo $\Delta t$ approssimato al tempo infinitesimo, ma in realtà discreto. La scelta dell'ampiezza del passo deve evitare sia lo spreco di risorse che la perdita di informazioni.
+Il \textbf{campionamento} è un processo che legge valori distanziati l'uno dall'altro con un \textbf{passo} $\Delta t$ approssimato al tempo infinitesimo, ma in realtà discreto. La scelta dell'ampiezza del passo deve evitare sia lo spreco di risorse che la perdita di informazioni.
 
 Il segnale, in pratica, passa dall'analogico al digitale e dal continuo al discreto, e viene rappresentato come una serie di impulsi.
 
-A una funzione campionata (con passo $\Delta x$) corrisponde nel dominio trasformato uno spettro periodico. Il periodo è inversamente proporzionale al passo di campionamento (ricostruzione della funzione continua dalla trasformata).
+A una funzione campionata (con passo $\Delta x$) corrisponde nel dominio trasformato uno \textbf{spettro periodico}. Il periodo è inversamente proporzionale al passo di campionamento (ricostruzione della funzione continua dalla trasformata).
 
 Così come a una funzione continua nel dominio dello spazio ne corrisponde una nel dominio delle frequenze espressa come somma pesata di armoniche (analisi e sintesi), a una funzione campionata con passo $\Delta x$ corrisponde nel dominio trasformato uno spettro periodico, con periodo in funzione del passo di campionamento.
 $$F(u) = \sum_{k=-\infty}^{\infty} f(k\Delta x)e^{-j2\pi uk \Delta x}$$
-La frequenza di campionamento minima, quindi, garantisce un periodo sufficientemente grande per contenere l'intero spettro. Esso è simmetrico, quindi $-f_{max} = f_{max}$ come visto nel dominio della trasformata di Fourier.
+La \textit{frequenza di campionamento minima}, quindi, garantisce un periodo sufficientemente grande per contenere l'intero spettro. Esso è simmetrico, quindi $-f_{max} = f_{max}$ come visto nel dominio della trasformata di Fourier.
 
 Se il passo di campionamento è troppo alto ($\Delta x' = 1/M > \Delta x = 1/N$), le repliche dello spettro si sovrappongono (periodo $M$ troppo breve) e non è possibile risalire alla funzione originale. \\
 Questo succede perché le alte frequenze che non vengono considerate (a causa dell'alta variabilità del segnale, che non può essere interpretata in un periodo) ma si sovrappongono alle più basse, causando una errata rappresentazione.
 
-Al contrario, una bassa frequenza di campionamento produce fenomeni di aliasing: la funzione viene approssimata male, come costante o una differente sinusoide.
+Al contrario, una bassa frequenza di campionamento produce fenomeni di \textit{aliasing}: la funzione viene approssimata male, come costante o una differente sinusoide.
 
-Il teorema di Shannon afferma che, data la frequenza massima del segnale $f_{MAX}$, la frequenza massima di campionamento deve essere:
+Il \textbf{teorema di Shannon} afferma che, data la frequenza massima del segnale $f_{MAX}$, la frequenza massima di campionamento deve essere:
 $$F_s = \nicefrac{1}{\Delta} > 2f_{MAX}$$
-Il periodo minimo di ripetizione dello spettro perché non vi sia sovrapposizione $N = 2f_{MAX}$. La $f_{MAX}$ viene definita frequenza di Nyquist, e rappresenta la frequenza massima del segnale.
+Il periodo minimo di ripetizione dello spettro perché non vi sia sovrapposizione $N = 2f_{MAX}$. La $f_{MAX}$ viene definita \textbf{frequenza di Nyquist}, e rappresenta la frequenza massima del segnale.
 
 Lo spazio pertanto sarà $2f_{MAX}$, il che è il minimo valore per evitare le sovrapposizioni delle repliche. Nella formula viene utilizzata la disuguaglianza stretta per assicurare che non ci siano due frequenze nello stesso punto.
 

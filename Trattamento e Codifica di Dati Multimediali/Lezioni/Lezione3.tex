@@ -65,7 +65,9 @@ Ognuna di queste componenti ha un'ampiezza diversa rispetto a quella dell'armoni
 	\vspace{-25pt}
 \end{wrapfigure}
 
-Esempio: un'onda quadra con periodo 5 ms può essere ottenuta sommando onde sinusoidali di opportuna frequenza, ampiezza e fase. Il contributo più rilevante è dato dalla prima sinusoide, si frequenza pari a quella dell'onda quadra (200 Hz, frequenza fondamentale $F_0$).
+Esempio: un'onda quadra con periodo 5 ms può essere ottenuta sommando onde sinusoidali di opportuna frequenza, ampiezza e fase.
+
+Il contributo più rilevante è dato dalla prima sinusoide, si frequenza pari a quella dell'onda quadra (200 Hz, frequenza fondamentale $F_0$).
 
 Per costruire l'onda quadra sono necessarie anche altre componenti elementari di frequenza maggiore, cioè tutte le armoniche multiple della frequenza $F_0$. \\
 
@@ -75,7 +77,7 @@ $$z = ai+b \qquad \abs{z} = \sqrt{a^2 + b^2} = \pi$$
 
 \begin{wrapfigure}{I}{0.43\textwidth}
 	\vspace{-15pt}
-		\includegraphics[width=0.42\textwidth]{Lezioni/Immagini/cartesiano}
+		\includegraphics[width=0.42\textwidth]{Lezioni/Immagini/cartesiano} 
 	\vspace{-30pt}
 \end{wrapfigure}
 
@@ -100,7 +102,9 @@ Si ricorda che $\theta = 2\pi f_k$. Quando $\theta$ cambia segno, l'angolo si sp
 
 Per passare dalle variabili discrete alle continue, si usa il coefficiente $R_k$ che raccoglie le due sommatorie (fino a infinito da entrambi i versi) e si applica l'integrale. 
 $$R_k = \int_{-\frac{N}{2}}^{\frac{N}{2}} f(x)e^{-j(2\pi f_kx)} dx$$
-Il coefficiente $\frac{A_n}{2}$ (altezza del segnale sull'asse $y$) è dato appunto dalla divisione del coefficiente $R$ in 2 parti, seno e coseno: l'ampiezza sarà la metà, e ogni ampiezza viene sommata insieme alle funzioni. C'è corrispondenza biunivoca fra dominio temporale e dominio delle frequenze. I seni hanno solo la parte complessa.
+Il coefficiente $\frac{A_n}{2}$ (altezza del segnale sull'asse $y$) è dato appunto dalla divisione del coefficiente $R$ in 2 parti, seno e coseno: l'ampiezza sarà la metà, e ogni ampiezza viene sommata insieme alle funzioni. 
+
+C'è corrispondenza biunivoca fra dominio temporale e dominio delle frequenze. I seni hanno solo la parte complessa.
 
 \subsection{Trasformata di Fourier di funzioni continue}
 Per passare dalle funzioni periodiche a quelle reali, la sommatoria diventa un integrale. La trasformata di Fourier serve per rapppresentare le funzioni continue come sinusoidi.
@@ -117,9 +121,9 @@ Esiste un valore della trasformata (non più $\delta$) per ogni funzione continu
 Piuttosto che parte reale e immaginaria, si considerano modulo e fase, ricavabili direttamente. Il modulo indica la \textbf{potenza} del segnale, e la fase assicura la \textbf{biunivocità} della corrispondenza. 
 $$F(u) = \digamma[f(x)] = \Re(u) + j\Im(u) = \abs{F(u)}e^{j\phi(u)}$$
 $$\text{Spettro: } \abs{F(u)} = [\Re(u)^2 + \Im(u)^2]^{\nicefrac{1}{2}}$$
-$$\text{Fase: } \phi(u) = \tan^{-1} \Big[\frac{\Im(u)}{\Re(u)}\Big]$$
+$$\text{Fase: } \phi(u) = \tan^{-1} \bigg[\frac{\Im(u)}{\Re(u)}\bigg]$$
 $$\text{Potenza (densità) spettrale: } \abs{F(u)}^2 = \Re(u)^2 + \Im(u)^2$$
-La trasformata di Fourier è un operatore scomponibile, quindi per passare da una dimensione a $n$ semplicemente si applica $n$ volte la formula. In altre parole, si scompone rispetto a una direzione la funzione.
+La trasformata di Fourier è un operatore \textbf{scomponibile}, quindi per passare da una dimensione a $n$ semplicemente si applica $n$ volte la formula. In altre parole, si scompone rispetto a una direzione la funzione.
 
 \subsection{Trasformata di Fourier di funzioni discrete}
 Il primo step è il campionamento: in questo caso si utilizza la sommatoria, ma la funzione continua è rappresentata da un numero discreto di campioni. La funzione è definita per campioni $i$, e la variabile indipendente $x$ assume valore complesso $i\Delta x$.
@@ -135,11 +139,11 @@ Il fattore $\nicefrac{1}{N}$ davanti alla trasformata o all'antitrasformata è u
 Un ragionamento analogo si applica per passare da una dimensione a due: la sommatoria è doppia e si divide per entrambi i fattori di normalizzazione. Entrambe le variabili rispettano la periodicità, cioè $F(u, v) = F(u + M, v + N)$ con $\Delta u = 1/M \Delta x$, $\Delta v = 1/N \Delta y$.
 
 \subsection{Elaborazione di immagini}
-Il segnale di un'immagine viene scomposto, come visto precedentemente, in modulo e fase. Il modulo raccoglie le frequenza di un'immagine, mentre la fase contiene l'informazione posizionale di ogni in un'immagine (le frequenze sono le stesse a prescindere dall'organizzazione spaziale).
+Il segnale di un'immagine viene scomposto, come visto precedentemente, in modulo e fase. Il modulo raccoglie le \textit{frequenza} di un'immagine, mentre la fase contiene l'\textit{informazione posizionale} di ogni in un'immagine (le frequenze sono le stesse a prescindere dall'organizzazione spaziale).
 
 L'ampiezza $\angle$ contiene informazioni relative alle posizione o meno delle strutture nell'immagine.
 $$F(u, v) = \abs{F(u, v)}e^{j\phi(u, v)}$$
-I pixel possono assumere valore da 0 a 255, mappati in una \textit{trasformata di Fourieri discreta}. Data la periodicità e la simmetria dello spettro rispetto all'origine, è possibile scegliere il periodo dello spettro centrato sull'origine $(0, 0)$.
+I pixel possono assumere valore da 0 a 255, mappati in una \textit{trasformata di Fourier discreta}. Data la periodicità e la simmetria dello spettro rispetto all'origine, è possibile scegliere il periodo dello spettro centrato sull'origine $(0, 0)$.
 
 In questo modo, il picco rappresenta la \textbf{componente continua} (valore medio della funzione), e le frequenze crescono allontanandosi dal picco. Per convenzione lo spettro (in alto a sinistra) si trasla in modo da essere al centro, e le alte frequenze sono verso gli angoli esterni.
 
@@ -153,7 +157,7 @@ L'\textit{istogramma di un'immagine a livelli di grigio} è una funzione discret
 
 Il numero di campioni stabilisce l'informazione che si può rappresentare: se è sufficientemente alto, la distribuzione dei toni di grigio sarà regolare. Questo non permette di trarre conclusioni sullo spazio, ma semplicemente su quanti campioni hanno un certo valore (e di conseguenza la bontà del quantizzatore).
 
-Se ci sono picchi nella distribuzione, esso è dovuto alla ripetizioni di pattern nell'immagine (come lo sfondo). Il numero di campioni nella trasformata è uguale a quello nell'immagine, e con frequenza di campionamento bassa la $\Delta f$ sarà piccolo e si verificherà l'aliasing. 
+Se ci sono picchi nella distribuzione, è dovuto alla ripetizioni di pattern nell'immagine (come lo sfondo). Il numero di campioni nella trasformata è uguale a quello nell'immagine, e con frequenza di campionamento bassa la $\Delta f$ sarà piccolo e si verificherà l'aliasing. 
 
 Per rimuovere i rumori si acquisiscono porzioni di segnali più lunghe, eventualmente analizzando le loro medie in modo da preservare le componenti più importanti.
 
@@ -169,26 +173,25 @@ Si ha che il 99.5\% dello spettro è contenuto in una circonferenza di dimension
 	\includegraphics[scale=0.45]{Lezioni/Immagini/spettro}
 \end{figure}
 
-Eliminando parte dello spettro e delle frequenze, il filtro diventa parte integrante del segnale che viene antitrasformato: ciò introduce fenomeni di ringing, quindi è necessario osservare anche il comportamento dell'antitrasformata del filtro. 
+Eliminando parte dello spettro e delle frequenze, il filtro diventa parte integrante del segnale che viene antitrasformato: ciò introduce fenomeni di \textit{ringing}, quindi è necessario osservare anche il comportamento dell'antitrasformata del filtro. 
 
-Per ottenere diversi effetti si selezionano diverse parti dello spettro da tenere, per esempio solo l'interno o l'esterno, o una banda di un certo intervallo (mosaico, smoothing). 
+Per ottenere diversi effetti si selezionano diverse parti dello spettro da tenere, per esempio solo l'interno o l'esterno, o una banda di un certo intervallo (mosaico, \textit{smoothing}). 
 
-% rivisto fino a qui
 \subsection{Proprietà della trasformata}
-Un'importante proprietà è la linearità, che vale per ogni dominio: la trasformata di Fourier applicata a una funzione che è combinazione lineare (somma pesata) di funzioni, il risultato è uguale alla trasformata di Fourier di ogni funzione presa singolarmente. 
+Un'importante proprietà è la \textbf{linearità}, che vale per ogni dominio: applicando la trasformata di Fourier a una funzione che è combinazione lineare (somma pesata) di funzioni, il risultato è uguale alla trasformata di Fourier di ogni funzione presa singolarmente. 
 $$F(f)x) + g(x) = F(f(x)) + F(g(x)) = F(u) + G(u)$$
-La linearità permette di ridurre (scomporre) la complessità della trasformata come sovrapposizione di sistemi più semplici e monodimensionali, senza introdurre dispersione del segnale.
+La linearità permette di ridurre (scomporre) la complessità della trasformata come \textit{sovrapposizione di sistemi più semplici e monodimensionali}, senza introdurre dispersione del segnale.
 
-Vale anche la traslazione nello spazio (tempo) e nelle frequenze, ma solo per la trasformata discreta: una traslazione equivale a una modulazione nelle frequenze con un esponente complesso. In altre parole, la trasformata del modulo è identica, ma la fase cambia di $x_0$ (sfasamento).
+Vale anche la \textbf{traslazione} nello spazio (tempo) e nelle frequenze, ma solo per la trasformata discreta: una traslazione equivale a una modulazione nelle frequenze con un esponente complesso. In altre parole, la trasformata del modulo è identica, ma la fase cambia di $x_0$ (sfasamento).
 $$F(f(x + x_0)) = e^{j2\pi ux_0} \qquad F^{-1}(F(u \pm \varpi)) = f(x)e^{\pm j2\pi \varpi x}$$
 A oggetti più grandi nel dominio diretto, corrisponderanno oggetti simili ma compressi nel dominio trasformato e viceversa, a causa dell'aumento delle frequenze. 
 $$\text{Scala: } F(f(ax)) = \frac{1}{\abs{a}} F\Big(\frac{u}{a}\Big) \implies f(\alpha x, \beta y) = \frac{1}{\abs{\alpha \beta}} F\Big(\frac{u}{\alpha}, \frac{v}{\beta}\Big)$$
 $$\text{Inversione: } F(f(-x)) = F(-u)$$
-La trasformata di una funzione reale gode di simmetria Hermitiana: la parte reale e il modulo sono simmetrici rispetto all'origine (lo 0), mentre la parte immaginaria e la fase sono antisimmetriche rispetto all'origine.
+La trasformata di una funzione reale gode di \textit{simmetria Hermitiana}: la parte reale e il modulo sono simmetrici rispetto all'origine (lo 0), mentre la parte immaginaria e la fase sono antisimmetriche rispetto all'origine.
 
 Campionando il segnale di partenza, la trasformata diventa periodica e il periodo permette di ricostruire il segnale, a sua volta periodica. 
 $$\text{Periodicità (discreta): } F(u) = F(u + M) \implies F(u) = \frac{1}{M} \sum_{x=0}^{M-1} f(x)e^{-j\frac{2\pi}{M}ux} \quad u = 0, \dots, M - 1$$
-Altre proprietà sono già state enunciate, come l'esistenza dell'inversa della trasformata discreta e la reversibilità.
+Altre proprietà sono già state enunciate, come l'\textbf{esistenza dell'inversa} della trasformata discreta e la \textbf{reversibilità}.
 $$\text{Separabilità: } F(u, v) = \frac{1}{NM} \sum_{x=0}^{N-1} \sum_{y=0}^{M-1} f(x, y) e^{-j2\pi \big(\frac{ux}{N} + \frac{vy}{N}\big)}$$
 $$\text{Valore medio di una trasformata discreta: } F(0) = \frac{1}{M} \sum{x=0}^{M-1} f(x) = \overline{f}(x)$$
 $F(u_0)$ è il peso con cui l'onda complessa $e^{j2\pi u_0x}$ di frequenza $u_0$ concorre a formare il segnale $f(x)$. Se $f(x)$ è un'onda complessa di frequenza $u_k$, $F(u)$ sarà 0 per ogni frequenza diversa da $u_k$.
@@ -196,19 +199,21 @@ $F(u_0)$ è il peso con cui l'onda complessa $e^{j2\pi u_0x}$ di frequenza $u_0$
 \subsection{\textit{sinc}}
 $sinc$ è un filtro passa-basso, utile per preservare la parte centrale di segnali con basse frequenze. 
 
-Nel dominio del coseno trasformato non ci saranno solo le $\delta$ se il segnale non è periodico e infinito, ma ci sarà anche l'effetto del \textit{sinc} (finestra), dove $sinc(x) = \frac{\sin(x)}{x}$, con un fattore $\pi$ a per normalizzarla [immagine: Georg-Johann]. 
+Nel dominio del coseno trasformato non ci saranno solo le $\delta$ se il segnale non è periodico e infinito, ma ci sarà anche l'effetto del \textit{sinc} (finestra), dove $sinc(x) = \frac{\sin(x)}{x}$, con un fattore di normalizzazione $\pi$ [immagine: Georg-Johann]. 
 
-\begin{wrapfigure}{L}{0.45\textwidth}
+\begin{wrapfigure}{L}{0.46\textwidth}
 	\vspace{-15pt}
 	\includegraphics[width=0.45\textwidth]{Lezioni/Immagini/sinc.png}
 	\vspace{-30pt}
 \end{wrapfigure}
 
-Questa funzione rappresenta il limite con $x$ che tende a 0 della funzione seno, cioè 1. Nel processamento dei segnali è la trasformata di Fourier della funzione rettangolare (finestra) non scalata, ricostruendo il segnale continuo a partire dai campioni.
+Questa funzione rappresenta il \textbf{limite} con $x$ che tende a 0 della funzione seno, cioè 1. Nel processamento dei segnali è la trasformata di Fourier della funzione rettangolare (\textbf{finestra}) non scalata, ricostruendo il segnale continuo a partire dai suoi campioni.
 
-Per il seno, c'è una $\delta$ positiva e una negativa, e se trasformando entrambe diventano positive non c'è più la possibilità di distinguerlo dal coseno. In realtà le due funzioni sono la stessa traslata (proprietà di traslazione). Bisogna però ricordare che la $\delta$ positiva della parte immaginaria in realtà corrisponde alla parte negativa.
+Per il seno, c'è una $\delta$ positiva e una negativa, e se trasformando entrambe diventano positive non c'è più la possibilità di distinguerlo dal coseno. 
 
-L'altezza di $\delta$ nel punto 0 è uguale all'altezza del segnale, che varia sempre meno fino a diventare costante. La trasformata di una costante, quindi, è rappresentabile come un coseno le cui $\delta$ si sovrappongono nel centro (limite della funzione, con frequenza che tende a 0).
+In realtà le due funzioni sono la stessa traslata (proprietà di traslazione). La $\delta$ positiva della parte immaginaria in realtà corrisponde alla parte negativa.
+
+L'altezza di $\delta$ nel punto 0 è uguale all'altezza del segnale, che varia sempre meno fino a diventare costante. La \textbf{trasformata di una costante}, quindi, è rappresentabile come un \textbf{coseno} le cui $\delta$ si sovrappongono nel centro (limite della funzione, con frequenza che tende a 0).
 
 La finestra di osservazione nel tempo ha frequenza $\delta$, con due picchi di seno e coseno, e il contributo di \textit{sinc} cresce con l'aumento dell'ampiezza della finestra (ringing). Al contrario, \textit{sinc} si avvicina sempre di più a $\delta$ con il restringimento.
 
