@@ -1,10 +1,10 @@
 \section{Equazioni alle differenze}
 I LTI causali a tempo discreto possono essere rappresantati in modi differenti, tra cui la combinazione lineare con coefficienti costanti nel tempo (invariante). 
 
-Il comportamento di un sistema LTI a tempo discreto e causale può essere descritto anche da equazioni alle differenze, come visto precedentemente:
-$$y(n) = -\alpha_1y(n-1) - \alpha_2y(n - 2) - \dots - \alpha_My(n - M) + \beta_0x(n) + \beta_1x(n - 1) + \dots + \beta_Nx(n - N)$$
+Il comportamento di un sistema LTI a tempo discreto e causale può essere descritto anche da \textbf{equazioni alle differenze}, come visto precedentemente:
+$$y(n) = -\alpha_1y(n-1) - \alpha_2y(n - 2) - \ldots - \alpha_My(n - M) + \beta_0x(n) + \beta_1x(n - 1) + \ldots + \beta_Nx(n - N)$$
 $$y(n) = \sum_{k=0}^{N} b_kx(n - k) - \sum_{j=1}^{M} a_jy(n - j)$$
-Si ricorda che i coefficienti sono costanti e indipendenti dal tempo, per assicurare la stazionarietà. Un'equazione è detta ricorsiva se almeno un coefficiente $a_i$ è diverso da zero.
+Si ricorda che i coefficienti sono costanti e indipendenti dal tempo, per assicurare la stazionarietà. Un'equazione è detta \textbf{ricorsiva} se almeno un coefficiente $a_i$ è diverso da zero.
 
 Quando il sistema ha una parte ricorsiva, dipende di fatto da più istanti precedenti dell'input, e non solo dai $N$ istanti evidenti dalla sommatoria. $M$ è l'ordine dell'equazione alle differenze (ordine del sistema).
 
