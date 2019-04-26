@@ -8,7 +8,7 @@ Si ricorda che i coefficienti sono costanti e indipendenti dal tempo, per assicu
 
 Quando il sistema ha una parte ricorsiva, dipende di fatto da più istanti precedenti dell'input, e non solo dai $N$ istanti evidenti dalla sommatoria. $M$ è l'ordine dell'equazione alle differenze (ordine del sistema).
 
-Il ritardo su $y$ indica di che ordine è il sistema: il primo ordine, per esempio, ha ricorsione con un campione in ritardo. 
+Il ritardo su $y$ indica di che \textbf{ordine} è il sistema: il primo ordine, per esempio, ha ricorsione con un campione in ritardo. 
 
 L'output di un sistema ricorsivo dev'essere calcolato in sequenza, al contrario di un sistema non ricorsivo in cui i campioni possono essere valutati con qualsiasi disposizione.
 
@@ -24,7 +24,8 @@ In quest'ultimo caso, l'output a un istante $n$ dipende dal valore dell'input pe
 Se il sistema accumulatore $y(n) = y(n - 1) + x(n)$ non ha subito alcuna eccitazione prima dell'istante $n$, $y(n - 1) = 0$ e il sistema è scarico (per $n = -\infty$).
 
 \subsection{Diagrammi a blocchi}
-Ogni operazione di cui è composto un sistema viene rappresentata in un diagramma a blocco, che contiene eventualmente anche una parte ricorsiva (freccia all'indietro). Si ricordano la linearità e la commutatività.
+Ogni operazione di cui è composto un sistema viene rappresentata in un diagramma a blocchi, che contiene eventualmente anche una parte ricorsiva (freccia all'indietro). Si ricordano la linearità e la commutatività.
+
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.4]{Lezioni/Immagini/blocchi}
@@ -54,9 +55,9 @@ La radice quadrata non è un sistema lineare: non esistono sommatorie, ma il ter
 \end{figure}
 
 \section{Risposta all'impulso}
-La risposta all'impulso viene descritta attraverso un prodotto di convoluzione, come sequenza finita o infinita. I primi casi non hanno la ricorsione, sono campioni combinati con pesi: i valori di $h$ sono i coefficienti di $x$.
+La \textbf{risposta all'impulso} viene descritta attraverso un prodotto di convoluzione, come sequenza finita o infinita. I primi casi non hanno la ricorsione, sono campioni combinati con pesi: i valori di $h$ sono i coefficienti di $x$.
 
-In base alla risposta all'impulso, i sistemi possono essere divisi in due gruppi: FIR (Finite Impulse Response) e IIR (Infinite Impulse Response). 
+In base alla risposta all'impulso, i sistemi possono essere divisi in due gruppi: \textbf{FIR} (\textit{Finite Impulse Response}) e \textbf{IIR} (\textit{Infinite Impulse Response}). 
 
 \subsection{FIR}
 $$h(n) = \begin{cases}
@@ -69,7 +70,7 @@ $$y(n) = x(n) * h(n) = \sum_{i = 0}^{\infty} h(i)x(n - i) = \sum_{i = 0}^{M-1} h
 Per un sistema FIR, l'output a qualsiasi istante $n$ è semplicemente la somma di una combinazione lineare pesata degli $M$ valori più recenti della sequenza di input.
 
 Il sistema agisce come una finestra che vede solo $M$ valori recenti, quindi ha memoria $M$. \\
-I sistemi FIR possono essere sempre realizzati in modo non ricorsivo, essendo in funzione di $M$ campioni pesati per la risposta all'impulso $h(n)$. Questo deriva dal fatto che una LTI non ricorsiva dipende solo da un numero finito di istanti nel passato.
+I sistemi FIR possono essere sempre realizzati in modo \textbf{non ricorsivo}, essendo in funzione di $M$ campioni pesati per la risposta all'impulso $h(n)$. Questo deriva dal fatto che una LTI non ricorsiva dipende solo da un numero finito di istanti nel passato.
 
 \subsection{IIR}
 $$h(n) = \begin{cases}
@@ -79,7 +80,7 @@ $$h(n) = \begin{cases}
 
 La risposta di un sistema IIR causale a un generico segnale è allora:
 $$y(n) = x(n) * h(n) = \sum_{i = 0}^{\infty} h(i)x(n - i)$$
-L'output a qualsiasi istante $n$ dipende da tutti i valori della sequenza di input: il sistema ha memoria infinita e non è realizzabile, perché richiederebbe infinite locazioni di memoria. 
+L'output a qualsiasi istante $n$ dipende da tutti i valori della sequenza di input: il sistema ha memoria infinita e \textbf{non è realizzabile}, perché richiederebbe infinite locazioni di memoria. 
 
 Se la sommatoria va a infinito, non c'è una diretta corrispondenza con il dominio delle frequenze, quindi non si individua $y(n)$ guardando la risposta ma si utilizzano le equazioni alle differenze e il dominio trasformato.
 
