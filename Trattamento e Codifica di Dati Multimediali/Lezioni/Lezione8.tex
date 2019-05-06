@@ -123,7 +123,7 @@ $$y(n) = -\alpha_1y(n-1) - \alpha_2y(n - 2) - \ldots - \alpha_My(n - M) + \beta_
 Applicando la trasformata di Fourier discreta a ogni termine si ottiene:
 $$Y\big(e^{j\omega}\big) = -\alpha_1Y\big(e^{j\omega}\big)e^{-j\omega} - \ldots - \alpha_MY\big(e^{j\omega}\big)e^{-j\omega M} + $$
 $$ + \beta_0 X\big(e^{j\omega}\big) + \beta_1X\big(e^{j\omega}\big)e^{-j\omega} + \ldots + \beta_NX\big(e^{j\omega}\big)e^{-j\omega N}$$
-Si ricorda che $F\big(f(x - x_o)\big) = e^{-j2\pi ux_0} F(u)$. Raccogliendo tutti i termini $Y\big(e^{j\omega}\big)$ e $X\big(e^{j\omega}\big)$, si ha:
+Si ricorda che $F\big(f(x - x_0)\big) = e^{-j2\pi ux_0} F(u)$. Raccogliendo tutti i termini $Y\big(e^{j\omega}\big)$ e $X\big(e^{j\omega}\big)$, si ha:
 $$Y\big(e^{j\omega}\big) \big(1 + \alpha_1e^{-j\omega} + \ldots + \alpha_Me^{-j\omega M}\big) = X\big(e^{j\omega}\big) \big(\beta_0 + \beta_1e^{-j\omega} + \ldots + \beta_Ne^{-j\omega N}\big)$$
 
 Per il teorema della convoluzione, $y(n) = x(n) * h(n) \leftrightarrow Y(e^{j\omega}) = X(e^{j\omega})H(e^{j\omega})$.

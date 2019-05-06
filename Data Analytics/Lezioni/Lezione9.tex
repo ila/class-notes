@@ -1,0 +1,16 @@
+\section{Social media analytics}
+Per analizzare i contenuti generati dagli utenti è necessario riconoscere e interpretare le ambiguità: la stessa parola può avere diversi significati a seconda del contesto.
+
+Per distinguere le entità menzionate, si usano i task di name-entity extraction e linking. A seconda della natura del testo, in questo caso i social media, bisogna tenere conto del rumore e del vocabolario. In particolare, lo stesso oggetto può essere frequentemente riferito in modi diversi, e questi devono essere collegati. Molto spesso si utilizzano delle basi di conoscenza (Wikipedia) che però non sono sempre aggiornate.
+
+\subsection{Named entity recognition}
+Questo problema consiste nella segmentazione e nella classificazione di segmenti di testo in classi ed etichette predefinite. 
+
+Il modello grafico probabilistico sfrutta un grafo indiretto con input una sequenza di informazioni (parole) e degli stati in output che consistono nelle etichette associate ai token. Il suo obiettivo è la massimizzazione della probabilità con cui una parola corrisponde a un'etichetta.
+
+Il modello di probabilità è logaritmicamente lineare, essendo la struttura un grafo, e si appoggia a una feature function che indica la correttezza dei link presenti in modo da agevolare il mapping futuro. 
+
+Le features sono rappresentate come vettori $(\lambda, \mu)$ e vengono stimate con un processo di training e testing, massimizzando la log-likelihood. Le sequenze più probabili vengono predette con il cammino minimo o l'algoritmo di Viterbi.
+
+La scelta di una soluzione piuttosto che un'altra dipende dal contesto, che è un vincolo nel dominio durante la scelta del percorso. Il cammino può essere costretto a passare dai nodi o evitarli. 
+
