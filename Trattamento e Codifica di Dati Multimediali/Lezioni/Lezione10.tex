@@ -24,5 +24,26 @@ Le immagini hanno due tipologie di formato: \\
 Raster, scalate in base a un numero prefissato di pixel in una griglia di elementi; \\
 Vettoriale, rappresentate con formule matematiche.
    
+\subsection{Istogramma}
+Un istogramma rappresenta l'insieme dei valori che un segnale può assumere, espresso in livelli di quantizzazione. Non dà informazioni spaziali, ma solo sul contrasto e sul numero di bit: indica quanti campioni assumono un certo valore (quantizzatore ottimo), e in base a ciò è possibile decidere come applicare la compressione (probabilità normalizzata).
+
+HDR: usa n bit per catturare una porzione del range dinamico con differente esposizione, per poi sovrapporre tutte le immagini ottenute in modo da avere una visione più chiara. 
+
+Per rappresentare meglio immagini con bianco o nero predominante, si utilizzano quantizzatori con pochi bit tagliando tutti i valori che non vengono utilizzati, in modo da avere una distribuzione più uniforme. 
+
+Effettuando il dithering (evitare i salti), bisogna anche aggiungere rumore casuale: in questo modo le basse frequenze vengono nascoste dalle alte, e interferiscono con il rumore di quantizzazione.
+
+\section{Audio}
+Un segnale sonoro è la variazione di pressione sul timpano, percepito nel tempo attraverso l'aria (mezzo di propagazione). Il suono è un'onda di pressione come la luce, ma macroscopico.
+
+L'aumento della frequenza non è linearmente in rapporto con l'ampiezza, ma si comporta seguendo una scala logaritmica. Il range di suoni in grado di essere percepite dagli umani è minore dell'insieme delle frequenze possibili, oltre esso ci sono ultrasuoni e infrasuoni. 
+
+Le curve isofone rappresentano i suoni all'interno di una soglia di udibilità, che può essere superata fino al fastidio. 
+
+Il segnale vocale può avere componenti fino a 10 KhZ, ma in genere se ne utilizzano solo 8, quindi questa è la frequenza di campionamento del segnale telefonico. 
+
+
+
+
 
 
