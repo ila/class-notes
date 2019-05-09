@@ -1,28 +1,75 @@
-\section{Colore e visione}
-L'immagine a colore viene percepita dal sistema visivo grazie alle onde elettromagnetiche, caratterizzate dalla lunghezza d'onda (proporzionale all'inverso della frequenza) e dall'ampiezza. La lughezza d'onda è rapportata il periodo: indica quanto ci mette un ciclo a compiersi.
+\section{Immagini}
+Un'immagine a colori viene percepita dal sistema visivo grazie all'impatto con le onde elettromagnetiche, caratterizzate dalla lunghezza d'onda $\lambda$ (proporzionale all'inverso della frequenza, $\lambda \propto \frac{1}{v}$) e dall'ampiezza (intensità). La lughezza d'onda è rapportata il periodo: indica quanto ci mette un ciclo a compiersi.
 
-Lo spettro è in buona parte invisibile, con estremi che corrispondono alle radiazioni ultraviolette e infrarossi. La porzione visibile è misurata in nanometri, con ordini di grandezza molto alti.
+Lo spettro è in buona parte invisibile, con estremi alti che corrispondono alle radiazioni ultraviolette e bassi a radiazioni infrarosse. La porzione visibile è misurata in nanometri, con ordini di grandezza molto alti.
 
-Il colore è processato nel cervello da coni e bastoncelli, in numerose tipologie con risposte differenti a seconda della lunghezza d'onda. I bastoncelli sono in percentuale estremamente maggiore, ed essendo essi atti a misurare la variazione d'intensità, gli esseri umani hanno più sensibilità in condizioni di scarsa luce. Le due dimensioni sono separabili. 
+% arcobaleno
 
-L'occhio è più sensibile alle variazioni di luce nel centro dello spettro visibile, quindi lo spettro avrà la forma di una curva e la funzione varia al variare delle lunghezze d'onda. A seconda dei nm della radiazione, alcuni coni saranno attivati, eventualmente fondendo le risposte. 
+Il cristallino focalizza l'immagine sulla retina come una lente, e il colore è processato nella retina da coni e bastoncelli, in numerose tipologie con risposte differenti a seconda della lunghezza d'onda. Essi convertono le onde elettromagnetiche in uno stimolo elettrico.
+
+I coni producono segnale per livelli di luminosità più alti, e possono essere:
+\begin{itemize}
+	\item L (long waves), sensibili al rosso;
+	\item M (middle waves), sensibili al verde;
+	\item S (short waves), sensibili al blu.
+\end{itemize}
+
+I bastoncelli funzionano con le rappresentazioni in toni di grigio, esono in percentuale estremamente maggiore; essendo essi atti a misurare la variazione d'intensità, gli esseri umani hanno più sensibilità in condizioni di scarsa luce. La percezione ultima del colore è legata a intensità e crominanza (tinta, saturazione), e le due dimensioni sono separabili. 
+
+L'occhio è più sensibile alle variazioni di luce nel centro dello spettro visibile, quindi lo spettro avrà la forma di una curva con funzione che varia al variare delle lunghezze d'onda. A seconda dei nanometri della radiazione, alcuni coni saranno attivati, eventualmente fondendo le risposte: il colore è combinazione di contributi a diverse lunghezze (spettro).
+
+% onde colore
 
 \subsection{Segnale reale}
-L'oggetto assorbe una parte della radiazione e ne ritrasmette un'altra parte (parametri legati alla capacità di riflettere), i cui segnali interferiscono con i recettori umani. Ogni colore può essere descritto da tre parametri (RGB).
+Per descrivere esattamente il segnale che forma l'immagine a partire da una scena occorre:
+\begin{itemize}
+	\item $E(\lambda)$, distribuzione spettrale dell'illuminante (SPD);
+	\item $R(\lambda)$, riflettanza spettrale di ogni elemento della scena;
+	\item $S(\lambda)$, sensitività dei recettori (coni e bastoncelli).
+\end{itemize}
 
+L'oggetto assorbe una parte della radiazione e ne ritrasmette un'altra parte (parametri legati alla capacità di riflettere), i cui segnali interferiscono con i recettori umani. La luce visibile è quindi $E(\lambda) \cdot R(\lambda)$, e ogni colore può essere descritto da tre parametri (RGB).
+
+La maggior parte delle sorgenti luminose produce contributi di luce su più lunghezze d'onda:
+$$L = \int E(\lambda) R(\lambda) l(\lambda) d\lambda$$
+$$M = \int E(\lambda) R(\lambda) m(\lambda) d\lambda$$
+$$S = \int E(\lambda) R(\lambda) s(\lambda) d\lambda$$
 I numeri in output si definiscono valori di stimolo, che poi si traducono nei canali RGB. Le distribuzioni continue in funzione di $\lambda$ si trasformano in valori discreti in spazio tridimensionale grazie all'integrale.
 
-Le immagine acquisite da una fotocamera digitale sono differenti da quelle elaborate dall'occhio umano: ogni camera ha una matrice che processa il colore in modo da renderlo simile all'output del cervello, e i valori ottenuti dai sensori sono interpolati. 
+Le immagine acquisite da una fotocamera digitale sono differenti da quelle elaborate dall'occhio umano: il sistema visivo viene simulato tramite sensori e processamento. Ogni camera ha una matrice che trasforma il segnale in modo da renderlo simile all'output del cervello, e i valori ottenuti dai sensori sono interpolati. 
 
 I dati sono fatti passare in filtri colore, disposti secondo Bayer pattern. Il verde è il colore recepito meglio, e permette di misurare maggiormente le variazioni di intensità (e conseguentemente i dettagli dell'immagine). 
 
-La somma dei contributi è chiamata sintesi additiva; esiste anche la sintesi sottrattiva, che fa differenze in base allo spettro e ai colori complementari di RGB (ciano, magenta, giallo). 
+\subsection{Sintesi}
+La somma dei contributi delle onde è chiamata sintesi additiva, e viene usata dai dispositivi che imitano l'occhio umano; esiste anche la sintesi sottrattiva, che fa differenze in base allo spettro e ai colori complementari di RGB (ciano, magenta, giallo). 
 
-Esistono rappresentazioni che separano i canali in base alla loro intensità, mettendola in evidenza in base alla frequenza delle onde. 
+Quest'ultima consiste nella sovrapposizione di più filtri: il colore che giunge alla vista è quello che riesce a passare per tutti i filtri, dato che ognuno di essi sottrae una parte della luce che lo attraversa. 
 
-Le immagini hanno due tipologie di formato: \\
-Raster, scalate in base a un numero prefissato di pixel in una griglia di elementi; \\
-Vettoriale, rappresentate con formule matematiche.
+% filtri
+
+Esistono rappresentazioni che separano i canali in base alla loro intensità, mettendola in evidenza in base alla frequenza delle onde. Alcuni esempi di modelli sono:
+\begin{itemize}
+	\item RGB (red, green, blue), usato dalle camere e videocamere digitali;
+	\item HSB (hue, saturation, brightness), corrisponde alla percezione umana del colore;
+	\item HSV (hue, saturation, value), HSB con tinta definita su un angolo;
+	\item CMYK (cyan, magenta, yellow, black), utilizzato per la sintesi sottrattiva nei sistemi di riproduzione;
+	\item YIQ, per i segnali TV e VHS in America;
+	\item YUV, per i segnali TV e VHS in Europa;
+	\item YcbCr, per i video digitali.
+\end{itemize}
+
+Il formato grafico è la tecnologia utilizzata per memorizzare il file. Le immagini hanno due tipologie di formato: 
+\begin{itemize}
+	\item Raster, scalate in base a un numero prefissato di pixel e bit per pixel (bitmap) in una griglia di elementi, usate per digitalizzazione ed elaborazione di scene reali. L'accuratezza della rappresentazione dipende dal numero di pixel e dalla loro condifica (quantizzazione);
+	\item Vettoriale, rappresentate con formule matematiche e oggetti, applicabili solo nel mondo geometrico ma con qualità maggiore. Le immagini sono più complesse e non viene persa definizione, ma sono più difficilmente modificabili.
+\end{itemize}
+Un'immagine in meta formato è una combinazione di questi formati, cioè contiene informazioni di ogni tipo: solitamente viene usato raster con alcuni elementi vettoriali.
+
+\subsection{Risoluzione}
+Le immagini hanno dimensioni espresse in pixel, mentre le dimensioni fisiche dipendono dal dispositivo di acquisizione. 
+
+La risoluzione dà informazioni sulla quantità o la densità di pixel contenuti in un'immagine (ppi, pixel per inches). In caso di stampa o acquisizione con scanner si misura in dpi, dot per inches (gocce di inchiostro). Più alta è la risoluzione, più piccola è la dimensione fisica dei pixel: tipicamente una qualità alta di stampa ha una risoluzione intorno ai 300 ppi.
+
    
 \subsection{Istogramma}
 Un istogramma rappresenta l'insieme dei valori che un segnale può assumere, espresso in livelli di quantizzazione. Non dà informazioni spaziali, ma solo sul contrasto e sul numero di bit: indica quanti campioni assumono un certo valore (quantizzatore ottimo), e in base a ciò è possibile decidere come applicare la compressione (probabilità normalizzata).
