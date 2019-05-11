@@ -70,24 +70,39 @@ Le immagini hanno dimensioni espresse in pixel, mentre le dimensioni fisiche dip
 
 La risoluzione dà informazioni sulla quantità o la densità di pixel contenuti in un'immagine (ppi, pixel per inches). In caso di stampa o acquisizione con scanner si misura in dpi, dot per inches (gocce di inchiostro). Più alta è la risoluzione, più piccola è la dimensione fisica dei pixel: tipicamente una qualità alta di stampa ha una risoluzione intorno ai 300 ppi.
 
-   
-\subsection{Istogramma}
+La risoluzione ottima dipende dallo scopo dell'immagine, tenendo conto di un fattore moltiplicativo di ingrandimento: esso rappresenta il rapporto tra il lato dell'immagine di destinazione e la sua dimensione fisica.
+
+Esempio: diapositiva di $24\times36$ mm, da stampare in $10\times15$ in 300 ppi:
+$$\frac{100\text{mm}}{24\text{mm}} \cdot 300\text{ppi} = 1248 \text{ppi}$$
+Le immagini sugli schermi video solitamente sono acquisite in 72 dpi.
+
+\subsection{Quantizzazione cromatica}
+La profondità del colore è il numero di bit per pixel:
+\begin{itemize}
+	\item 1 bit rappresenta 2 colori (bianco e nero);
+	\item 8 bit rappresentano 256 colori (colormap, livelli di grigio);
+	\item 24 bit rappresentano quasi 17 milioni di colori (true color).
+\end{itemize}
+
+Per risparmiare sulla profondità si usano palette contenenti il sottoinsieme dei colori rappresentabili che compare in una foto. Una lookup table individua i corrispondenti valori di rosso, verde e blu.
+
+Le dimensioni, la risoluzione e il numero di bit determinano l'occupazione in memoria, proporzionale a essi. Per una visualizzazione in scala $1 : 1$ l'immagine deve avere la stessa risoluzione del display.
+
 Un istogramma rappresenta l'insieme dei valori che un segnale può assumere, espresso in livelli di quantizzazione. Non dà informazioni spaziali, ma solo sul contrasto e sul numero di bit: indica quanti campioni assumono un certo valore (quantizzatore ottimo), e in base a ciò è possibile decidere come applicare la compressione (probabilità normalizzata).
 
-HDR: usa n bit per catturare una porzione del range dinamico con differente esposizione, per poi sovrapporre tutte le immagini ottenute in modo da avere una visione più chiara. 
+Il dynamic range è l'intervallo tra ampiezza massima e minima di un segnale, legato al numero di bit e al contrasto: se esso viene sfruttato appieno, l'immagine è ben contrastata. L'occhio umano può distinguere valori di luminosità massima/minima con un rapporto di circa $10.000 : 1$, mentre i monitor riproducono a $256 : 1$.
 
 Per rappresentare meglio immagini con bianco o nero predominante, si utilizzano quantizzatori con pochi bit tagliando tutti i valori che non vengono utilizzati, in modo da avere una distribuzione più uniforme. 
 
-Effettuando il dithering (evitare i salti), bisogna anche aggiungere rumore casuale: in questo modo le basse frequenze vengono nascoste dalle alte, e interferiscono con il rumore di quantizzazione.
+L'occupazione del range dinamico dipende dal tempo di esposizione: più è breve, più la fotografia è luminosa. Il sistema HDR usa $n$ bit per catturare una porzione del range dinamico con differente esposizione, per poi sovrapporre tutte le immagini ottenute in modo da avere una visione più chiara. 
 
-\section{Audio}
-Un segnale sonoro è la variazione di pressione sul timpano, percepito nel tempo attraverso l'aria (mezzo di propagazione). Il suono è un'onda di pressione come la luce, ma macroscopico.
+Per visualizzare scene con alto range dinamico (HDR) sui monitor, è necesario effettuare il tone mapping, cioè la riduzione in scala inferiore (8 bit). Il dithering è la conversione a una profondità colore inferiore: i pixel sono divisi in blocchi, ognuno dei quali viene riempito con diversi pattern di nero allo scopo di simulare i livelli di grigio. L'effetto è la perdita di risoluzione.
 
-L'aumento della frequenza non è linearmente in rapporto con l'ampiezza, ma si comporta seguendo una scala logaritmica. Il range di suoni in grado di essere percepite dagli umani è minore dell'insieme delle frequenze possibili, oltre esso ci sono ultrasuoni e infrasuoni. 
+Per evitare i ``salti", ogi pixel è sostituito con un pattern più grande, in modo che il numero di punti stampati possa approssimare il livello di intensità (half tone printing). Le dimensioni, pertanto, sono più grandi. Per le immagini a colori, si usano vicinanze di colori diversi per crearn un altro osservando a distanza. 
 
-Le curve isofone rappresentano i suoni all'interno di una soglia di udibilità, che può essere superata fino al fastidio. 
+Effettuando il dithering bisogna anche aggiungere rumore casuale: in questo modo le basse frequenze vengono nascoste dalle alte, e interferiscono con il rumore di quantizzazione.
 
-Il segnale vocale può avere componenti fino a 10 KhZ, ma in genere se ne utilizzano solo 8, quindi questa è la frequenza di campionamento del segnale telefonico. 
+
 
 
 
