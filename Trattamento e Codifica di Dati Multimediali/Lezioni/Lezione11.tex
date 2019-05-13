@@ -37,8 +37,53 @@ Le energie in gioco nei fenomeni acustici sono irrilevanti rispetto a quelle nel
 
 Il volume aumenta man mano che l'ampiezza cresce, e l'incremento di tono è sempre più piccolo al crescere della frequenza.
 
+Il campo di udibiltà è determinato dai valori limite di intensità e frequenza. Il limite inferiore per l'intensità è costituito dalla curva di soglia di udibilità, mentre quello superiore dalla soglia del dolore. 
 
+Le curve isofone rappresentano i suoni all'interno di una soglia di udibilità, che può essere superata fino al fastidio. Esse dipendono dall'intensità e dalla frequenza.
 
-Le curve isofone rappresentano i suoni all'interno di una soglia di udibilità, che può essere superata fino al fastidio. 
+Vengono usate scale di rappresentazione che riflettono uguali differenze percettive. La scala di Mei indica la relazione tra sensazione di altezza e frequenza, uguali differenze sulla scala corrispondono a uguali differenze percepite di tono ma non di frequenza.
 
-Il segnale vocale può avere componenti fino a 10 KhZ, ma in genere se ne utilizzano solo 8, quindi questa è la frequenza di campionamento del segnale telefonico. 
+Le ampiezze sono rappresentate in scala logaritmica e hanno come unità di misura il dB. Incrementi di 1 dB corrispondono a JND (Just Noticeable Differences).
+
+\subsection{Campionamento}
+Le variazioni di pressione vengono tradotte in variazioni di tensione/corrente elettrica dal microfono, che effettua una trasduzione elettroacustica. Il filtro antialiasing è applicato tramite amplificazione e filtraggio, per poi effettuare conversione A/D e registrazione su supporto.
+
+La funzione a gradini generata dal convertitore viene filtrata con un filtro passa-basso prima del campionamento, per limitare le frequenze e l'aliasing. L'intervallo di frequenze che viene mantenuto dipende dall'applicazione.
+
+Il segnale vocale può avere componenti fino a 10 KhZ, ma in genere se ne utilizzano solo 8, quindi questa è la frequenza di campionamento del segnale telefonico. Il segnale musicale ha range tra 20 Hz e 20 kHz.
+
+Dopo la conversione DA, nell'output possono essere di nuovo presenti alte frequenze a causa del campionamento e della quantizzazione, quindi viene applicato un ulteriore filtro. La frequenza di campionamento standard è di 44,1 kHz, per registrare audio in formati differenti. Al di fuori di tale soglia si incorre in sovracampionamento o sottocampionamento (aliasing). 
+
+La maggior parte dell'informazione del segnale vocale è contenuta in 4 kHz, ma esso andrebbe campionato a 40 kHz. Esiste anche per il campionamento il SNR (dB), con potenza del segnale proporzionale al quadrato della tensione.
+$$SNR = 10\log_{10} \frac{V^2\text{segnale}}{V^2\text{rumore}} = 20\log_{10} \frac{V\text{segnale}}{V\text{rumore}}$$
+
+\subsection{Dimensione e codifica}
+Lo spazio in memoria (kB) occupato da un file audio si calcola con la seguente formula:
+$$\frac{f_c \cdot D \cdot b \cdot N_c}{8 \cdot 1024}$$
+$f_c$ è la frequenza di campionamento, $D$ è la durata in secondi, $b$ è il numero di bit del quantizzatore e $N_c$ è il numero di canali (mono o stereo).
+
+I dati non compressi crescono al crescere della risoluzione del quantizzatore, dato che aumenta il numero di bit. Un segnale stereo raddoppia la banda per la trasmissione. 
+
+La codifica può avvenire in due modi:
+\begin{itemize}
+	\item PCM (Pulse Code Modulation), modulazione del codice dell'impulso;
+	\item PAM (Pulse Amplitude Modulation), modulazione dell'ampiezza dell'impulso.
+\end{itemize}
+
+La PCM converte in forma digitale i segnali analogici, trasformando le forma d'onda attraverso campionamento, quantizzazione e codifica. I valori numerici diventano parole di 4 bit, e la rappresentazione può essere lineare o non.
+
+Il trasmettitore digitale associa una forma d'onda a ogni cifra in uscita dal PCM, e all'uscita del canale le onde sono riconosciute dal ricevitore digitale e riconvertite nelle cifre originarie.
+
+PAM è un modo per associare forme d'onda a simboli in uscita da una qualsiasi sorgente discreta. Essa prevede che si associ a ogni numero nella sequenza di bit la stessa pulsazione base, con un'ampiezza che dipende dal valore trasmesso.
+
+I sistemi PAM inviano sul canale una sequenza di forme d'onda diverse tra loro, ma di diversa ampiezza. In ricezione, osservando l'ampiezza si può risalire al messaggio originale.
+
+Nel processo di digitalizzazione, la qualità del suono è legata al tentativo di soddisfare due esigenze opposte:
+\begin{enumerate}
+	\item Fedeltà nella riproduzione;
+	\item Dimensione del file.
+\end{enumerate}
+
+Le onde creano interferenze nello spazio, quindi è necessario creare l'effetto di più suoni generati in punti distinti e il numero di canali è un fattore importante. Le configurazioni più usate sono stereo e surround $5 + 1$, con 5 canali contenenti frequenze medie e alte, e un subwoofer per quelle basse. 
+
+In fase di scrittura su disco, i campioni provenienti da diversi canali vengono trasmessi in successione. Questa tecnica si chiama interleaving, o multiplexing in caso di trasmissione. Al momento della riproduzione, occorre utilizzare buffer per la sincronizzazione.
