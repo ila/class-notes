@@ -75,6 +75,7 @@ La risoluzione ottima dipende dallo scopo dell'immagine, tenendo conto di un fat
 Esempio: diapositiva di $24\times36$ mm, da stampare in $10\times15$ in 300 ppi:
 $$\frac{100\text{mm}}{24\text{mm}} \cdot 300\text{ppi} = 1248 \text{ppi}$$
 Le immagini sugli schermi video solitamente sono acquisite in 72 dpi.
+$$ \text{File size} = \frac{\text{height} \cdot \text{width} \cdot \text{bit depth} \cdot \text{dpi}}{8} = \frac{\text{pixel dimensions} \cdot \text{bit depth}}{8}$$
 
 \subsection{Quantizzazione cromatica}
 La profondità del colore è il numero di bit per pixel:
@@ -100,7 +101,7 @@ Per visualizzare scene con alto range dinamico (HDR) sui monitor, è necesario e
 
 Per evitare i ``salti", ogi pixel è sostituito con un pattern più grande, in modo che il numero di punti stampati possa approssimare il livello di intensità (half tone printing). Le dimensioni, pertanto, sono più grandi. Per le immagini a colori, si usano vicinanze di colori diversi per crearn un altro osservando a distanza. 
 
-Effettuando il dithering bisogna anche aggiungere rumore casuale: in questo modo le basse frequenze vengono nascoste dalle alte, e interferiscono con il rumore di quantizzazione.
+Effettuando il dithering bisogna anche aggiungere rumore casuale: in questo modo le basse frequenze vengono nascoste dalle alte, e interferiscono con il rumore di quantizzazione ottenendo un disturbo più regolare e quindi percepito in misura minore.
 
 
 

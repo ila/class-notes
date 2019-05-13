@@ -1,7 +1,43 @@
 \section{Audio}
-Un segnale sonoro è la variazione di pressione sul timpano, percepito nel tempo attraverso l'aria (mezzo di propagazione). Il suono è un'onda di pressione come la luce, ma macroscopico.
+Un segnale sonoro è la variazione di pressione sul timpano, percepito nel tempo attraverso l'aria (mezzo di propagazione). Il suono è un'onda di pressione come la luce (fenomeno ondulatorio), ma macroscopico: le molecole dell'aria vengono compresse ed espanse, e la sorgente sonora vibra in modo longitudinale nella stessa direzione di propagazione del suono.
+$$A(t) = A_{max} \cdot \sin(2\pi ft + \varphi_0)$$
+I suoni elementari hanno andamento sinusoidale, periodico e con estensione indefinita. La maggior parte dei suoni natura sono caratterizzati da forme d'onda diverse, ma possono essere scomposte come una combinazione di suoni elementari.
 
-L'aumento della frequenza non è linearmente in rapporto con l'ampiezza, ma si comporta seguendo una scala logaritmica. Il range di suoni in grado di essere percepite dagli umani è minore dell'insieme delle frequenze possibili, oltre esso ci sono ultrasuoni e infrasuoni. 
+Le componenti di un segnale sonoro sono individuate da:
+\begin{itemize}
+	\item Ampiezza $A$, che si misura rispetto al valore medio della pressione dell'aria ed è espressa in dB;
+	\item Periodo $T$, la durata nel tempo di ogni ciclo dell'oscillazione, espresso in secondi;
+	\item Frequenza $F$, velocità con cui i valori di pressione fluttuano ciclicamente, espressa in numero di cicli al secondo (onde e Hz).
+\end{itemize}
+
+% immagine onde suono
+Il valore 0 indicato sull'asse della pressione corrisponde al valore medio della pressione nell'aria. La differenza di fase ha unicamente a che vedere con il fatto che due funzioni siano diversamente allineate rispetto al tempo.
+
+\subsection{Analisi di Fourier}
+L'analisi di Fourier permette la rappresentazione del segnale sonoro nel dominio delle frequenze a partire dal tempo, esplicitando $f$.
+% onde nere
+La presenza di una linea nello spettro in frequenza indica la presenza di un segnale esattamente sinusoidale periodo, tuttavia i suoni caratterizzati da uno spettro discreto sono pochi. I suoni normalmente uditi hanno un inizio e una fine precisi, cioè sono contenuti in un intervallo temporale finito.
+% tempo frequenze
+
+Ai parametri che descrivono un segnale ondulatorio possono essere associate le tre grandezze percettive che descrivono ogni suono:
+\begin{itemize}
+	\item Altezza, che rappresenta la tonalità dell'audio e ha come parametro la sequenza;
+	\item Intensità, il volume, con parametro fisico l'ampiezza;
+	\item Timbro, cioè la tipologia di strumento, con parametro fisico lo spettro.
+\end{itemize}
+
+A parità di frequenza fondamentale e intensità, due suoni possono differire per timbro (la sovrapposizione delle onde sinusoidali può essere diversa).
+
+La frequenza fondamentale è proporzioanale all'altezza del suono, cioè della sensazione di acutezza/gravità. L'aumento della frequenza non è linearmente in rapporto con l'ampiezza, ma si comporta seguendo una scala di tipo logaritmico. Affinché in un suono sia possibile individuare un'altezza, esso deve essere periodico. 
+
+\subsection{Grandezze fisiche e grandezze percettive}
+Ampiezza e frequenza della forma d'onda hanno effetto sul suono percepito: variazioni di piccola ampiezza producono suoni di bassa intensità e viceversa, e al crescere della frequenza aumenta il tono (non linearmente).
+
+Le energie in gioco nei fenomeni acustici sono irrilevanti rispetto a quelle nel fenomeno luminoso. Il range di suoni in grado di essere percepite dagli umani (tra i 20 e i 20.000 Hz) è minore dell'insieme delle frequenze possibili, oltre esso ci sono ultrasuoni e infrasuoni. 
+
+Il volume aumenta man mano che l'ampiezza cresce, e l'incremento di tono è sempre più piccolo al crescere della frequenza.
+
+
 
 Le curve isofone rappresentano i suoni all'interno di una soglia di udibilità, che può essere superata fino al fastidio. 
 
