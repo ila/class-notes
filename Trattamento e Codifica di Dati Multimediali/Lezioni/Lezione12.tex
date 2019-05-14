@@ -1,0 +1,73 @@
+\section{Video}
+Un video viene percepito dal nostro sistema visivo con la persistenza della visione, e per ottenere il movimento apparente (serie di immagini statiche) è necessario individuare la frequenza minima per avere una visione continua. 
+
+La persistenza della visione è un fenomeno per il quale un'immagine rimane per qualche frazione di secondo in memoria, attribuito a livello cerebrale. Ciò permette di ottenere un movimento continuo. 
+
+Esistono frequenze di campionamento prestabilite per percepire una serie di immagini come un video continuo:
+\begin{itemize}
+	\item Una teleconferenza è a 10 fps;
+	\item Un film muto è a 16 fps (limite del movimento a scatti);
+	\item Un film sonoro è a 24 fps;
+	\item Le televisioni sono a 25-60 fps, a seconda della tipologia.
+\end{itemize}
+
+Dalla conoscenza della risposta si determina la progettazione di un dispositivo di riproduzione video. La risposta dell'HVS dipende dal contenuto frequenziale, rispetto al tempo e allo spazio.
+
+Per definire il numero di immagini al secondo (frame rate e refresh rate) bisogna definire una soglia critica legata alla frequenza di Flicker, ottenuta in base a una serie di parametri, quindi variabile nel tempo e nello spazio.
+
+Se la frequenza è troppo alta, l'immagine non è più nitida: il range ha anche un limite superiore, con estremi tra i 20 e gli 80 Hz, definendo una Critical Flicker Frequency alla quale lo stimolo passa da intermittente a continuo. Essa varia in funzione di:
+\begin{itemize}
+	\item Luminosità media del display;
+	\item Luminosità dell'ambiente;
+	\item Distanza dallo schermo.
+\end{itemize}
+
+Un video field è un insieme di campioni in un'immagine, composto da linee alternate. I vari field sono campionati a istanti diversi. L'aumento delle frequenza di refresh per la televisione è ottenuto dividendo l'immagine in due campi, le cui righe non vengono scansionate sequenzialmente ma sono alternate tra pari e dispari. Il refresh include anche la ripetizione della stessa immagine, riducendo il flicker.
+
+La scansione progressiva consiste nella trasmissione in sequenza e in modo continuo di tutte le linee. Al contrario, la scansione interlacciata divide il frame in field trasmessi in metà del tempo totale.
+
+I 24 fps del cinema non sono sempre sufficienti, quindi i proiettori possono arrivare a 48 o addirittura 72. Nella trasmissione analogica, invece, la frequenza viene virtualmente raddoppiata con l'interfacciamento: le risposte in frequenza vengono combinate. Nei computer si utilizza un rate di 72 fps.
+
+Il sottocampionamento introduce aliasing quando il movimento è molto veloce, causando differenze di percezione ovviate da opportuni filtri passa-basso (smoothing). 
+
+\subsection{Riproduzione}
+Un segnale analogico ha risoluzione definita dal numero di linee di scansione. \\
+Un segnale digitale ha risoluzione definita dal numero di pixel.
+
+La riproduzione del colore cambia a seconda dello spazio, delle modalità di trasmissione e della quantizzazione per il segnale digitale.
+
+I coefficienti associati a ogni colore cambiano in base alla posizione geografica per lo standard analogico, mentre per il digitale è globalmente YCrCb. Nella combinazione lineare, il canale più importante è quello del verde. 
+
+Un altro aspetto da considerare è la dipendenza tra l'intensità del monitor e la tensione, la quale ha un fattore esponenziale: il monitor tende a comprimere gli scuri, mostrandoli in livello maggiore. 
+
+Per questo motivo si utilizza la gamma correction, che aumenta l'intensità dei grigi. 
+
+L'HDTV (alta definizione) è concepita per avere una risoluzione doppia rispetto alla TV analogica, con dimensioni in pixel molto più grandi che però permettono l'adattamento agli standard precedenti, aumentando il refresh rate.
+
+% sottocampionamento, eliminando coppie CbCr
+
+Chroma Sampled 8x: il sottocampionamento non è percepito, utilizzando solo il canale di intensità.
+
+\section{Wavelets}
+L'obiettivo dell'analisi è la riduzione delle ridondanze, spostandosi in uno spazio dove le informazioni e i canali sono separati. 
+
+Lo spettro ha un contributo maggiore espresso con le basse frequenze al centro, quindi è possibile codificare solo una porzione determinata di energia.
+
+In termini di compressione, sono necessari solo i bit delle componenti da tenere. Il modello di compressione permette di quantizzare con perdite trascurabili, in un cambio di spazio secondo due strategie:
+
+\subsection{Codifica con trasformate}
+Questo algoritmo introduce perdita ed è computazionalmente costoso, a causa del calcolo delle trasformate. 
+
+La trasformata Wavelet funziona secondo il principio di determinazione di Heisenberg, trovando un compromesso tra le frequenze e il dominio temporale lavorando con tradeoff.
+
+L'operatore è diverso: la DFT è una particolare trasformata, dove $g(x, u)$ è il kernel della trasformazione diretta. I kernel devono essere invertibili, lineari e separabili.
+
+Il segnale di partenza è proiettato in base al suo tempo e spazio con le sue parti reale e immaginaria. Seno e coseno hanno simmetria rispettivamente dispari e pari, e trasformando si osserva l'influenza di ciascuna componente. 
+
+Coseno: la componente continua è legata al valore medio dell'immagine (0, 0). 
+
+Visualizzando un'immagine su un monitor con un range elevato (scala logaritmica), non si vede un cazzo perché il monitor arriva solo fino a 256.
+
+
+
+
