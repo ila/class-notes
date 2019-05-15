@@ -36,13 +36,28 @@ Un segnale digitale ha risoluzione definita dal numero di pixel.
 
 La riproduzione del colore cambia a seconda dello spazio, delle modalità di trasmissione e della quantizzazione per il segnale digitale. Bisogna rappresentare il colore mantenendo un segnale di luminanza compatibile, le stesse temporizzazioni e la stessa banda.
 
-Per codificare le immagini, 
+Per codificare le immagini, si cambia spazio colore in modo da separare luminanza da crominanza. Non ci sono limitazioni relative ai canali e ai componenti sulla stessa portante. 
+
+Il video fornisce informazioni sulla luminosità dell'immagine usando un segnale di luminanza $Y$ ottenuto sommando in modo pesato le componenti RGB, a cui viene in seguito applicata una correzione gamma. 
+$$ Y = 0.299R + 0.587G + 0.114B$$
+La maggioranza del segnale è composta dal verde; l'informazione colore è codificata in due canali aggiuntivi, ottenuti sottraendo la luminanza dalle componenti rosso e blu.
+$$ U = 0.492(B - Y) \qquad V = 0.877(R - Y)$$
+Queste due componenti sono chiamate chrome, e la rappresentazione di un valore indipendente dalla luminanza è definita crominanza. 
 
 I coefficienti associati a ogni colore cambiano in base alla posizione geografica per lo standard analogico, mentre per il digitale è globalmente YCrCb. Nella combinazione lineare, il canale più importante è quello del verde. 
 
-Un altro aspetto da considerare è la dipendenza tra l'intensità del monitor e la tensione, la quale ha un fattore esponenziale: il monitor tende a comprimere gli scuri, mostrandoli in livello maggiore. 
+I più importanti standard di video analogico sono NTSC in Nord America e Giappone, PAL e SECAM in Europa. I segnali analogici usati sono YUV e YIQ. Le informazioni su colore UV e IQ sono combinate insieme in un segnale di chroma, che a sua volta è combinato con la luminanza Y.
 
-Per questo motivo si utilizza la gamma correction, che aumenta l'intensità dei grigi. 
+Un altro aspetto da considerare è la dipendenza tra l'intensità del monitor e la tensione, la quale ha un fattore esponenziale: il monitor tende a comprimere gli scuri, mostrandoli in livello maggiore.
+$$B_d = v_d^{\gamma_d} \qquad \begin{cases}
+v_d = \text{tensione} \\
+B_d = \text{brightness} \\
+\gamma_d = \text{gamma}
+\end{cases}$$
+
+Per questo motivo si utilizza la gamma correction, che aumenta l'intensità dei grigi. Essa compensa le caratteristiche di non linearità dei display, per mantenere la compatibilità con i televisori in bianco e nero.
+
+Se il valore del canale rosso è $R$, lo schermo emette una luce proporzionale a $R^\gamma$, con $\gamma \approx 2.2$. In genere il segnale normalizzato viene corretto prima della trasmissione, elevando a $\nicefrac{1}{\gamma}$.
 
 L'HDTV (alta definizione) è concepita per avere una risoluzione doppia rispetto alla TV analogica, con dimensioni in pixel molto più grandi che però permettono l'adattamento agli standard precedenti, aumentando il refresh rate.
 
