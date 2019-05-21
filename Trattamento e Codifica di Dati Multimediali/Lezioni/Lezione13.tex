@@ -59,19 +59,65 @@ Il segnale è decomposto in un insieme di sottosegnali (sottobanda, analisi), pa
 Ciascuna sottobanda $(y_0(n), y_1(n))$ è ottenuta filtrando con un passa-banda $(h_0(n), h_1(n))$ il segnale originale. Poiché la sottobanda ha spettro limitato e pari a metà dell'originale, è possibile sottocampionare senza perdita di informazione. 
 % immagine
 %% da qui
-Imponendo ..., si trovano le coppie di filtri di sintesi e corrispondenti filtri di analisi che garantiscono una perfetta ricostruzione. In caso di più dimensioni, possono esserci $n$ filtri per righe e colonne che mettono in evidenza diverse porzioni di frequenze rispetto alla direzione. 
+Imponendo $\hat{x}(n) = x(n)$, si trovano le opportune coppie di filtri di sintesi e corrispondenti filtri di analisi che garantiscono una perfetta ricostruzione. In caso di più dimensioni (separabili), possono esserci $n$ filtri per righe e colonne che mettono in evidenza diverse porzioni di frequenze rispetto alla direzione. Flitraggio e sottocampionamento avvengono quindi in due fasi successive.
+
+Si ottengono 4 immagini di output: $dV(m, n)$, $dH(m, n)$, $dD(m, n)$ le immagini nelle 3 dimensioni per le alte frequenze, e $a(m, n)$ l'immagine approssimata. Ciascuna sottobanda a sua volta può essere scomposta in 4 ulteriori sottobande.
+% sottobande
+Visivamente, è immediata la correlazione fra filtri di analisi e sintesi corrispondenti: sono ortonormali, cioè ortogonali a norma unitaria, e permettono una ricostruzione error-free in ciascun livello che a sua volta viene approssimato.
 
 Dato che le statistiche locali sono facilmente modellabili e presentano molti valori nulli, questa codifica è particolarmente vantaggiosa per la compressione: non tutto l'istogramma viene occupato, oppure ci sono poche alte frequenze che possono essere eliminato. L'approccio di denoising per ridurre il rumore è utilizzato nelle applicazioni mediche.
 
-Il filtro passa-basso è una funzione di scala, mentre il passa-alto è una wavelet generata a partire da una wavelet madre. La formula in notazione monodimensionale è:
-$$f(x)  = \frac{1}{den\sqrt{m}} \sum_{k} W_\varphi (j_0, k) \varphi_{j_0, k} (x) + \frac{1}{den\sqrt{m}} \sum_{j=j_0}^{J}\sum_{k} W... $$
-Trasformando con la wavelet, è possibile pesare ogni contributo per capire quali frequenze e bande hanno influenza maggiore, valutando le features che caratterizzano l'immagine. 
+Nell'analisi multirisoluzione, il filtro passa-basso è una funzione di scala (MRA), mentre il passa-alto è una wavelet generata a partire da una wavelet madre. Ogni approssimazione differisce dalla più vicina di un fattore 2.
 
-Per calcolare gli edge, si ha il segnale di partenza in una somma di contributi: la parte interessata viene tenuta applicando la formula, mentre le altre componenti vengono annullate. 
+Le wavelet descrivono la differenza di informazione fra due approssimazioni adiacenti. La formula in notazione monodimensionale è:
+$$f(x)  = \frac{1}{\sqrt{M}} \sum_{k} W_\varphi (j_0, k) \varphi_{j_0, k} (x) + \frac{1}{\sqrt{M}} \sum_{j=j_0}^{J}\sum_{k} W_\psi(j, k)\psi_{j, k}(x)$$
+$\varphi(x)$ è la funzione di scaling, con i relativi coefficienti di approssimazione. $\psi(x)$ è la wavelet madre, con i relativi coefficienti di dettaglio.
+
+Tramite imposizione di equivalenze tra prodotti, è possibile misurare le variazioni lungo le righe, le colonne e le diagonali. Trasformando con la wavelet, è possibile pesare ogni contributo per capire quali frequenze e bande hanno influenza maggiore, valutando le features che caratterizzano l'immagine. 
+% wt in 2 dimensioni
+Per calcolare gli edge, si ha il segnale di partenza in una somma di contributi: la parte interessata (per esempio il filtro passa alto $\psi$) viene tenuta applicando la formula, mentre le altre componenti vengono annullate. 
+
+Annullando anche i termini di edge orizzontali a tutte le scale e ricostruendo (sintesi) a partire da questi dati, si isolano i soli edge verticali.
 
 Un altro approccio è il denoising, a partire dalle wavelet. La ricostruzione è effettuata dopo aver posto una soglia alta sui coefficienti a tutte le risoluzioni, accettando solo i valori al di sopra. 
 
+L'immagine originale è una risonanza magnetica con un rumore bianco additivo o moltiplicativo, a cui viene applicata la procedura di denoising:
+\begin{enumerate}
+	\item Scelta della funzione wavelet;
+	\item Scelta del numero di livelli;
+	\item Sogliatura dei coefficienti di wavelet ed eliminazione di quelli inferiori alla soglia;
+	\item Ricostruzione a partire dall'immagine approssimata all'ultima scala.
+\end{enumerate}
+
+Riducendo il rumore, si ha notevole perdita di dettaglio anche sugli edge, applicando soglie a tutte le risoluzioni. Agendo solo sulla risoluzione massima, si ha una perdita minore.
+
+Per il principio di indeterminazione di Heisenberg,
+$$\delta t \times \delta v \geq K$$
+$\delta t$: campionamento nel dominio del tempo o dello spazio, indeterminazione sulla frequenza. \\ % --> ???
+
 \section{Tecniche di compressione}
+Il costo di un segnale dipende da campionamento e quantizzazione, fino ad arrivare a una quantità troppo elevata di dati per la memorizzazione ad alta qualità.
+
+Per rappresentare l'informazione si ricorre alla compressione, cioè la trasformazione in un insieme di dati statisticamente incorrelati che garantiscano un grado di fedeltà (qualità) rispetto all'originale, e abbiano un accettabile peso computazionale per il tipo di applicazione.
+
 Le tecniche di compressione si dividono in due grandi famiglie: lossy (con perdita accettabile a seconda dell'applicazione) e lossless (senza perdita). I dati ridondanti vengono rimossi, e il risparmio viene misurato tramite un rapporto di compressione in bit, dipendente appunto dalla ridondanza. 
 
-Un tipo di ridondanza è statistico: i vicini possono essere correlati o dipendenti, quindi una parte dell'informazione è ripetuta. Alcuni livelli secondo l'istogramma hanno una maggiore probabilità di essere occupati, quindi è possibile calcolare il numero medio normalizzato di bit necessari per ogni frequenza. 
+I dati sono gli strumenti tramite i quali è rappresentata l'informazione, e quest'ultima può essere associata a diversi quantitativi di dati. Il principio della compressione è appunto minimizzare il numero di bit utilizzati. 
+$$\text{rapporto di compressione } C = \frac{b_1 \text{ bit prima della compressione}}{b_2 \text{ bit dopo la compressione}}$$
+$$\text{ridondanza relativa } R = 1 - \frac{1}{C}$$
+Se $b_1 = b_2$, allora $R = 0$ e non ci sono dati ridondanti tra le due rappresentazioni. Un rapporto tipico di compressione è $10 : 1$, con corrispondente ridondanza $0.9$.
+
+\subsection{Ridondanza}
+Possono essere individuati diversi tipi di ridondanza, di cui almeno uno va ridotto:
+\begin{enumerate}
+	\item Della codifica;
+	\item Spaziale o temporale;
+	\item Percettiva.
+\end{enumerate}
+
+I primi due consistono nella ridondanza statistica: i vicini possono essere correlati o dipendenti, quindi una parte dell'informazione è ripetuta. Alcuni livelli secondo l'istogramma hanno una maggiore probabilità di essere occupati, quindi è possibile calcolare il numero medio normalizzato di bit necessari per ogni frequenza. 
+
+
+
+
+
