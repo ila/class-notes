@@ -91,9 +91,11 @@ L'immagine originale è una risonanza magnetica con un rumore bianco additivo o 
 
 Riducendo il rumore, si ha notevole perdita di dettaglio anche sugli edge, applicando soglie a tutte le risoluzioni. Agendo solo sulla risoluzione massima, si ha una perdita minore.
 
-Per il principio di indeterminazione di Heisenberg,
+Per il principio di indeterminazione di Heisenberg, la distanza per ogni punto esatto di una funzione è infinitesima: pertanto, la risoluzione nelle frequenze è indefinita. Nel dominio trasformato, è nota l'informazione per ogni valore di $f$, ma $\delta x$ è infinito. 
+
+In altre parole, in base al dominio, una dimensione è indeterminata. Il prodotto delle due, che corrisponde all'area, è sempre maggiore di un valore $K$:
 $$\delta t \times \delta v \geq K$$
-$\delta t$: campionamento nel dominio del tempo o dello spazio, indeterminazione sulla frequenza. \\ % --> ???
+Nelle wavelet, è possibile determinare precedentemente una delle due dimensioni, avendo contemporaneamente informazione spaziale e frequenziale.
 
 \section{Tecniche di compressione}
 Il costo di un segnale dipende da campionamento e quantizzazione, fino ad arrivare a una quantità troppo elevata di dati per la memorizzazione ad alta qualità.
@@ -111,13 +113,94 @@ Se $b_1 = b_2$, allora $R = 0$ e non ci sono dati ridondanti tra le due rapprese
 Possono essere individuati diversi tipi di ridondanza, di cui almeno uno va ridotto:
 \begin{enumerate}
 	\item Della codifica;
-	\item Spaziale o temporale;
-	\item Percettiva.
+	\item Spaziale o temporale (correlazione inter-campione);
+	\item Percettiva, imponendo quantizzazioni più o meno spinte.
 \end{enumerate}
 
-I primi due consistono nella ridondanza statistica: i vicini possono essere correlati o dipendenti, quindi una parte dell'informazione è ripetuta. Alcuni livelli secondo l'istogramma hanno una maggiore probabilità di essere occupati, quindi è possibile calcolare il numero medio normalizzato di bit necessari per ogni frequenza. 
+I primi due consistono nella ridondanza statistica: i vicini possono essere correlati o dipendenti, quindi una parte dell'informazione è ripetuta. 
 
+\subsubsection{Ridondanza della codifica}
+La ridondanza della codifica non introduce perdita, quindi è reversibile e ha una soglia massima di compressione che può essere raggiunta. Quest'ultima dipende dal tipo di segnale.
 
+L'idea è costruire un quantizzatore che venga usato nel miglior modo possibile, distribuendo i valori in modo equiprobabile tra i livelli. Alcuni livelli, secondo l'istogramma a livelli di grigio, hanno una maggiore probabilità di essere occupati, quindi è possibile calcolare quanto comprimere in base al numero medio normalizzato di bit necessari per ogni frequenza.
 
+Se i valori sono sbilanciati, si ricorre alla codifica a lunghezza variabile, con numero di bit medio necessario per descrivere l'immagine:
+$$L_{avg} = \sum_{k=0}^{L-1}l(r_k)p_r(r_k)$$
+$l(r_k)$ è il numero di bit necessario per descrivere il $k$-esimo livello $r$, con frequenza (probabilità) $p_r$. Essendo gli standard a 256 livelli di grigio, la frequenza sarà costante e la sommatoria sarà 1, pertanto le immagini saranno codificate a $M\times N \cdot 8$ bit.
+
+VLC (Variable-Length Coding) è una strategia di riduzione della ridondanza che impiega un numero minor di bit per rappresentare i livelli più probabili, e viceversa. Il numero medio di bit è minore rispetto alla lunghezza fissa.
+
+\subsubsection{Ridondanza spaziale}
+Quando l'istogramma è uniforme, però, la VLC non ha effetto. Tutti i valori sono equiprobabili, ma ciò li rende fortemente correlati (e pertanto ridondanti) spazialmente. 
+
+Si può ridurre la ridondanza spaziale ...
+
+\subsubsection{Ridondanza percettiva}
+Todo
+
+\subsection{Entropia}
+L'entropia è la misura della quantità di dati minima necessaria per codificare senza perdita una sorgente di informazione.
+
+Informalmente, rappresenta il valore dell'informazione attraverso incertezza e probabilità di un certo simbolo. La sorgente deve emettere valori tra di loro incorrelati, quindi non deve avere memoria. 
+
+Nel caso delle immagini, c'è molto spesso dipendenza tra pixel contigui, ma l'entropia è la soluzione ottima a cui avvicinarsi il più possibile.
+
+Un evento casuale $E$ con probabilità $p(E)$ ha un grado di incertezza:
+$$I(E) = \log \frac{1}{p(E)}$$
+La base del logaritmo dipende dall'unità di misura dell'informazione, in questo caso 2 (bit).
+
+Essendo l'entropia proporzionale all'incertezza, l'entropia di una sorgente con alfabeto S è:
+$$H(S) = \sum_{k=1}^{M} p_k \log_2 \frac{1}{p_k} = -\sum_{k=1}^{M}\log_2p_k$$
+La situazione di equiprobabilità genera entropia massima.
+
+L'entropia indica anche un limite inferiore per il numero di bit necessari per codificare un certo alfabeto, ipotizzando l'equiprobabilità di ogni livello e fornendo un punto di riferimento per i codici a lunghezza variabile. 
+
+L'obiettivo di VLC è trovare il codice di lunghezza minima per descrivere il segnale. Se un codice ha parole con lunghezza $b$, il numero medio di bit richiesti è:
+$$R = \sum_{k=1}^{M}b_kp_k$$
+
+La massima entropia implica un contenuto informativo visivo basso, essendo i valori equiprobabili. Immagini diverse possono avere entropia simile, ma essa serve come valore di riferimento solo con sorgenti senza memoria, quindi il rapporto di compressione può essere molto differente.
+
+\subsubsection{Codici di Huffman}
+todo
+
+Se il segnale viene letto sequenzialmente, non si hanno informazioni precise riguardo alla distribuzione dei simboli: essa viene stimata tramite strumenti che aggiornano a ogni valore la possibile frequenza.
+
+\subsection{RLC}
+La correlazione tra bit può portare a un elevato risparmio, ma per ottenerla si deve ricorrere a sorgenti con memoria. 
+
+Il segnale si presenta con tanti 0 in sequenza intervallati da 1, e viene trasmessa la coppia di valore assunto e numero di valori (run-length coding). 
+
+Questa tecnica è impiegata per la codifica di immagini a colori, ma è poco efficiente per immagini reali a causa delle imprecisioni e del rumore. 
+
+Il bitmap prevede una modalità di compressione senza perdita utilizzando appunto RLC, codificando le informazioni sequenziali ripetute. Il rapporto di compressione può essere minore di 1 in caso che nuovi bit vengano sprecati per creare coppie di valori diversi da quelli non contigui.
+
+\subsection{Differential coding}
+Questa tecnica viene applicata quando RLC è inefficiente, e ha come scopo la riduzione della ridondanza in simboli consecutivi di un datastream.
+
+Osservando il segnale in termine di differenza tra frequenze, una forte correlazione spaziale viene sfruttata tramite codifica a lunghezza variabile sui picchi dell'istogramma. 
+
+Viene calcolata la differenza tra frequenze adiacenti, ed essa viene codificata. Il segnale viene ricostruito sommando le differenze a partire dal valore iniziale (noto).
+
+Per sfruttare la ridondanza tenendo conto delle differenze, è possibile anche sfruttare la differenza tra il valore attuale e quello predetto. Se la regione è uniforme in base a determinate regole, sarà immediato il calcolo del valore successivo, sfruttando l'interpolazione. 
+
+La differenza, con valori accurati, tenderà a 0 con un istogramma stretto, e di conseguenza un'entropia minore (MPEG). 
+
+\subsection{Algoritmi lossless}
+Lossless JPEG non usa la DCT e non introduce perdita tramite codifica predittiva, sfruttando l'uniformità delle regioni.
+
+Gli algoritmi lossless universali non richiedono la conoscenza a priori della distribuzione di probabilità dei simboli: in genere riescono a modellare dinamicamente le caratteristiche dei dati, adeguando la codifica.
+
+Viene aggiunto un ulteriore bit nel dizionario che permette di identificare l'occorrenza dei valori. Tutte le volte che un valore si ripete, la codifica può essere riutilizzata usando la coppia e associandola a un livello (analisi delle frequenze). 
+
+In funzione di com'è costruita l'immagine, ciascun algoritmo sarà più o meno efficiente. 
+
+\subsection{Codifica video}
+Nei video esiste una correlazione non solo tra i pixel dello stesso fotogramma, ma anche tra fotogrammi adiacenti. In base alla ridondanza, è possibile applicare compressione spaziale e temporale.
+
+La codifica predittiva rimuove entrambe le tipologie, con un errore di predizione $e(n)$ ottenuto tramite VLC e diversi modelli di predizione. % immagine
+
+In presenza di un segnale sonoro a una generica frequenza, si ha un'alterazione della soglia di udibilità per le frequenze limitrofe al segnale, che non vengono percepite. 
+
+% slide 47
 
 
