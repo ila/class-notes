@@ -38,10 +38,17 @@ La riproduzione del colore cambia a seconda dello spazio, delle modalità di tra
 
 Per codificare le immagini, si cambia spazio colore in modo da separare luminanza da crominanza. Non ci sono limitazioni relative ai canali e ai componenti sulla stessa portante. 
 
+ \begin{wrapfigure}{L}{0.35\textwidth}
+	\vspace{-15pt}
+	\includegraphics[width=0.35\textwidth]{Lezioni/Immagini/gamma}
+	\vspace{-20pt}
+\end{wrapfigure}
+
 Il video fornisce informazioni sulla luminosità dell'immagine usando un segnale di luminanza $Y$ ottenuto sommando in modo pesato le componenti RGB, a cui viene in seguito applicata una correzione gamma. 
 $$ Y = 0.299R + 0.587G + 0.114B$$
 La maggioranza del segnale è composta dal verde; l'informazione colore è codificata in due canali aggiuntivi, ottenuti sottraendo la luminanza dalle componenti rosso e blu.
 $$ U = 0.492(B - Y) \qquad V = 0.877(R - Y)$$
+
 Queste due componenti sono chiamate chrome, e la rappresentazione di un valore indipendente dalla luminanza è definita crominanza. 
 
 I coefficienti associati a ogni colore cambiano in base alla posizione geografica per lo standard analogico, mentre per il digitale è globalmente YCrCb. Nella combinazione lineare, il canale più importante è quello del verde. 
@@ -73,9 +80,10 @@ Nella digitalizzazione, i canali Cr e Cb sono di solito campionati orizzontalmen
 Per eliminare le coppie, si utilizzano schemi del tipo $4 : 2 : 2$ o $4 : 1 : 1$, che trasmettono solamente alcuni valori campionando orizzontalmente. 
 
 La compressione JPEG usa $4 : 2 : 0$, il quale elimina un fattore 2 in entrambe le dimensioni posizionando fra righe e colonne un pixel con croma media. Per ogni 4 campioni di luminanza, ci sono 2 chroma sulle linee dispari. 
-% immagine chroma pixel
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.3]{Lezioni/Immagini/pixel}
+\end{figure}
+
 Chroma Sampled 8x: il sottocampionamento non è percepito, utilizzando solo il canale di intensità.
-
-
-
-

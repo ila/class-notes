@@ -28,12 +28,17 @@ La trasformata è lineare e invertibile, e $g(u, x)$ è detto kernel della trasf
 
 Trasformata di Fourier discreta 1D:
 $$e^{-j\frac{2\pi}{M}ux} = \cos\big(\frac{2\pi}{M}ux\big) + j\sin\big(\frac{2\pi}{M}ux\big)$$
-% immagine onde quadrate
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.48]{Lezioni/Immagini/ondequadrate}
+\end{figure}
+
 Il segnale di partenza è proiettato in base al suo tempo e spazio con le sue parti reale e immaginaria. Seno e coseno hanno simmetria rispettivamente dispari e pari, e trasformando si osserva l'influenza di ciascuna componente. 
 
 La trasformata coseno discreta (DCT) è lineare, con kernel diretto uguale a quello inverso (simmetria speculare), separabile e simmetrico. La componente continua è legata al valore medio dell'immagine (0, 0). 
 $$T(u) = \sum_{x=0}^{M- 1}f(x)g(u, x) \qquad g(x, u) = \alpha(u) \cos\Big[\frac{(2x + 1)\pi u}{2N}\Big]$$
-% immagine coseno
+
 $$\alpha(u) = \begin{cases}
 \sqrt{\frac{1}{N}} & u = 0 \\
 \sqrt{\frac{2}{N}} & u = 1, 2, \dots, N - 1^{}
@@ -42,8 +47,11 @@ $$\alpha(u) = \begin{cases}
 La separabilità permette di calcolare la trasformata 2D tramite applicazioni successive della trasformata 1D alle righe e alle colonne, senza perdita di informazione. Ciascun blocco è costituito da $N \times N$ sottoblocchi.
 
 Una maggiore quantità di informazione è presente nei primi coefficienti della DCT, rispetto allo stesso numero di coefficienti della DFT.
-% dct vs dtf
-Visualizzando un'immagine su un monitor con un range elevato (scala logaritmica), non si vede nulla perché il monitor arriva solo fino a 256.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.27]{Lezioni/Immagini/dctdft}
+\end{figure}
 
 \subsection{Analisi multirisoluzione}
 Le immagini sono generalmente costituite da regioni connesse che formano gli oggetti, omogenee rispetto a una qualche proprietà.
@@ -57,12 +65,21 @@ La tecnica più frequente è l'analisi piramidale, che parte dalla risoluzione m
 Il segnale è decomposto in un insieme di sottosegnali (sottobanda, analisi), passando attraverso filtri complementari, ciascuno dei quali agisce su una fascia di frequenze. Ricampionando, filtrando e ricombinando le sottobande (sintesi) si ottiene un'approssimazione $\hat{x}(n)$ dell'originale, non incorrendo in aliasing. 
 
 Ciascuna sottobanda $(y_0(n), y_1(n))$ è ottenuta filtrando con un passa-banda $(h_0(n), h_1(n))$ il segnale originale. Poiché la sottobanda ha spettro limitato e pari a metà dell'originale, è possibile sottocampionare senza perdita di informazione. 
-% immagine
-%% da qui
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.3]{Lezioni/Immagini/sottobande}
+\end{figure}
+
 Imponendo $\hat{x}(n) = x(n)$, si trovano le opportune coppie di filtri di sintesi e corrispondenti filtri di analisi che garantiscono una perfetta ricostruzione. In caso di più dimensioni (separabili), possono esserci $n$ filtri per righe e colonne che mettono in evidenza diverse porzioni di frequenze rispetto alla direzione. Flitraggio e sottocampionamento avvengono quindi in due fasi successive.
 
 Si ottengono 4 immagini di output: $dV(m, n)$, $dH(m, n)$, $dD(m, n)$ le immagini nelle 3 dimensioni per le alte frequenze, e $a(m, n)$ l'immagine approssimata. Ciascuna sottobanda a sua volta può essere scomposta in 4 ulteriori sottobande.
-% sottobande
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{Lezioni/Immagini/sottobande2d}
+\end{figure}
+
 Visivamente, è immediata la correlazione fra filtri di analisi e sintesi corrispondenti: sono ortonormali, cioè ortogonali a norma unitaria, e permettono una ricostruzione error-free in ciascun livello che a sua volta viene approssimato.
 
 Dato che le statistiche locali sono facilmente modellabili e presentano molti valori nulli, questa codifica è particolarmente vantaggiosa per la compressione: non tutto l'istogramma viene occupato, oppure ci sono poche alte frequenze che possono essere eliminato. L'approccio di denoising per ridurre il rumore è utilizzato nelle applicazioni mediche.
@@ -73,9 +90,17 @@ Le wavelet descrivono la differenza di informazione fra due approssimazioni adia
 $$f(x)  = \frac{1}{\sqrt{M}} \sum_{k} W_\varphi (j_0, k) \varphi_{j_0, k} (x) + \frac{1}{\sqrt{M}} \sum_{j=j_0}^{J}\sum_{k} W_\psi(j, k)\psi_{j, k}(x)$$
 $\varphi(x)$ è la funzione di scaling, con i relativi coefficienti di approssimazione. $\psi(x)$ è la wavelet madre, con i relativi coefficienti di dettaglio.
 
-Tramite imposizione di equivalenze tra prodotti, è possibile misurare le variazioni lungo le righe, le colonne e le diagonali. Trasformando con la wavelet, è possibile pesare ogni contributo per capire quali frequenze e bande hanno influenza maggiore, valutando le features che caratterizzano l'immagine. 
-% wt in 2 dimensioni
-Per calcolare gli edge, si ha il segnale di partenza in una somma di contributi: la parte interessata (per esempio il filtro passa alto $\psi$) viene tenuta applicando la formula, mentre le altre componenti vengono annullate. 
+ \begin{wrapfigure}{L}{0.55\textwidth}
+	\vspace{-10pt}
+	\includegraphics[width=0.55\textwidth]{Lezioni/Immagini/wct2}
+	\vspace{-30pt}
+\end{wrapfigure}
+
+Tramite imposizione di equivalenze tra prodotti, è possibile misurare le variazioni lungo le righe, le colonne e le diagonali. 
+
+Trasformando con la wavelet, è possibile pesare ogni contributo per capire quali frequenze e bande hanno influenza maggiore, valutando le features che caratterizzano l'immagine. 
+
+Per calcolare gli edge, si ha il segnale di partenza in una somma di contributi: la parte interessata (per esempio il filtro passa alto $\psi$) viene tenuta applicando la formula, mentre le altre componenti con frequenze basse vengono annullate. 
 
 Annullando anche i termini di edge orizzontali a tutte le scale e ricostruendo (sintesi) a partire da questi dati, si isolano i soli edge verticali.
 
@@ -96,114 +121,4 @@ Per il principio di indeterminazione di Heisenberg, la distanza per ogni punto e
 In altre parole, in base al dominio, una dimensione è indeterminata. Il prodotto delle due, che corrisponde all'area, è sempre maggiore di un valore $K$:
 $$\delta t \times \delta v \geq K$$
 Nelle wavelet, è possibile determinare precedentemente una delle due dimensioni, avendo contemporaneamente informazione spaziale e frequenziale.
-
-\section{Tecniche di compressione}
-Il costo di un segnale dipende da campionamento e quantizzazione, fino ad arrivare a una quantità troppo elevata di dati per la memorizzazione ad alta qualità.
-
-Per rappresentare l'informazione si ricorre alla compressione, cioè la trasformazione in un insieme di dati statisticamente incorrelati che garantiscano un grado di fedeltà (qualità) rispetto all'originale, e abbiano un accettabile peso computazionale per il tipo di applicazione.
-
-Le tecniche di compressione si dividono in due grandi famiglie: lossy (con perdita accettabile a seconda dell'applicazione) e lossless (senza perdita). I dati ridondanti vengono rimossi, e il risparmio viene misurato tramite un rapporto di compressione in bit, dipendente appunto dalla ridondanza. 
-
-I dati sono gli strumenti tramite i quali è rappresentata l'informazione, e quest'ultima può essere associata a diversi quantitativi di dati. Il principio della compressione è appunto minimizzare il numero di bit utilizzati. 
-$$\text{rapporto di compressione } C = \frac{b_1 \text{ bit prima della compressione}}{b_2 \text{ bit dopo la compressione}}$$
-$$\text{ridondanza relativa } R = 1 - \frac{1}{C}$$
-Se $b_1 = b_2$, allora $R = 0$ e non ci sono dati ridondanti tra le due rappresentazioni. Un rapporto tipico di compressione è $10 : 1$, con corrispondente ridondanza $0.9$.
-
-\subsection{Ridondanza}
-Possono essere individuati diversi tipi di ridondanza, di cui almeno uno va ridotto:
-\begin{enumerate}
-	\item Della codifica;
-	\item Spaziale o temporale (correlazione inter-campione);
-	\item Percettiva, imponendo quantizzazioni più o meno spinte.
-\end{enumerate}
-
-I primi due consistono nella ridondanza statistica: i vicini possono essere correlati o dipendenti, quindi una parte dell'informazione è ripetuta. 
-
-\subsubsection{Ridondanza della codifica}
-La ridondanza della codifica non introduce perdita, quindi è reversibile e ha una soglia massima di compressione che può essere raggiunta. Quest'ultima dipende dal tipo di segnale.
-
-L'idea è costruire un quantizzatore che venga usato nel miglior modo possibile, distribuendo i valori in modo equiprobabile tra i livelli. Alcuni livelli, secondo l'istogramma a livelli di grigio, hanno una maggiore probabilità di essere occupati, quindi è possibile calcolare quanto comprimere in base al numero medio normalizzato di bit necessari per ogni frequenza.
-
-Se i valori sono sbilanciati, si ricorre alla codifica a lunghezza variabile, con numero di bit medio necessario per descrivere l'immagine:
-$$L_{avg} = \sum_{k=0}^{L-1}l(r_k)p_r(r_k)$$
-$l(r_k)$ è il numero di bit necessario per descrivere il $k$-esimo livello $r$, con frequenza (probabilità) $p_r$. Essendo gli standard a 256 livelli di grigio, la frequenza sarà costante e la sommatoria sarà 1, pertanto le immagini saranno codificate a $M\times N \cdot 8$ bit.
-
-VLC (Variable-Length Coding) è una strategia di riduzione della ridondanza che impiega un numero minor di bit per rappresentare i livelli più probabili, e viceversa. Il numero medio di bit è minore rispetto alla lunghezza fissa.
-
-\subsubsection{Ridondanza spaziale}
-Quando l'istogramma è uniforme, però, la VLC non ha effetto. Tutti i valori sono equiprobabili, ma ciò li rende fortemente correlati (e pertanto ridondanti) spazialmente. Questo succede per esempio in immagini a righe, mentre lungo le colonne i valori sono incorrelati.
-
-Si può ridurre la ridondanza spaziale individuata introducendo coppie run-length: il primo componente della coppia individua l'intensità, mentre il secondo il numero di volte con cui si ripete. L'approccio è lossless.
-
-\subsubsection{Ridondanza percettiva}
-L'immagine è percepita come se avesse un valore di grigio uniforme, ma l'istogramma è discordante da questa rappresentazione.
-% immagine
-Le informazioni ignorate dal sistema visivo umano possono essere eliminate, sostituite da un valore medio. Il processo è eseguito tramite quantizzazione, ma c'è perdita. 
-
-\subsection{Entropia}
-L'entropia è la misura della quantità di dati minima necessaria per codificare senza perdita una sorgente di informazione, modellando la sorgente come processo probabilistico con eventi statisticamente indipendenti.
-
-Informalmente, rappresenta il valore dell'informazione attraverso incertezza e probabilità di un certo simbolo. La sorgente deve emettere valori tra di loro incorrelati, quindi non deve avere memoria. 
-
-Nel caso delle immagini, c'è molto spesso dipendenza tra pixel contigui, ma l'entropia è la soluzione ottima a cui avvicinarsi il più possibile.
-
-Un evento casuale $E$ con probabilità $p(E)$ ha un grado di incertezza (e una quantità di informazione) pari a:
-$$I(E) = \log \frac{1}{p(E)}$$
-La base del logaritmo dipende dall'unità di misura dell'informazione, in questo caso 2 (bit). Se un evento è certo, l'incertezza è nulla. 
-
-Essendo l'entropia proporzionale all'incertezza, l'entropia di una sorgente con alfabeto $S = \{s_1, s_2, \dots,s_M\}$ è:
-$$H(S) = \sum_{k=1}^{M} p_k \log_2 \frac{1}{p_k} = -\sum_{k=1}^{M}\log_2p_k$$
-$p_k$ è la probabilità del $k$-esimo simbolo dell'alfabeto, e $\log_2\frac{1}{p_k}$ è la quantità di informazione contenuta nel simbolo $s_k$, cioè il numero di bit necessario per la codificaLa . situazione di equiprobabilità genera entropia massima.
-
-L'entropia indica pertanto un limite inferiore (valore medio) per il numero di bit necessari per codificare un certo alfabeto, ipotizzando l'equiprobabilità di ogni livello e fornendo un punto di riferimento per i codici a lunghezza variabile. 
-
-L'obiettivo di VLC è trovare il codice di lunghezza minima per descrivere il segnale. Se un codice $c_1, c_2, \dots, c_M$ ha parole con lunghezza $b_1, b_2, \dots, b_M$, il numero medio di bit richiesti è:
-$$R = \sum_{k=1}^{M}b_kp_k$$
-Il problema della progettazione di codice è la ricerca di parole con lunghezza media vicina all'entropia della sorgente del segnale, cioè $r$ vicino a $H$, e la stima della precisione dei valori di probabilità.
-
-La massima entropia implica un contenuto informativo visivo basso, essendo i valori equiprobabili. Immagini diverse possono avere entropia simile, ma essa serve come valore di riferimento solo con sorgenti senza memoria, quindi il rapporto di compressione può essere molto differente in caso di fotografie o immagini con pattern.
-
-\subsubsection{Codici di Huffman}
-todo
-
-Se il segnale viene letto sequenzialmente, non si hanno informazioni precise riguardo alla distribuzione dei simboli: essa viene stimata tramite strumenti che aggiornano a ogni valore la possibile frequenza.
-
-\subsection{RLC}
-La correlazione tra bit può portare a un elevato risparmio, ma per ottenerla si deve ricorrere a sorgenti con memoria. 
-
-Il segnale si presenta con tanti 0 in sequenza intervallati da 1, e viene trasmessa la coppia di valore assunto e numero di valori (run-length coding). 
-
-Questa tecnica è impiegata per la codifica di immagini a colori, ma è poco efficiente per immagini reali a causa delle imprecisioni e del rumore. 
-
-Il bitmap prevede una modalità di compressione senza perdita utilizzando appunto RLC, codificando le informazioni sequenziali ripetute. Il rapporto di compressione può essere minore di 1 in caso che nuovi bit vengano sprecati per creare coppie di valori diversi da quelli non contigui.
-
-\subsection{Differential coding}
-Questa tecnica viene applicata quando RLC è inefficiente, e ha come scopo la riduzione della ridondanza in simboli consecutivi di un datastream.
-
-Osservando il segnale in termine di differenza tra frequenze, una forte correlazione spaziale viene sfruttata tramite codifica a lunghezza variabile sui picchi dell'istogramma. 
-
-Viene calcolata la differenza tra frequenze adiacenti, ed essa viene codificata. Il segnale viene ricostruito sommando le differenze a partire dal valore iniziale (noto).
-
-Per sfruttare la ridondanza tenendo conto delle differenze, è possibile anche sfruttare la differenza tra il valore attuale e quello predetto. Se la regione è uniforme in base a determinate regole, sarà immediato il calcolo del valore successivo, sfruttando l'interpolazione. 
-
-La differenza, con valori accurati, tenderà a 0 con un istogramma stretto, e di conseguenza un'entropia minore (MPEG). 
-
-\subsection{Algoritmi lossless}
-Lossless JPEG non usa la DCT e non introduce perdita tramite codifica predittiva, sfruttando l'uniformità delle regioni.
-
-Gli algoritmi lossless universali non richiedono la conoscenza a priori della distribuzione di probabilità dei simboli: in genere riescono a modellare dinamicamente le caratteristiche dei dati, adeguando la codifica.
-
-Viene aggiunto un ulteriore bit nel dizionario che permette di identificare l'occorrenza dei valori. Tutte le volte che un valore si ripete, la codifica può essere riutilizzata usando la coppia e associandola a un livello (analisi delle frequenze). 
-
-In funzione di com'è costruita l'immagine, ciascun algoritmo sarà più o meno efficiente. 
-
-\subsection{Codifica video}
-Nei video esiste una correlazione non solo tra i pixel dello stesso fotogramma, ma anche tra fotogrammi adiacenti. In base alla ridondanza, è possibile applicare compressione spaziale e temporale.
-
-La codifica predittiva rimuove entrambe le tipologie, con un errore di predizione $e(n)$ ottenuto tramite VLC e diversi modelli di predizione. % immagine
-
-In presenza di un segnale sonoro a una generica frequenza, si ha un'alterazione della soglia di udibilità per le frequenze limitrofe al segnale, che non vengono percepite. 
-
-% slide 47
-
 

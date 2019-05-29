@@ -1,0 +1,12 @@
+\section{Compressione JPEG}
+La compressione JPEG si articola in 5 fasi:
+\begin{enumerate}
+	\item Conversione spazio colore, comprimendo le parti cromatiche;
+\end{enumerate}
+La perdita avviene nelle fasi di sottocampionamento del chroma e quantizzazione. 
+
+L'idea per la quantizzazione si basa sull'utilizzo di una matrice dei coefficienti che genera coefficienti quantizzati. Le frequenze vengono pesate diversamente tagliando le alte frequenze, quindi dividendo con valori più alti, e salvando le basse applicando valori bassi.
+
+Le tabelle sono calcolate tramite esperimenti psicovisuali, scegliendo numeri che permettono una minore complessità computazionale. 
+
+Nelle regioni disomogenee, i valori adiacenti sono distinti fra loro, e i coefficienti della matrice saranno in quantità maggiore e molto distanti dallo zero. 
