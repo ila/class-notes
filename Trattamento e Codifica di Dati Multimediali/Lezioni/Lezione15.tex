@@ -3,6 +3,11 @@ JPEG (Joing Photographic Experts Group) è lo standard di memorizzazione delle i
 
 JPEG definisce una serie di elaborazioni flessibili da seguire sulle immagini, che possono eventualmente essere saltate. Le regole sono però definite in modo rigido, includendo la decompressione.
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.46]{Lezioni/Immagini/jpeg}
+\end{figure}
+
 La compressione JPEG si articola in 5 fasi:
 \begin{enumerate}
 	\item Conversione spazio colore, comprimendo le parti cromatiche;
@@ -16,114 +21,56 @@ La perdita avviene nelle fasi di sottocampionamento del chroma e quantizzazione.
 \subsection{Conversione spazio cromatico}
 Si può sfruttare la caratteristica psicovisuale per cui il sistema visivo umano è più sensibile alle variazioni di luminanza che non a quelle di crominanza, quantizzando maggiormente queste ultime.
 
-In questo modo, la ridondanza psicovisuale diminuisce, con poca perdita. L'immagine viene convertita da RGB a un altro spazio come YCbCR. 
+In questo modo, la ridondanza psicovisuale diminuisce, con poca perdita. L'immagine viene convertita da RGB a un altro spazio come YCbCR, esprimendo il colore in termini di $x : y : z$ e campionando orizzontalmente.
 
+La compressione lossy sulle coordinate cromatiche è opzionalmente effettuata riducendo le dimensioni sottocampionando tramite media a due a due tra i pixel adiacenti. 
 
+\subsection{Suddivisione in blocchi}
+Ciascun canale (Y, Cb, Cr) dell'immagine è diviso in blocchi quadrati, di cui ciascuno è costituito da 8$\times$8 pixel. 
 
+\subsection{Analisi in frequenza}
 L'idea per la quantizzazione si basa sull'utilizzo di una matrice dei coefficienti che genera coefficienti quantizzati. Le frequenze vengono pesate diversamente tagliando le alte frequenze, quindi dividendo con valori più alti, e salvando le basse applicando valori bassi.
 
-Le tabelle sono calcolate tramite esperimenti psicovisuali, scegliendo numeri che permettono una minore complessità computazionale. 
+In JPEG viene utilizzata la DCT, e i coefficienti rappresentano le ampiezze dei segnali armonici che sommati ricostruiscono il segnale.
+$$F(u, v) = \sum_{x=0}^{M-1}\sum_{y=0}^{N-1} f(x, y) g(u, v, x, y)$$
+$$f(x, y) = \sum_{u=0}^{M-1}\sum_{x=0}^{N-1} F(u, v) \cos\bigg[\frac{(2x + 1)\pi u}{2N}\bigg] \cos\bigg[\frac{(2x + 1)\pi v}{2N}\bigg]$$
+$$g(x, y, u, v) = \alpha(u) \alpha(v) \cos\bigg[\frac{(2x + 1)\pi u}{2N}\bigg] \cos\bigg[\frac{(2y + 1)\pi v}{2N}\bigg]$$
 
-Nelle regioni disomogenee, i valori adiacenti sono distinti fra loro, e i coefficienti della matrice saranno in quantità maggiore e molto distanti dallo zero. 
+Per ogni canale, a ogni blocco nello spazio corrisponde un blocco di coefficienti nel dominio della frequenza, in cui le basse frequenze sono in alto a sinistra e le alte sono in basso a destra. Il primo coefficiente del blocco trasformato è correlato al valore medio dei valori del blocco originario.
 
+Viene poi definita una tabella di quantizzazione $Q$ che divide la matrice dei coefficienti $F$ e genera coefficienti quantizzati:
+$$\hat{F}(u, v) = \text{round} \bigg(\frac{F(u, v)}{Q(u, v)}\bigg)$$
+Le tabelle $Q(u, v)$ sono calcolate tramite esperimenti psicovisuali, scegliendo numeri che permettono una minore complessità computazionale. 
 
-\section{Compressione video}
-La compressione video deve necessariamente essere lossy, dato che la quantità di ridondanze è generalmente elevata e le dimensioni dei video non compresse sono ingestibili dai supporti di memoria. Il tipo di processing adottato è intra-frame o inter-frame. 
+Poiché i valori della tabella di quantizzazione sono abbastanza elevati, i coefficienti quantizzati sono più piccoli e con una varianza minore. Si può variare il rapporto di compressione riscalando la tabella di quantizzazione (quality factor), che vengono poi moltiplicati in fase di decodifica:
+$$ \tilde{F}(u, v) = \hat{F}(u, v) Q(u, v)$$
+I coefficienti quantizzati sono ottenuti arrotondando all'intero più vicino, e quelli meno significativi tendono ad azzerarsi. 
 
-Ci sono soluzioni che considerano solo la ridondanza spaziale o temporale, e altre che sfruttano la ridondanza percettiva. 
+Nelle regioni disomogenee (texture), i valori adiacenti sono distinti fra loro, e i coefficienti della matrice saranno in quantità maggiore e molto distanti dallo zero. A parità di coefficienti, la perdita è più elevata. La qualità, in generale, è buona con 16 coefficienti diversi da zero.
 
-Il procedimento più semplice applica codifiche predittive frame per frame oppure comprime usando JPEG, ma queste tecniche sono legate solo alle caratteristiche spaziali: esse devono essere estese valutando anche la ridondanza temporale, in termini di differenze tra i frame con predizioni (istogramma piccato).
+\subsection{Mapping dei coefficienti}
+Il tipo di mapping impiegato si differenzia per i coefficienti supersititi, che possiedono una componente continua, indicata come DC, e alcune variabili, AC. Queste ultime vengono ordinate tramite zig-zag scan e codificati con RLE.
 
-Il primo step è naturalmente la differenza tra frame consecutivi: questo funziona in modo ottimale quando le zone delle immagini cambiano poco, ma non è efficace quando la camera non è perfettamente ferma, o ci sono cambi di luce, o le scene sono in movimento.
+Sul valore DC invece viene applicata una tecnica DCPM (Differential Pulse Code Modulation), che codifica ogni blocco come differenza rispetto al valore del blocco precedente, sfruttando la correlazione statistica.
+$$\delta_k = DC(0, 0)_k - DC(0, 0)_{k-1}$$
 
-Generalmente anche in presenza di queste condizioni c'è correlazione, ma se la differenza tra due fotogrammi è il rumore o è dovuta al cambio di scena il segnale è poco correlato. In alcuni casi è possibile predirre anche il movimento.
+\subsection{Codifica dei dati}
+L'ultima codifica applicata ai dati utilizza VLE (lunghezza variabile) in base all'entropia. Viene analizzata la frequenza statistica di ciascuna parola e a ognuna è assegnata una stringa del codice. 
+$$p_r(r_k) = \frac{n_k}{n} \qquad L_{avg} = \sum_{k=0}^{L-1} l(r_k)p_r(r_k)$$
 
-La motion compensation è una codifica predittiva che consiste nella stima dei vettori di moto con cui le porzioni di frame vengono spostati, e nella loro applicazione per le variazioni future. La stima riguarda gli spostamenti dei macro blocchi 16$\times$16.
-
-Gli I-frame (intra/independent frame, compressi con JPEG) sono la partenza per la predizione, mentre i risultati sono i P-frame. Essi si distinguono tra:
 \begin{itemize}
-	\item Predetti solo in base al reference frame;
-	\item Predetti in base al frame precedente e ai frame successivi. 
-\end{itemize}
-Utilizzare le informazioni dei frame consecutivi aumenta la precisione.
-
-Ogni gruppo non sovrapposto di pixel viene assegnato a un vettore di moto comune. L'intensità è 16, con 8 canali cromatici ($\nicefrac{1}{4}$) per semplificare il campionamento. 
-
-Dato un macroblocco del target frame, viene cercato il più simile macroblocco nel reference frame tra i precedenti e successivi. Le dimensioni della finestra di ricerca variano in base allo standard utilizzato. 
-
-% cose
-
-Le possibilità sono la codifica della differenza oppure la compensazione della differenza attraverso il moto. 
-
-\begin{enumerate}
-	\item Individuazione del target frame;
-	\item Scorrimento dei macroblocchi e ricerca del più simile al blocco del reference frame;
-	\item Sostituzione con il più simile traslato di un vettore di moto;
-	\item Calcolo della differenza tra predizione e target;
-	\item Codifica della differenza.
-\end{enumerate}
-
-I blocchi del target frame sono organizzati su una griglia ...
-
-La compensazione del moto viene applicata in modo efficiente ai canali di luminanza, mentre i valori di crominanza sono meno correlati. 
-
-Se il moto è da sinistra verso destra, le zone di sinistra hanno l'errore di predizione più alto perché sono zone che non esistono nei frame precedenti.
-
-La stima del moto con frame successivi implica un ritardo nei calcoli finché le informazioni sono incomplete.
-
-Per semplificare le operazioni, la ricerca del macroblocco è effettuata in un intorno. 
-\begin{itemize}
-	\item Ricerca logaritmica, valutando la MAD su 9 punti (3$\times$3), selezionando il più vicino e dividendolo a sua volta, fino ad arrivare a un errore tollerabile, nonostante il rischio di concentrazione sui punti locali tralasciando il possibile ottimo globale;
-	\item Multirisoluzione, in tre passi;
-	\begin{enumerate}
-		\item Stima iniziale sul frame a risoluzione minore;
-		\item Raffinazione a risoluzione intermedia;
-		\item Determinazione del vettore di moto finale sulla risoluzione massima.
-	\end{enumerate}
+	\item Codifica sequenziale: i blocchi DCT sono codificati e tramessi uno dopo l'altro, alternando le diverse componenti a colori (pagine web);
+	\item Codifica progressiva: vengono trasmesse prima le porzioni più significative, visualizzando un'anteprima con qualità ridotta.
 \end{itemize}
 
-Gli standard di codifica video digitale sono regolati da:
-\begin{itemize}
-	\item ITU (raccomandazioni), con un carattere generale e orientato alle applicazioni real-time (H.xx);
-	\item ISO, 
-\end{itemize}
+Per misurare la qualità della compressione, si usa il rapporto di compressione $C = \frac{bit_1}{bit_2}$ oppure il numero di bit per pixel. Questi valori sono dipendenti dal fattore di qualità. 
 
+\subsection{JPEG-20}
+La compressione con bit-stream ha una bassa complessità ed è efficiente, ma non esistono regioni di interesse e non è possibile differenziare la qualità.
 
-Gli IPB frames sono particolari sequenze di frame, la cui combinazione forma il GOP:
-\begin{itemize}
-	\item I servono per predirre i frame successivi;
-	\item B (backwards), ;
-	\item P (picture), 
-\end{itemize}
+JPEG-20 permette diverse risoluzioni, evitando i blocking artifact sfruttando una decomposizione wavelet a 3 livelli. A parità di fattore di compressione, l'immagine appare con meno blocchetti, quindi migliore.
 
-Il rapporto di compressione è più alto perché questa metodologia non sfrutta solo la ridondanza spaziale, ma riduce anche quella temporale. I frame B sono quelli su cui la perdita è maggiore, perché vengono codificati agendo su entrambe le direzioni.
-
-Non sempre i macroblocchi sono codificati nello stesso modo: a seconda del tipo di frame e dell'errore di predizione essi saranno determinati diversamente. Se nessuna strategia è la migliore, si utilizza l'interpolazione.
-
-MPEG-2 è un'evoluzione di MPEG-1, con la stessa struttura base ma dedicato a video di qualità superiore, con bitrate maggiori di 4 Mbps. Questo standard implementa diversi standard di adattabilità con livelli di decodifica in base ai frame rate, pertanto è più scalabile.
-
-Le versioni sono a qualità variabile, trattando i coefficienti secondo la perdita indicata. I video sono interlacciati, gestendo i field (righe dispari e pari), ottenendo un errore più basso.
-
-L'utilizzo dei field ha un effetto diretto sulla quantizzazione: il campo è 8$\times$16, il pattern a zig-zag è opzionale e sono ammessi anche pattern alternativi. Il sottocampionamento è solo in una dimensione, essendo i sottoinsiemi incorrelati. 
-
-Non tutti i livelli ammettono le stesse variazioni: esse cambiano in base alla dimensione e i frame al secondo, campionando con diversi profili di chroma. 
-
-Il concetto di scalabilità prevede alcune caratteristiche:
-\begin{itemize}
-	\item Livelli base a qualità inferore;
-\end{itemize}
-
-I layers sono definiti in base ad alcune possibilità, migliorando SNR, frequenze, frame rate o risoluzione spaziale. Questi modi possono eventualmente essere combinati in una scalabilità ibrida. 
-
-MPEG-4 pone l'attenzione sull'interattività con l'utente, introducendo ulteriori caratteristiche basate sugli oggetti e le loro relazioni.
-
-Esistono anche possibili oggetti precodificati, come le animazioni che permettono di inserire effetti speciali nei video.
-
-Alcuni standard di decompressione introducono un filtro di denoising, applicato dopo la decodifica per rimuovere gli artefatti di blocchettizzazione. 
-
-MPEG-7 definisce gli strumenti necessari per descrivere il contenuto audiovisuale dei dati multimediali e consentire l'interoperabilità tra diversi sistemi e applicazioni.
-
-Ogni scena viene caratterizzata e classificata secondo un numero di features che impongono un grado di correlazione tra gli oggetti.
+Le zone più importanti, o meno uniformi, possono essere prioritizzate in termini di qualità, applicando una maggior compressione sullo sfondo.
 
 
 
