@@ -1,0 +1,35 @@
+\section{Formati immagine}
+
+\subsection{Bitmap}
+Bitmap è il formato più indicato per le immagini a 3 canali di 8 bit, ma supporta anche profondità differenti. Il numero di bit necessari dipende dal numero di pixel, con un fattore moltiplicativo di 24.
+
+La compressione non introduce perdita, utilizzando RLE: questo metodo può eventualmente fallire in caso di pattern disomogenei. 
+
+\subsection{GIF}
+GIF permette la sovrapposizione tra immagini, attivando la trasparenza uniforme 0-1.
+
+La compressione è senza perdita, ma la limitazione di 256 colori quantizza pesantemente il numero di combinazioni a disposizione.
+
+\subsection{TIFF}
+TIFF gestisce immagini con contenuti ad altissime frequenze, sfruttando algoritmi che cercano ripetizioni di pattern a discapito delle dimensioni.
+
+Permette di salvare caratteristiche aggiuntive memorizzando le informazioni colore in spazi diversi, definendo profili standard per allineare risposte di devices differenti.
+
+ \subsection{PNG}
+ PNG è una valida alternativa a GIF con diverse profondità colore, fino a 48 bit. Un ulteriore passaggio è l'alpha-channel per gestire la trasparenza, estendendo 0-1 a più livelli. 
+ 
+ \subsection{JPEG}
+ 
+ 
+ \section{Compressione audio}
+ La compressione audio è legata a strategie predittive tramite interpolazione dei valori o modelli basati su come alcuni suoni possono apparire (es. parlato), senza introdurre perdita e con rapporti di compressione dipendenti dal tipo di audio: il silenzio può essere eliminato, e i suoni artificiali vengono predetti più difficilmente.
+ 
+ Un modo più intelligente tiene conto del sistema percettivo, eliminando le frequenze fuori dal range di udibilità applicando un filtro passa-banda e rimuovendo gli alias. 
+ 
+ Un altro aspetto da sfruttare riguarda gli altri meccanismi dei sistemi umani: il mascheramento e la non linearità degli effetti. 
+ 
+ 
+ 
+ MPEG coding algorithm: il tono mascherato viene modificato una volta individuata la banda con il tono più alto, osservando la potenza nelle bande vicine. Considerato un frame, si trova il tono mascherante, e in base a esso si osserva come viene modificata la soglia di udibilità in modo da poter eliminare i suoni non percepiti. 
+ 
+La codifica di Huffman viene in seguito applicata

@@ -1,48 +1,62 @@
 \section{Compressione video}
 La compressione video deve necessariamente essere lossy, dato che la quantità di ridondanze è generalmente elevata e le dimensioni dei video non compresse sono ingestibili dai supporti di memoria. Il tipo di processing adottato è intra-frame o inter-frame. 
 
-Ci sono soluzioni che considerano solo la ridondanza spaziale o temporale, e altre che sfruttano la ridondanza percettiva. 
+Ci sono soluzioni che considerano solo la ridondanza spaziale o temporale, e altre che sfruttano la ridondanza percettiva attraverso le limitazioni del sistema visivo/uditivo. 
 
-Il procedimento più semplice applica codifiche predittive frame per frame oppure comprime usando JPEG, ma queste tecniche sono legate solo alle caratteristiche spaziali: esse devono essere estese valutando anche la ridondanza temporale, in termini di differenze tra i frame con predizioni (istogramma piccato).
+Il procedimento più semplice applica codifiche predittive oppure JPEG frame per frame, ma queste tecniche sono legate solo alle caratteristiche spaziali: esse devono essere estese valutando anche la ridondanza temporale, in termini di differenze tra i frame con predizioni (istogramma piccato).
 
-Il primo step è naturalmente la differenza tra frame consecutivi: questo funziona in modo ottimale quando le zone delle immagini cambiano poco, ma non è efficace quando la camera non è perfettamente ferma, o ci sono cambi di luce, o le scene sono in movimento.
+Il primo step è naturalmente la differenza tra frame consecutivi, a cui è associata un'entropia: ciò funziona in modo ottimale quando le zone delle immagini cambiano poco, ma non è efficace quando la camera non è perfettamente ferma, o ci sono cambi di luce, o le scene sono in movimento.
 
 Generalmente anche in presenza di queste condizioni c'è correlazione, ma se la differenza tra due fotogrammi è il rumore o è dovuta al cambio di scena il segnale è poco correlato. In alcuni casi è possibile predirre anche il movimento.
 
-La motion compensation è una codifica predittiva che consiste nella stima dei vettori di moto con cui le porzioni di frame vengono spostati, e nella loro applicazione per le variazioni future. La stima riguarda gli spostamenti dei macro blocchi 16$\times$16.
+\subsection{Motion compensation}
+La motion compensation è una codifica predittiva che consiste nella stima dei vettori di moto con cui le porzioni di frame vengono spostati, e nella loro applicazione per le variazioni future. 
 
-Gli I-frame (intra/independent frame, compressi con JPEG) sono la partenza per la predizione, mentre i risultati sono i P-frame. Essi si distinguono tra:
+Lo scopo è l'individuazione e la compensazione del moto, studiando il disallineamento dei pixel. La stima riguarda gli spostamenti dei macro blocchi 16$\times$16, ma questa tecnica non funziona in caso di differenze significative.
+
+Tipologie di frame:
 \begin{itemize}
-	\item Predetti solo in base al reference frame;
-	\item Predetti in base al frame precedente e ai frame successivi. 
+	\item Target frame, da codificare;
+	\item Reference frame, utilizzato per il calcolo delle differenze;
+	\item I-frame (intra/independent frame, compressi con JPEG), frame di partenza per la predizione;
+	\item P-frame, risultati:
+	\begin{itemize}
+		\item Predetti solo in base al reference frame;
+		\item Predetti in base al frame precedente e ai frame successivi. 
+	\end{itemize}
 \end{itemize}
-Utilizzare le informazioni dei frame consecutivi aumenta la precisione.
+Il disallineamento fra il reference frame e il target è chiamato MV (Motion Vector). Utilizzare le informazioni dei frame consecutivi aumenta la precisione.
 
-Ogni gruppo non sovrapposto di pixel viene assegnato a un vettore di moto comune. L'intensità è 16, con 8 canali cromatici ($\nicefrac{1}{4}$) per semplificare il campionamento. 
+Ogni gruppo non sovrapposto di pixel viene assegnato a un vettore di moto comune. L'intensità è 16, con 8 canali cromatici ($\nicefrac{1}{4}$) per semplificare il campionamento $4 : 2 : 0$. 
 
-Dato un macroblocco del target frame, viene cercato il più simile macroblocco nel reference frame tra i precedenti e successivi. Le dimensioni della finestra di ricerca variano in base allo standard utilizzato. 
+Dato un macroblocco del target frame, viene cercato il più simile macroblocco nel reference frame tra i precedenti e successivi. Le dimensioni della finestra di ricerca variano in base allo standard utilizzato. Il MV consiste nelle sottrazioni, espresse tramite coppie di valori sugli assi.
 
-% cose
+L'encoder calcola la somiglianza tra il frame predetto e quello ottenuto, detta motion compensated difference frame $MCD(n)$. MCD ha una correlazione fra pixel inferiore a quella risultante dalla differenza tra target e difference.
 
-Le possibilità sono la codifica della differenza oppure la compensazione della differenza attraverso il moto. 
+Il decoder prende in input MCD, il frame reference e i vettori di moto, per ricostruire il frame predetto e in seguito il frame target, con perdita. I blocchi predetti sono organizzati su una griglia, al contrario di quelli utilizzati per la predizione.
 
+Le possibilità per la compressione sono la codifica della differenza oppure la compensazione della differenza attraverso il moto. 
+
+Riassumendo:
 \begin{enumerate}
 	\item Individuazione del target frame;
-	\item Scorrimento dei macroblocchi e ricerca del più simile al blocco del reference frame;
-	\item Sostituzione con il più simile traslato di un vettore di moto;
-	\item Calcolo della differenza tra predizione e target;
+	\item Scorrimento dei macroblocchi e ricerca del più simile al blocco del reference frame, cercando il vettore di moto;
+	\item Sostituzione con il più simile traslato di un vettore di moto (compensazione);
+	\item Calcolo della differenza tra predizione e target (errore);
 	\item Codifica della differenza.
 \end{enumerate}
 
-I blocchi del target frame sono organizzati su una griglia ...
-
-La compensazione del moto viene applicata in modo efficiente ai canali di luminanza, mentre i valori di crominanza sono meno correlati. 
+La compensazione del moto viene applicata in modo efficiente ai canali di luminanza, mentre i valori di crominanza sono meno correlati: i vettori di moto si ottengono sottocampionando i risultati sulla luminanza.
 
 Se il moto è da sinistra verso destra, le zone di sinistra hanno l'errore di predizione più alto perché sono zone che non esistono nei frame precedenti.
 
-La stima del moto con frame successivi implica un ritardo nei calcoli finché le informazioni sono incomplete.
+Il vettore di moto di ciascun macroblocco è calcolato trovando nel reference frame la posizione più probabile di quel macroblocco del target frame: il reference frame può essere tra i precedenti o i successivi. Un frame codificato usando entrambi si indica come B-frame (bidirectional).
 
-Per semplificare le operazioni, la ricerca del macroblocco è effettuata in un intorno. 
+La posizione più probabile è quella che minimizza una misura di errore tra reference e target, all'intorno della regione definita.
+
+Si definisce MAD la distorsione media assoluta tra pixel di due macroblocchi di dimensioni $N \times N$ disallineati, da minimizzare.
+
+La stima del moto con frame successivi implica un ritardo nei calcoli finché le informazioni sono incomplete. Per semplificare le operazioni, la ricerca del macroblocco è effettuata in un intorno, e non ha standard definiti:
 \begin{itemize}
 	\item Ricerca logaritmica, valutando la MAD su 9 punti (3$\times$3), selezionando il più vicino e dividendolo a sua volta, fino ad arrivare a un errore tollerabile, nonostante il rischio di concentrazione sui punti locali tralasciando il possibile ottimo globale;
 	\item Multirisoluzione, in tre passi;
@@ -53,68 +67,94 @@ Per semplificare le operazioni, la ricerca del macroblocco è effettuata in un i
 	\end{enumerate}
 \end{itemize}
 
+\subsection{Standard per la codifica}
 Gli standard di codifica video digitale sono regolati da:
 \begin{itemize}
 	\item ITU (raccomandazioni), con un carattere generale e orientato alle applicazioni real-time (H.xx);
-	\item ISO, 
+	\item ISO, MPEG e derivati, per necessità più ampie come storage e broadcast.
 \end{itemize}
 
-
-Gli IPB frames sono particolari sequenze di frame, la cui combinazione forma il GOP:
+Gli IP frames sono particolari sequenze di frame, la cui combinazione è la base di H-261:
 \begin{itemize}
-	\item I servono per predirre i frame successivi;
-	\item B (backwards), ;
-	\item P (picture), 
+	\item I (intra) servono per predirre i frame successivi, codificati con JPEG con riduzione della ridondanza e DCT;
+	\item P (picture), codificati tramite MC e predizione, e in seguito DCT insieme al vettore di moto.
 \end{itemize}
+La sequenza è I-P-P con finestra temporale stabilita dall'encoder e disallineamento misurato in pixel.
+
+Nella quantizzazione per coefficienti DCT, non vengono applicate matrici di quantizzazione ma si usa una costante per tutti i coefficienti, calcolata per approssimazione tra DCT e step-size.
 
 Il rapporto di compressione è più alto perché questa metodologia non sfrutta solo la ridondanza spaziale, ma riduce anche quella temporale. I frame B sono quelli su cui la perdita è maggiore, perché vengono codificati agendo su entrambe le direzioni.
 
 Non sempre i macroblocchi sono codificati nello stesso modo: a seconda del tipo di frame e dell'errore di predizione essi saranno determinati diversamente. Se nessuna strategia è la migliore, si utilizza l'interpolazione.
 
-MPEG-2 è un'evoluzione di MPEG-1, con la stessa struttura base ma dedicato a video di qualità superiore, con bitrate maggiori di 4 Mbps. Questo standard implementa diversi standard di adattabilità con livelli di decodifica in base ai frame rate, pertanto è più scalabile.
+\subsubsection{MPEG}
+MPEG (Motion Picture Experts Group) è uno standard creato da ISO per la codifica di informazioni audio e video in formato digitale compresso, con bitstream predefiniti. 
 
-Le versioni sono a qualità variabile, trattando i coefficienti secondo la perdita indicata. I video sono interlacciati, gestendo i field (righe dispari e pari), ottenendo un errore più basso.
+MPEG-1 è il primo standard per i filmati digitali, non interlacciato. I blocchi hanno dimensioni 8$\times$8, e l'unità elementare di codifica è il macroblocco 16$\times$16.
 
-L'utilizzo dei field ha un effetto diretto sulla quantizzazione: il campo è 8$\times$16, il pattern a zig-zag è opzionale e sono ammessi anche pattern alternativi. Il sottocampionamento è solo in una dimensione, essendo i sottoinsiemi incorrelati. 
+I dati hanno una struttura gerarchica:
+\begin{itemize}
+	\item Più macroblocchi formano una slice, codificata in modo indipendente con differenti fattori di scala, senza propagazione dell'errore;
+	\item Un'immagine del frame codificato consiste in una picture;
+	\item Più pictures sono definite GOP;
+	\item Più GOP sono inclusi in una sequence.
+\end{itemize}
+
+La predizione è solamente di tipo forward, e ci sono casi in cui il frame precedente non è sufficiente per una buona stima del vettore di moto: si introduce backward prediction.
+
+Analogamente a IP, lo standard MPEG definisce tre tipi di picture:
+\begin{enumerate}
+	\item I, codificate sfruttando la ridondanza;
+	\item P, codificati con predizione compensata del moto rispetto al picture precedente;
+	\item B, codificati con predizione compensata del moto rispetto al picture precedente, successivo o entrambi (buffering).
+\end{enumerate}
+Per ogni B-frame sono calcolati due vettori di moto per ogni macroblocco: se il matching è buono, viene fatta una media delle predizioni. La compressione di I è peggiore, mentre B ha priorità minore ma compressione maggiore.
+
+% 2 immagini
+
+Non sempre i macroblocchi sono codificati allo stesso modo: l'encoder sceglie l'approccio più adatto in base all'informazione contenuta.
+\begin{itemize}
+	\item I sono intra-coded, con matrice di quantizzazione variabile;
+	\item P sono codificati come intra se non è possibile avere una predizione sufficientemente accurata;
+	\item B sono determinati dal precedente, dal successivo o dalla media, a seconda dell'errore di predizione.
+\end{itemize}
+
+MPEG-2 è un'evoluzione di MPEG-1, con la stessa struttura base ma dedicato a video di qualità superiore, con bitrate maggiori di 4 Mbps. Questo standard implementa diverse misure di adattabilità con livelli di decodifica in base ai frame rate, pertanto è più scalabile.
+
+Le versioni sono a qualità variabile, trattando i coefficienti secondo la perdita indicata. I video sono interlacciati, gestendo i field (righe dispari e pari), ottenendo un errore più basso. L'approccio può essere frame prediction o field prediction, codificando top e bottom separatamente con due vettori di movimento.
+
+L'utilizzo dei field ha un effetto diretto sulla quantizzazione: il campo è 16$\times$8, il pattern a zig-zag è opzionale e sono ammessi anche pattern alternativi. Il sottocampionamento è solo in una dimensione, essendo i sottoinsiemi incorrelati. 
 
 Non tutti i livelli ammettono le stesse variazioni: esse cambiano in base alla dimensione e i frame al secondo, campionando con diversi profili di chroma. 
 
 Il concetto di scalabilità prevede alcune caratteristiche:
 \begin{itemize}
 	\item Livelli base a qualità inferore;
+	\item Livelli base indipendenti per fornire un video di qualità inferiore;
+	\item Codifica e decodifica dei livelli superiori dipendenti dai precedenti.
 \end{itemize}
 
-I layers sono definiti in base ad alcune possibilità, migliorando SNR, frequenze, frame rate o risoluzione spaziale. Questi modi possono eventualmente essere combinati in una scalabilità ibrida. 
+I layers sono definiti in base ad alcune possibilità:
+\begin{itemize}
+	\item SNR, con differente quantizzazione a seconda del livello;
+	\item Scalabilità spaziale, dividendo i dati relativi alle immagini sotto-campionati da quelli che permettono di ricostruire l'immagine completa;
+	\item Temporale;
+	\item Partizionamento dei dati con le frequenze.
+\end{itemize}
+Questi modi possono eventualmente essere combinati in una scalabilità ibrida.
 
-MPEG-4 pone l'attenzione sull'interattività con l'utente, introducendo ulteriori caratteristiche basate sugli oggetti e le loro relazioni.
+MPEG-4 pone l'attenzione sull'interattività con l'utente, introducendo ulteriori caratteristiche basate sugli oggetti e le loro relazioni (anche tridimensionali). La trasmissione è possibile anche su mezzi a banda limitata, garantendo efficienza e accesso universale.
 
-Esistono anche possibili oggetti precodificati, come le animazioni che permettono di inserire effetti speciali nei video.
+Esistono anche possibili oggetti precodificati, come le animazioni che permettono di inserire effetti speciali nei video. Ogni oggetto può essere trasmesso in uno stream separato, ed essi sono ricomposti dopo la decodifica.
+% immagine mpeg
+Tutti i componenti di una presentazione sono accessibili tramite Object Descriptors, posti in mutua relazione tramite scene description e relative informazioni spazio-temporali. La ricostruzione è possibile grazie a BiFS, linguaggio di descrizione.
 
 Alcuni standard di decompressione introducono un filtro di denoising, applicato dopo la decodifica per rimuovere gli artefatti di blocchettizzazione. 
 
-MPEG-7 definisce gli strumenti necessari per descrivere il contenuto audiovisuale dei dati multimediali e consentire l'interoperabilità tra diversi sistemi e applicazioni.
+MPEG-7 definisce gli strumenti necessari per descrivere il contenuto audiovisuale dei dati multimediali e consentire l'interoperabilità tra diversi sistemi e applicazioni. 
 
-Ogni scena viene caratterizzata e classificata secondo un numero di features che impongono un grado di correlazione tra gli oggetti.
+Permette la migliore gestione, distribuzione e fruizione delle descrizioni, aiutando utenti e applicazioni ad identificare e filtrare le informazioni rilevanti.
 
+Ogni scena viene caratterizzata e classificata secondo un numero di features che impongono un grado di correlazione tra gli oggetti, tramite sintassi e semantica.
 
-\section{Formati immagine}
-
-\subsection{Bitmap}
-Bitmap è il formato più indicato per le immagini a 3 canali di 8 bit, ma supporta anche profondità differenti. Il numero di bit necessari dipende dal numero di pixel, con un fattore moltiplicativo di 24.
-
-La compressione non introduce perdita, utilizzando RLE: questo metodo può eventualmente fallire in caso di pattern disomogenei. 
-
-\subsection{GIF}
-GIF permette la sovrapposizione tra immagini, attivando la trasparenza uniforme 0-1.
-
-La compressione è senza perdita, ma la limitazione di 256 colori quantizza pesantemente il numero di combinazioni a disposizione.
-
-\subsection{TIFF}
-TIFF gestisce immagini con contenuti ad altissime frequenze, sfruttando algoritmi che cercano ripetizioni di pattern a discapito delle dimensioni.
-
-Permette di salvare caratteristiche aggiuntive memorizzando le informazioni colore in spazi diversi, definendo profili standard per allineare risposte di devices differenti.
-
- \subsection{PNG}
- PNG è una valida alternativa a GIF con diverse profondità colore, fino a 48 bit. Un ulteriore passaggio è l'alpha-channel per gestire la trasparenza, estendendo 0-1 a più livelli. 
- 
- \subsection{JPEG}
+Ogni descrittore è una rappresentazione di una feature, per caratteristiche di basso livello. Può essere atomico o composito, e ogni feature può averne uno o più.
