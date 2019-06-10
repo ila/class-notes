@@ -38,6 +38,11 @@ TIFF contiene meta informazioni in locazioni di memoria chiamate tag, che includ
  \subsubsection{JPEG-2000}
  JPEG-2000 è basato su tecnologie wavelet per una migliore compressione, senza artefatti a blocchi. Ha il supporto per multi-spectral imagery e la capacità di ricostruzione progressiva dell'immagine codificando regioni di interesse.
  
+ \begin{figure}[h]
+ 	\centering
+ 	\includegraphics[scale=0.4]{Lezioni/Immagini/formati}
+ \end{figure}
+ 
  \subsection{Postscript}
  Postscript è basato su una descrizione vettoriale, definendo gli elementi di pagina come vettori. Immagini bitmap possono essere inclusi nei file, insieme a informazioni addizionali memorizzate senza compressione (ASCII).
  
@@ -79,7 +84,12 @@ Gli algoritmi lossy basati su predizione includono:
 Un modo più efficace tiene conto del sistema percettivo, eliminando le frequenze fuori dal range di udibilità applicando un filtro passa-banda e rimuovendo gli alias. 
 
 Le curve isofone rapresentano i suoni percepiti con lo stesso volume (pressione acustica o intensità sonora), in foni. Il mascheramento in frequenza 
- % immagine
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{Lezioni/Immagini/mascheramento}
+\end{figure}
+
 Un altro aspetto da sfruttare riguarda gli altri meccanismi dei sistemi umani: il mascheramento e la non linearità degli effetti. 
  
 Il suono mascherante è il suono disturbatore, mentre il suono mascherato è il suono mascherato. Quest'ultimo è condizionato dalla diminuzione di sensibilità, e il mascheramento si misura con l'aumento di intensità necessario per tornare udibile.
@@ -111,6 +121,11 @@ L'obiettivo è la rimozione delle parti di un segnale audio acusticamente irrile
  \subsection{MPEG}
 MPEG coding algorithm: il tono mascherato viene modificato una volta individuata la banda con il tono più alto, osservando la potenza nelle bande vicine. Considerato un frame, si trova il tono mascherante, e in base a esso si osserva come viene modificata la soglia di udibilità in modo da poter eliminare i suoni non percepiti. 
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{Lezioni/Immagini/mpeg-coding-audio}
+\end{figure}
+
 Le frequenze sono scomposte, e il segnale audio è codificato con una rappresentazione spettrale. L'output dei filtri è poi quantizzato eliminando il rumore nella soglia di mascheramento, e vengono trasmesse le componenti in frequenza che sono state mascherate con un numero minore di bit.
 
 MPEG applica 32 bande che simulano le bande critiche. A bassa frequenza esse si sovrappongono, e la banda con effetto minimo vincola i bit per l'intera banda. Ad alta frequenza, invece, una banda critica corrisponde a diverse bande, a discapito della potenza di calcolo.
@@ -122,7 +137,25 @@ La codifica è composta da tre strati (Sub Band Coder) indipendenti, che sfrutta
 	\item Adaptive Transform Coding, con maggiore complessità in codifica.
 \end{enumerate}
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{Lezioni/Immagini/mpeg-coding}
+\end{figure}
 
+\begin{enumerate}
+	\item Il segnale audio è convertito e diviso (componenti spettrali) in 32 sottobande di frequenza;
+	\item Per ciascuna sottobanda, il mascheramento è applicato in base al modello psicoacustico scelto;
+	\item Se la potenza in una banda, calcolata con una spreading function, è inferiore alla soglia di mascheramento, la banda mascherata non viene codificata;
+	\item Altrimenti, vengono determinati i bit necessari a rappresentare il coefficiente in modo da mascherare il rumore di quantizzazione;
+	\item I componenti che superano la soglia vengono codificati con Huffman.
+\end{enumerate}
 
+La soglia di udibilità viene calcolata in base alla minima soglia di mascheramento o in base alla media di esse, se la sottobanda ha dimensioni diverse dalla banda critica.
 
+Le specifiche di codifica variano in base al layer:
+\begin{itemize}
+	\item Layer 1: frame lunghi 12 campioni, filtri applicati un frame alla volta con pari intervalli di frequenza per banda;
+	\item Layer 2: tre frame per filtri e FTT per una maggior risoluzione in frequenza;
+	\item Layer 3: critical band filter, bande di larghezza diversa e modello con effetti di mascheramento temporali.
+\end{itemize}
 

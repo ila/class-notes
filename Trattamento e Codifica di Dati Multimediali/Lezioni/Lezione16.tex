@@ -48,6 +48,11 @@ Riassumendo:
 
 La compensazione del moto viene applicata in modo efficiente ai canali di luminanza, mentre i valori di crominanza sono meno correlati: i vettori di moto si ottengono sottocampionando i risultati sulla luminanza.
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{Lezioni/Immagini/motion-estimation}
+\end{figure}
+
 Se il moto è da sinistra verso destra, le zone di sinistra hanno l'errore di predizione più alto perché sono zone che non esistono nei frame precedenti.
 
 Il vettore di moto di ciascun macroblocco è calcolato trovando nel reference frame la posizione più probabile di quel macroblocco del target frame: il reference frame può essere tra i precedenti o i successivi. Un frame codificato usando entrambi si indica come B-frame (bidirectional).
@@ -92,6 +97,11 @@ MPEG (Motion Picture Experts Group) è uno standard creato da ISO per la codific
 
 MPEG-1 è il primo standard per i filmati digitali, non interlacciato. I blocchi hanno dimensioni 8$\times$8, e l'unità elementare di codifica è il macroblocco 16$\times$16.
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{Lezioni/Immagini/mpeg-gerarchica}
+\end{figure}
+
 I dati hanno una struttura gerarchica:
 \begin{itemize}
 	\item Più macroblocchi formano una slice, codificata in modo indipendente con differenti fattori di scala, senza propagazione dell'errore;
@@ -102,15 +112,20 @@ I dati hanno una struttura gerarchica:
 
 La predizione è solamente di tipo forward, e ci sono casi in cui il frame precedente non è sufficiente per una buona stima del vettore di moto: si introduce backward prediction.
 
+ \begin{wrapfigure}{R}{0.4\textwidth}
+	\vspace{-10pt}
+	\includegraphics[width=0.4\textwidth]{Lezioni/Immagini/ibp}
+	\vspace{-30pt}
+\end{wrapfigure}
+
 Analogamente a IP, lo standard MPEG definisce tre tipi di picture:
 \begin{enumerate}
 	\item I, codificate sfruttando la ridondanza;
 	\item P, codificati con predizione compensata del moto rispetto al picture precedente;
 	\item B, codificati con predizione compensata del moto rispetto al picture precedente, successivo o entrambi (buffering).
 \end{enumerate}
-Per ogni B-frame sono calcolati due vettori di moto per ogni macroblocco: se il matching è buono, viene fatta una media delle predizioni. La compressione di I è peggiore, mentre B ha priorità minore ma compressione maggiore.
 
-% 2 immagini
+Per ogni B-frame sono calcolati due vettori di moto per ogni macroblocco: se il matching è buono, viene fatta una media delle predizioni. La compressione di I è peggiore, mentre B ha priorità minore ma compressione maggiore.
 
 Non sempre i macroblocchi sono codificati allo stesso modo: l'encoder sceglie l'approccio più adatto in base all'informazione contenuta.
 \begin{itemize}
@@ -119,9 +134,20 @@ Non sempre i macroblocchi sono codificati allo stesso modo: l'encoder sceglie l'
 	\item B sono determinati dal precedente, dal successivo o dalla media, a seconda dell'errore di predizione.
 \end{itemize}
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{Lezioni/Immagini/p-frame}
+\end{figure}
+
+\subsection{Versioni}
 MPEG-2 è un'evoluzione di MPEG-1, con la stessa struttura base ma dedicato a video di qualità superiore, con bitrate maggiori di 4 Mbps. Questo standard implementa diverse misure di adattabilità con livelli di decodifica in base ai frame rate, pertanto è più scalabile.
 
 Le versioni sono a qualità variabile, trattando i coefficienti secondo la perdita indicata. I video sono interlacciati, gestendo i field (righe dispari e pari), ottenendo un errore più basso. L'approccio può essere frame prediction o field prediction, codificando top e bottom separatamente con due vettori di movimento.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{Lezioni/Immagini/ipbp}
+\end{figure}
 
 L'utilizzo dei field ha un effetto diretto sulla quantizzazione: il campo è 16$\times$8, il pattern a zig-zag è opzionale e sono ammessi anche pattern alternativi. Il sottocampionamento è solo in una dimensione, essendo i sottoinsiemi incorrelati. 
 
@@ -146,7 +172,12 @@ Questi modi possono eventualmente essere combinati in una scalabilità ibrida.
 MPEG-4 pone l'attenzione sull'interattività con l'utente, introducendo ulteriori caratteristiche basate sugli oggetti e le loro relazioni (anche tridimensionali). La trasmissione è possibile anche su mezzi a banda limitata, garantendo efficienza e accesso universale.
 
 Esistono anche possibili oggetti precodificati, come le animazioni che permettono di inserire effetti speciali nei video. Ogni oggetto può essere trasmesso in uno stream separato, ed essi sono ricomposti dopo la decodifica.
-% immagine mpeg
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{Lezioni/Immagini/mpeg-4}
+\end{figure}
+
 Tutti i componenti di una presentazione sono accessibili tramite Object Descriptors, posti in mutua relazione tramite scene description e relative informazioni spazio-temporali. La ricostruzione è possibile grazie a BiFS, linguaggio di descrizione.
 
 Alcuni standard di decompressione introducono un filtro di denoising, applicato dopo la decodifica per rimuovere gli artefatti di blocchettizzazione. 
