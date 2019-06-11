@@ -1,5 +1,5 @@
 \section{Compressione JPEG}
-JPEG (Joing Photographic Experts Group) è lo standard di memorizzazione delle immagini fotografiche, che permette un'elevata compressione lossy con accettabile degradazione della qualità. 
+\textbf{JPEG} (Joing Photographic Experts Group) è lo standard di memorizzazione delle immagini fotografiche, che permette un'\textit{elevata compressione lossy} con accettabile degradazione della qualità. 
 
 JPEG definisce una serie di elaborazioni flessibili da seguire sulle immagini, che possono eventualmente essere saltate. Le regole sono però definite in modo rigido, includendo la decompressione.
 
@@ -16,12 +16,12 @@ La compressione JPEG si articola in 5 fasi:
 	\item Mapping con DCPM e RLE;
 	\item Codifica con Huffman.
 \end{enumerate}
-La perdita avviene nelle fasi di sottocampionamento del chroma e quantizzazione. 
+La perdita avviene nelle fasi di \textbf{sottocampionamento} del chroma e \textbf{quantizzazione}. 
 
 \subsection{Conversione spazio cromatico}
 Si può sfruttare la caratteristica psicovisuale per cui il sistema visivo umano è più sensibile alle variazioni di luminanza che non a quelle di crominanza, quantizzando maggiormente queste ultime.
 
-In questo modo, la ridondanza psicovisuale diminuisce, con poca perdita. L'immagine viene convertita da RGB a un altro spazio come YCbCR, esprimendo il colore in termini di $x : y : z$ e campionando orizzontalmente.
+In questo modo, la ridondanza psicovisuale diminuisce, con perdita trascurabile. L'immagine viene convertita da RGB a un altro spazio come YCbCR, esprimendo il colore in termini di $x : y : z$ e campionando orizzontalmente.
 
 La compressione lossy sulle coordinate cromatiche è opzionalmente effettuata riducendo le dimensioni sottocampionando tramite media a due a due tra i pixel adiacenti. 
 

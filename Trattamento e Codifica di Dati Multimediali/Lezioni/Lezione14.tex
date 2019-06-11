@@ -1,24 +1,25 @@
 \section{Tecniche di compressione}
 Il costo di un segnale dipende da campionamento e quantizzazione, fino ad arrivare a una quantità troppo elevata di dati per la memorizzazione ad alta qualità.
 
-Per rappresentare l'informazione si ricorre alla compressione, cioè la trasformazione in un insieme di dati statisticamente incorrelati che garantiscano un grado di fedeltà (qualità) rispetto all'originale, e abbiano un accettabile peso computazionale per il tipo di applicazione.
+Per rappresentare l'informazione si ricorre alla \textbf{compressione}, cioè la trasformazione in un insieme di dati \textbf{statisticamente incorrelati} che garantiscano un grado di fedeltà (qualità) rispetto all'originale, e abbiano un accettabile peso computazionale per il tipo di applicazione.
 
-Le tecniche di compressione si dividono in due grandi famiglie: lossy (con perdita accettabile a seconda dell'applicazione) e lossless (senza perdita). I dati ridondanti vengono rimossi, e il risparmio viene misurato tramite un rapporto di compressione in bit, dipendente appunto dalla ridondanza. 
+Le tecniche di compressione si dividono in due grandi famiglie: \textbf{lossy} (con perdita accettabile a seconda dell'applicazione) e \textbf{lossless} (senza perdita). I dati ridondanti vengono rimossi, e il risparmio viene misurato tramite un rapporto di compressione in bit, dipendente appunto dalla ridondanza. 
 
 I dati sono gli strumenti tramite i quali è rappresentata l'informazione, e quest'ultima può essere associata a diversi quantitativi di dati. Il principio della compressione è appunto minimizzare il numero di bit utilizzati. 
 $$\text{rapporto di compressione } C = \frac{b_1 \text{ bit prima della compressione}}{b_2 \text{ bit dopo la compressione}}$$
 $$\text{ridondanza relativa } R = 1 - \frac{1}{C}$$
+
 Se $b_1 = b_2$, allora $R = 0$ e non ci sono dati ridondanti tra le due rappresentazioni. Un rapporto tipico di compressione è $10 : 1$, con corrispondente ridondanza $0.9$.
 
 \subsection{Ridondanza}
 Possono essere individuati diversi tipi di ridondanza, di cui almeno uno va ridotto:
 \begin{enumerate}
-	\item Della codifica;
-	\item Spaziale o temporale (correlazione inter-campione);
-	\item Percettiva, imponendo quantizzazioni più o meno spinte.
+	\item Della \textit{codifica};
+	\item \textit{Spaziale} o \textit{temporale} (correlazione inter-campione);
+	\item \textit{Percettiva}, imponendo quantizzazioni più o meno spinte.
 \end{enumerate}
 
-I primi due consistono nella ridondanza statistica: i vicini possono essere correlati o dipendenti, quindi una parte dell'informazione è ripetuta. 
+I primi due consistono nella ridondanza \textbf{statistica}: i vicini possono essere correlati o dipendenti, quindi una parte dell'informazione è ripetuta. 
 
 \subsubsection{Ridondanza della codifica}
 La ridondanza della codifica non introduce perdita, quindi è reversibile e ha una soglia massima di compressione che può essere raggiunta. Quest'ultima dipende dal tipo di segnale.
@@ -32,36 +33,38 @@ $l(r_k)$ è il numero di bit necessario per descrivere il $k$-esimo livello $r$,
 VLC (Variable-Length Coding) è una strategia di riduzione della ridondanza che impiega un numero minor di bit per rappresentare i livelli più probabili, e viceversa. Il numero medio di bit è minore rispetto alla lunghezza fissa.
 
 \subsubsection{Ridondanza spaziale}
-Quando l'istogramma è uniforme, però, la VLC non ha effetto. Tutti i valori sono equiprobabili, ma ciò li rende fortemente correlati (e pertanto ridondanti) spazialmente. Questo succede per esempio in immagini a righe, mentre lungo le colonne i valori sono incorrelati.
+Quando l'istogramma è uniforme, però, la VLC non ha effetto. Tutti i valori sono equiprobabili, ma ciò li rende fortemente correlati (e pertanto ridondanti) spazialmente. Questo succede per esempio in immagini con pattern a righe, mentre lungo le colonne i valori sono incorrelati.
 
 Si può ridurre la ridondanza spaziale individuata introducendo coppie run-length: il primo componente della coppia individua l'intensità, mentre il secondo il numero di volte con cui si ripete. L'approccio è lossless.
 
 \subsubsection{Ridondanza percettiva}
 L'immagine è percepita come se avesse un valore di grigio uniforme, ma l'istogramma è discordante da questa rappresentazione.
 
+Le informazioni ignorate dal sistema visivo umano possono essere eliminate, sostituite da un valore medio. Il processo è eseguito tramite quantizzazione, ma c'è perdita. 
+
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.4]{Lezioni/Immagini/ridondanzapercettiva}
 \end{figure}
 
-Le informazioni ignorate dal sistema visivo umano possono essere eliminate, sostituite da un valore medio. Il processo è eseguito tramite quantizzazione, ma c'è perdita. 
-
 \subsection{Entropia}
-L'entropia è la misura della quantità di dati minima necessaria per codificare senza perdita una sorgente di informazione, modellando la sorgente come processo probabilistico con eventi statisticamente indipendenti.
+L'entropia è la misura della \textbf{quantità di dati minima necessaria per codificare senza perdita} una sorgente di informazione, modellando la sorgente come \textit{processo probabilistico} con eventi \textit{statisticamente indipendenti}.
 
-Informalmente, rappresenta il valore dell'informazione attraverso incertezza e probabilità di un certo simbolo. La sorgente deve emettere valori tra di loro incorrelati, quindi non deve avere memoria. 
+Informalmente, rappresenta il valore dell'informazione attraverso incertezza e probabilità di un certo simbolo. La sorgente deve emettere valori tra di loro incorrelati, quindi \textbf{non deve avere memoria}. 
 
 Nel caso delle immagini, c'è molto spesso dipendenza tra pixel contigui, ma l'entropia è la soluzione ottima a cui avvicinarsi il più possibile.
 
 Un evento casuale $E$ con probabilità $p(E)$ ha un grado di incertezza (e una quantità di informazione) pari a:
 $$I(E) = \log \frac{1}{p(E)}$$
+
 La base del logaritmo dipende dall'unità di misura dell'informazione, in questo caso 2 (bit). Se un evento è certo, l'incertezza è nulla. 
 
-Essendo l'entropia proporzionale all'incertezza, l'entropia di una sorgente con alfabeto $S = \{s_1, s_2, \dots,s_M\}$ è:
+Essendo l'entropia proporzionale all'incertezza, una sorgente con alfabeto $S = \{s_1, s_2, \dots,s_M\}$ ha entropia pari a:
 $$H(S) = \sum_{k=1}^{M} p_k \log_2 \frac{1}{p_k} = -\sum_{k=1}^{M}\log_2p_k$$
-$p_k$ è la probabilità del $k$-esimo simbolo dell'alfabeto, e $\log_2\frac{1}{p_k}$ è la quantità di informazione contenuta nel simbolo $s_k$, cioè il numero di bit necessario per la codificaLa . situazione di equiprobabilità genera entropia massima.
 
-L'entropia indica pertanto un limite inferiore (valore medio) per il numero di bit necessari per codificare un certo alfabeto, ipotizzando l'equiprobabilità di ogni livello e fornendo un punto di riferimento per i codici a lunghezza variabile. 
+$p_k$ è la probabilità del $k$-esimo simbolo dell'alfabeto, e $\log_2\frac{1}{p_k}$ è la quantità di informazione contenuta nel simbolo $s_k$, cioè il numero di bit necessario per la codificarla. Una situazione di equiprobabilità genera entropia massima.
+
+L'entropia indica pertanto un \textbf{limite inferiore} (valore medio) per il numero di bit necessari per codificare un certo alfabeto, ipotizzando l'equiprobabilità di ogni livello e fornendo un punto di riferimento per i codici a lunghezza variabile. 
 
 L'obiettivo di VLC è trovare il codice di lunghezza minima per descrivere il segnale. Se un codice $c_1, c_2, \dots, c_M$ ha parole con lunghezza $b_1, b_2, \dots, b_M$, il numero medio di bit richiesti è:
 $$R = \sum_{k=1}^{M}b_kp_k$$
@@ -72,7 +75,7 @@ La massima entropia implica un contenuto informativo visivo basso, essendo i val
 \subsubsection{Codici di Huffman}
 La codifica di Huffman funziona come VLC: ai caratteri più frequenti vengono assegnate parole di pochi bit, quindi la lunghezza è inversamente proporzionale alla probabilità.
 
-La compressione è senza perdita, e i codici possono essere costrutiti con una struttura da albero binario, generando un codice ottimale minimizzando $L_{avg}$ in modo che sia il più vicino possibile all'entropia della sorgente.
+La compressione è senza perdita, e i codici possono essere costrutiti con una struttura ad \textbf{albero binario} prefix-free, generando un codice ottimale minimizzando $L_{avg}$ in modo che sia il più vicino possibile all'entropia della sorgente.
 
 Se il segnale viene letto sequenzialmente, non si hanno informazioni precise riguardo alla distribuzione dei simboli: essa viene stimata tramite strumenti che aggiornano a ogni valore la possibile frequenza.
 
@@ -83,11 +86,11 @@ Se ci sono raggruppamenti, è possibile sfruttare la memoria codificando il simb
 
 Gran parte del contenuto informativo di un pixel è ridondante, e può essere ottenuto a partire dai pixel vicini passando a un mapping più efficiente, ma generalmente non interpretabile visivamente. 
 
-RLC considera singolarmente le linee dell'immagine, collezionando le coppie $(g, w)$ che indicao rispettivamente il valore e la lunghezza.
+RLC considera singolarmente le linee dell'immagine, collezionando le coppie $(g, w)$ che indicano rispettivamente il valore e la lunghezza.
 
 Questa tecnica è impiegata per la codifica di immagini a colori, ma è poco efficiente per immagini reali a causa delle imprecisioni e del rumore. 
 
-Il bitmap prevede una modalità di compressione senza perdita utilizzando appunto RLC, codificando le informazioni sequenziali ripetute. Il rapporto di compressione può essere minore di 1 in caso che nuovi bit vengano sprecati per creare coppie di valori diversi da quelli non contigui.
+Il bitmap prevede una modalità di compressione senza perdita utilizzando appunto RLC, codificando le informazioni sequenziali ripetute. Il rapporto di compressione può essere minore di 1 nel caso che nuovi bit vengano sprecati per creare coppie di valori diversi da quelli non contigui.
 
 \subsection{Differential coding}
 Questa tecnica viene applicata quando RLC è inefficiente, e ha come scopo la riduzione della ridondanza in simboli consecutivi di un datastream. Nel caso di audio, si utilizza la variante DPCM (Differential Pulse Code Modulation).
@@ -101,11 +104,12 @@ PCM (Pulse Code Modulation) converte forme d'onda analogiche in segnali digitali
 
 Osservando il segnale in termine di differenza tra frequenze, una forte correlazione spaziale viene sfruttata tramite codifica a lunghezza variabile sui picchi dell'istogramma.
 
-DCPM calcola la differenza tra frequenze adiacenti, ed essa viene codificata. Il segnale viene ricostruito sommando le differenze a partire dal valore iniziale (noto).
+DCPM calcola la \textbf{differenza tra frequenze adiacenti}, ed essa viene codificata. Il segnale viene ricostruito sommando le differenze a partire dal valore iniziale (noto).
 
 Nel caso delle immagini, si opera generando un'immagine differenza fra pixel contigui applicando un operatore che approssima la derivata prima (gradiente) o seconda (Laplaciana):
 $$d(x, y) = I(x, y) - I(x - 1, y)$$
 $$d(x, y) = 4I(x, y) - I(x, y - 1) - I(x, y + 1) - I(x + 1, y) - I(x - 1, y)$$
+
 Per sfruttare la ridondanza tenendo conto delle differenze, è possibile anche sfruttare la differenza tra il valore attuale e quello predetto. Se la regione è uniforme in base a determinate regole, sarà immediato il calcolo del valore successivo, sfruttando l'interpolazione. 
 
 La differenza, con valori accurati, tenderà a 0 con un istogramma stretto, e di conseguenza un'entropia minore (MPEG) in presenza di ridondanza spaziale. 
@@ -129,7 +133,7 @@ Alcuni esempi di algoritmi sono Adaptive Huffman Coding, Lempel-Ziv e Arithmetic
 
 LZW rimuove ridondanza di codifica e spaziale senza necessità di conoscenza a priori della probabilità di occorrenza dei simboli.
 
-Viene inizialmente costruito un dizionario che contiene i simboli da codificare, con un ulteriore bit che permette di identificare l'occorrenza dei valori. Tutte le volte che un valore si ripete, la codifica può essere riutilizzata usando la coppia e associandola a un livello (analisi delle frequenze). 
+Viene inizialmente costruito un \textbf{dizionario} che contiene i simboli da codificare, con un ulteriore bit che permette di identificare l'occorrenza dei valori. Tutte le volte che un valore si ripete, la codifica può essere riutilizzata usando la coppia e associandola a un livello (analisi delle frequenze). 
 
 \subsection{Codifica video}
 Nei video esiste una correlazione non solo tra i pixel dello stesso fotogramma, ma anche tra fotogrammi adiacenti. In base alla ridondanza, è possibile applicare:
@@ -182,10 +186,15 @@ La qualità della compressione si valuta una volta introdotta la quantizzazione 
 La perdita di informazione permette di raggiungere rapporti fino a $100 : 1$, cercando un compromesso tra accuratezza e dimensioni. La qualità deve essere misurata quantitativamente secondo criteri oggettivi, considerando la presenza di ridondanze. 
 
 Alcuni criteri sono:
+
 $$\text{Segnale errore: } e(x y) = \hat{f}(x, y) - f(x, y)$$
+\smallskip
 $$\text{Errore totale: } \sum_{x=0}^{M-1} \sum_{y=0}^{N-1} e(x, y) = \sum_{x=0}^{M-1} \sum_{y=0}^{N-1} \hat{f}(x, y) - f(x, y)$$
-$$\text{Root Mean Square error: } e_{rms} = \bigg[ \frac{1}{MN} \sum_{x=0}^{M-1} \sum_{y=0}^{N-1} \big[\hat{f}(x, y) - f(x, y)\big]^2\bigg]^{\frac{1}{2}}$$
+\smallskip
+$$\text{Root Mean Square error: } e_{rms} = \Bigg[ \frac{1}{MN} \sum_{x=0}^{M-1} \sum_{y=0}^{N-1} \big[\hat{f}(x, y) - f(x, y)\big]^2\Bigg]^{\frac{1}{2}}$$
+\smallskip
 $$\text{Signal to Noise Ratio: } SNR = \frac{\sum_{x=0}^{M-1} \sum_{y=0}^{N-1} \hat{f}(x, y)^2}{\sum_{x=0}^{M-1} \sum_{y=0}^{N-1} \big[\hat{f}(x, y) - f(x, y)\big]^2}$$
+
 Il segnale errore restituisce un'immagine. RMS, il più comune, serve a normalizzare l'errore totale, dato che sommare valori di segno opposto potrebbe risultare in un numero prossimo a 0. SNR è già adottato per la quantizzazione, ma non è modellabile: è definito come il rapporto tra il segnale originale e la differenza, da minimizzare.
 
 Le metriche non tengono in considerazione la percezione soggettiva: un algoritmo può commettere errori specifici non individuabili dalle formule, ma soltanto dall'occhio umano: sono necessari test soggettivi con valutazioni della qualità su scala predefinita e correlata con valori oggettivi. A parità di errore, una diversa tecnica di compressione potrebbe essere migliore o peggiore. 
@@ -217,7 +226,7 @@ La dimensione $n$ della sotto-immagine è una potenza di 2 per semplicità compu
 
 \newpage
 \subsection{Compressione wavelet}
-I coefficienti della trasformata decorrelano il contenuto informativo dei pixel di un'immagine, permettendo una codifica più efficiente anche se con un maggior numero di operazione.
+I coefficienti della trasformata decorrelano il contenuto informativo dei pixel di un'immagine, permettendo una codifica più efficiente anche se con un maggior numero di operazioni.
 
 La maggior parte dell'informazione è contenuta in un numero limitato di coefficienti, e i restanti possono essere opportunamente quantizzati con scarsa influenza sulla distorsione.
 

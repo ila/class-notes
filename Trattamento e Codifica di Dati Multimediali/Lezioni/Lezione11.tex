@@ -1,12 +1,12 @@
 \section{Audio}
 
  \begin{wrapfigure}{R}{0.4\textwidth}
-	\vspace{-10pt}
+	\vspace{-50pt}
 	\includegraphics[width=0.4\textwidth]{Lezioni/Immagini/ondepressione}
-	\vspace{-40pt}
+	\vspace{-50pt}
 \end{wrapfigure}
 
-Un segnale sonoro è la variazione di pressione sul timpano, percepito nel tempo attraverso l'aria (mezzo di propagazione). 
+Un \textbf{segnale sonoro} è la variazione di pressione sul timpano, percepito nel tempo attraverso l'aria (mezzo di propagazione). 
 
 Il suono è un'onda di pressione come la luce (fenomeno ondulatorio), ma macroscopico: le molecole dell'aria vengono compresse ed espanse, e la sorgente sonora vibra in modo longitudinale nella stessa direzione di propagazione del suono.
 $$A(t) = A_{max} \cdot \sin(2\pi ft + \varphi_0)$$
@@ -17,9 +17,9 @@ La maggior parte dei suoni natura sono caratterizzati da forme d'onda diverse, m
 
 Le componenti di un segnale sonoro sono individuate da:
 \begin{itemize}
-	\item Ampiezza $A$, che si misura rispetto al valore medio della pressione dell'aria ed è espressa in dB;
-	\item Periodo $T$, la durata nel tempo di ogni ciclo dell'oscillazione, espresso in secondi;
-	\item Frequenza $F$, velocità con cui i valori di pressione fluttuano ciclicamente, espressa in numero di cicli al secondo (onde e Hz).
+	\item \textit{Ampiezza} $A$, che si misura rispetto al valore medio della pressione dell'aria ed è espressa in dB;
+	\item \textit{Periodo} $T$, la durata nel tempo di ogni ciclo dell'oscillazione, espresso in secondi;
+	\item \textit{Frequenza} $F$, velocità con cui i valori di pressione fluttuano ciclicamente, espressa in numero di cicli al secondo (onde e Hz).
 \end{itemize}
 
 Il valore 0 indicato sull'asse della pressione corrisponde al valore medio della pressione nell'aria. La differenza di fase ha unicamente a che vedere con il fatto che due funzioni siano diversamente allineate rispetto al tempo.
@@ -32,7 +32,7 @@ L'analisi di Fourier permette la rappresentazione del segnale sonoro nel dominio
 	\includegraphics[scale=0.45]{Lezioni/Immagini/ondeverdi}
 \end{figure}
 
-La presenza di una linea nello spettro in frequenza indica la presenza di un segnale esattamente sinusoidale periodo, tuttavia i suoni caratterizzati da uno spettro discreto sono pochi. I suoni normalmente uditi hanno un inizio e una fine precisi, cioè sono contenuti in un intervallo temporale finito.
+La presenza di una linea nello spettro in frequenza indica la presenza di un segnale esattamente sinusoidale periodico, tuttavia i suoni caratterizzati da uno spettro discreto sono pochi. I suoni normalmente uditi hanno un inizio e una fine precisi, cioè sono contenuti in un intervallo temporale finito.
 
 \begin{figure}[h]
 	\centering
@@ -41,14 +41,15 @@ La presenza di una linea nello spettro in frequenza indica la presenza di un seg
 
 Ai parametri che descrivono un segnale ondulatorio possono essere associate le tre grandezze percettive che descrivono ogni suono:
 \begin{itemize}
-	\item Altezza, che rappresenta la tonalità dell'audio e ha come parametro la sequenza;
-	\item Intensità, il volume, con parametro fisico l'ampiezza;
-	\item Timbro, cioè la tipologia di strumento, con parametro fisico lo spettro.
+	\item \textbf{Altezza}, che rappresenta la tonalità dell'audio e ha come parametro la sequenza;
+	\item \textbf{Intensità}, il volume, con parametro fisico l'ampiezza;
+	\item \textbf{Timbro}, cioè la tipologia di strumento, con parametro fisico lo spettro.
 \end{itemize}
 
-A parità di frequenza fondamentale e intensità, due suoni possono differire per timbro (la sovrapposizione delle onde sinusoidali può essere diversa).
+A parità di frequenza fondamentale e intensità, \textit{due suoni possono differire per timbro} (la sovrapposizione delle onde sinusoidali può essere diversa).
 
-La frequenza fondamentale è proporzioanale all'altezza del suono, cioè della sensazione di acutezza o gravità. L'aumento della frequenza non è linearmente in rapporto con l'ampiezza, ma si comporta seguendo una scala di tipo logaritmico. Affinché in un suono sia possibile individuare un'altezza, esso deve essere periodico. 
+\newpage
+La frequenza fondamentale è proporzionale all'altezza del suono, cioè della sensazione di acutezza o gravità. L'aumento della frequenza non è linearmente in rapporto con l'ampiezza, ma si comporta seguendo una scala di tipo logaritmico. Affinché in un suono sia possibile individuare un'altezza, esso deve essere periodico. 
 
 \subsection{Grandezze fisiche e grandezze percettive}
 
@@ -66,16 +67,16 @@ Il range di suoni in grado di essere percepite dagli umani (tra i 20 e i 20.000 
 
 Il volume aumenta man mano che l'ampiezza cresce, e l'incremento di tono è sempre più piccolo al crescere della frequenza.
 
-Il campo di udibiltà è determinato dai valori limite di intensità e frequenza. Il limite inferiore per l'intensità è costituito dalla curva di soglia di udibilità, mentre quello superiore dalla soglia del dolore. 
+Il \textbf{campo di udibilità} è determinato dai valori limite di intensità e frequenza. Il limite inferiore per l'intensità è costituito dalla curva di soglia di udibilità, mentre quello superiore dalla soglia del dolore. 
 
 Le curve isofone rappresentano i suoni all'interno di una soglia di udibilità, che può essere superata fino al fastidio. Esse dipendono dall'intensità e dalla frequenza.
 
-Vengono usate scale di rappresentazione che riflettono uguali differenze percettive. La scala di Mei indica la relazione tra sensazione di altezza e frequenza, uguali differenze sulla scala corrispondono a uguali differenze percepite di tono ma non di frequenza.
+Vengono usate scale di rappresentazione che riflettono uguali differenze percettive. La \textit{scala di Mei} indica la relazione tra sensazione di altezza e frequenza: uguali differenze sulla scala corrispondono a uguali differenze percepite di tono, ma non di frequenza.
 
 Le ampiezze sono rappresentate in scala logaritmica e hanno come unità di misura il dB. Incrementi di 1 dB corrispondono a JND (Just Noticeable Differences).
 
 \subsection{Campionamento}
-Le variazioni di pressione vengono tradotte in variazioni di tensione/corrente elettrica dal microfono, che effettua una trasduzione elettroacustica. Il filtro antialiasing è applicato tramite amplificazione e filtraggio, per poi effettuare conversione A/D e registrazione su supporto.
+Le variazioni di pressione vengono tradotte in variazioni di tensione/corrente elettrica dal microfono, che effettua una \textit{trasduzione elettroacustica}. Il filtro antialiasing è applicato tramite amplificazione e filtraggio, per poi effettuare conversione A/D e registrazione su supporto.
 
 La funzione a gradini generata dal convertitore viene filtrata con un filtro passa-basso prima del campionamento, per limitare le frequenze e l'aliasing. L'intervallo di frequenze che viene mantenuto dipende dall'applicazione.
 
@@ -95,8 +96,8 @@ I dati non compressi crescono al crescere della risoluzione del quantizzatore, d
 
 La codifica può avvenire in due modi:
 \begin{itemize}
-	\item PCM (Pulse Code Modulation), modulazione del codice dell'impulso;
-	\item PAM (Pulse Amplitude Modulation), modulazione dell'ampiezza dell'impulso.
+	\item PCM (Pulse Code Modulation), modulazione del \textbf{codice} dell'impulso;
+	\item PAM (Pulse Amplitude Modulation), modulazione dell'\textbf{ampiezza} dell'impulso.
 \end{itemize}
 
 La PCM converte in forma digitale i segnali analogici, trasformando le forma d'onda attraverso campionamento, quantizzazione e codifica. I valori numerici diventano e di 4 bit, e la rappresentazione può essere lineare o non.
@@ -115,4 +116,4 @@ Nel processo di digitalizzazione, la qualità del suono è legata al tentativo d
 
 Le onde creano interferenze nello spazio, quindi è necessario creare l'effetto di più suoni generati in punti distinti e il numero di canali è un fattore importante. Le configurazioni più usate sono stereo e surround $5 + 1$, con 5 canali contenenti frequenze medie e alte, e un subwoofer per quelle basse. 
 
-In fase di scrittura su disco, i campioni provenienti da diversi canali vengono trasmessi in successione. Questa tecnica si chiama interleaving, o multiplexing in caso di trasmissione. Al momento della riproduzione, occorre utilizzare buffer per la sincronizzazione.
+In fase di scrittura su disco, i campioni provenienti da diversi canali vengono trasmessi in successione. Questa tecnica si chiama \textit{interleaving}, o \textit{multiplexing} in caso di trasmissione. Al momento della riproduzione, occorre utilizzare buffer per la sincronizzazione.
