@@ -2,19 +2,19 @@
 Il formato è la regola con la quale una descrizione dell'immagine è memorizzata in un file elettronico, che comprende sia i dati che le modalità di lettura e interpretazione.
 
 \subsection{Bitmap}
-Bitmap è il formato più indicato per le immagini a 3 canali di 8 bit, ma supporta anche profondità differenti. Il numero di bit necessari dipende dal numero di pixel, con un fattore moltiplicativo di 24.
+Bitmap è il formato più indicato per le immagini a \textbf{3 canali di 8 bit}, ma supporta anche profondità differenti. Il numero di bit necessari dipende dal numero di pixel, applicando un fattore moltiplicativo di 24.
 
 A livelli di grigio utilizza i tre colori uguali, memorizzando le immagini dal basso a sinistra riga per riga, con header e mappa di colori.
 
 La compressione non introduce perdita, utilizzando RLE: questo metodo può eventualmente fallire in caso di pattern disomogenei. 
 
 \subsection{GIF}
-GIF (Graphics Interchange Format) permette la sovrapposizione tra immagini, attivando la trasparenza uniforme 0-1. Può contenere più immagini, quindi può essere utilizzato per le animazioni.
+GIF (Graphics Interchange Format) permette la sovrapposizione tra immagini, attivando la \textbf{trasparenza uniforme} 0-1. Può contenere più immagini, quindi può essere utilizzato per le animazioni.
 
 Si usa quando l'immagine originale è a scala di colore, con un massimo di 256 colori. La compressione è senza perdita, ma la limitazione di 256 colori (8 bit) quantizza pesantemente il numero di combinazioni a disposizione.
 
 \subsection{TIFF}
-TIFF (Tagged Image File Format) gestisce immagini con contenuti ad altissime frequenze, sfruttando algoritmi che cercano ripetizioni di pattern (loghi) a discapito delle dimensioni.
+TIFF (Tagged Image File Format) gestisce immagini con contenuti ad altissime frequenze, sfruttando algoritmi che cercano \textbf{ripetizioni di pattern} (loghi) a discapito delle dimensioni.
 
 Permette di salvare caratteristiche aggiuntive memorizzando le informazioni colore in spazi diversi, definendo profili standard per allineare risposte di devices differenti.
 
@@ -23,7 +23,7 @@ Può essere salvato con o senza compressione, in caso adottando conservazione co
 TIFF contiene meta informazioni in locazioni di memoria chiamate tag, che includono per esempio risoluzione, compressione o modello di colore.
 
  \subsection{PNG}
- PNG (Portable Network Graphics) è una valida alternativa a GIF con diverse profondità colore, fino a 48 bit. Un ulteriore passaggio è l'alpha-channel per gestire la trasparenza, estendendo 0-1 a più livelli. 
+ PNG (Portable Network Graphics) è una valida alternativa a GIF con diverse profondità colore, fino a 48 bit. Un ulteriore passaggio è l'\textbf{alpha-channel} per gestire la trasparenza, estendendo 0-1 a più livelli. 
  
  PNG è utile per lo scambio di informazioni su internet, senza la limitazione colore. La compressione è lossless con dimensioni inferiori rispetto a TIFF, utilizzando un alpha channel per la trasparenza.
  
@@ -31,12 +31,12 @@ TIFF contiene meta informazioni in locazioni di memoria chiamate tag, che includ
  $$\alpha I_A + (1 - \alpha) I_B$$
  
  \subsection{JPEG}
- JPEG (Joint Photographic Experts Group) memorizza immagini fotografiche con perdita di informazioni, tramite RGB, CMYK o scale di grigio.
+ JPEG (Joint Photographic Experts Group) memorizza \textbf{immagini fotografiche} con perdita di informazioni, tramite RGB, CMYK o scale di grigio.
  
  Non supporta la trasparenza e tratta solo immagini statiche, mentre per i filmati viene usato MPEG. Come formato intermedio per una sequenza di passi di manipolazione non è indicato, mentre TIFF è ottimale.
  
  \subsubsection{JPEG-2000}
- JPEG-2000 è basato su tecnologie wavelet per una migliore compressione, senza artefatti a blocchi. Ha il supporto per multi-spectral imagery e la capacità di ricostruzione progressiva dell'immagine codificando regioni di interesse.
+ JPEG-2000 è basato su tecnologie \textbf{wavelet} per una migliore compressione, senza artefatti a blocchi. Ha il supporto per multi-spectral imagery e la capacità di ricostruzione progressiva dell'immagine codificando regioni di interesse.
  
  \begin{figure}[h]
  	\centering
@@ -44,18 +44,18 @@ TIFF contiene meta informazioni in locazioni di memoria chiamate tag, che includ
  \end{figure}
  
  \subsection{Postscript}
- Postscript è basato su una descrizione vettoriale, definendo gli elementi di pagina come vettori. Immagini bitmap possono essere inclusi nei file, insieme a informazioni addizionali memorizzate senza compressione (ASCII).
+ Postscript è basato su una descrizione \textbf{vettoriale}, definendo gli elementi di pagina come vettori. Immagini bitmap possono essere inclusi nei file, insieme a informazioni addizionali memorizzate senza compressione (ASCII).
  
  \subsection{PDF}
- PDF (Portable Document Format) consiste in una o più pagine che conservano font, formattazione e colori del sorgente. Può contenere grafica vettoriale, immagini, video e link a ipertesti.
+ PDF (Portable Document Format) consiste in una o più \textbf{pagine} che conservano font, formattazione e colori del sorgente. Può contenere grafica vettoriale, immagini, video e link a ipertesti.
  
  Supporta la compressione JPEG, RLE e LZW, con profili ICC.
  
  \subsection{SVG}
- SVG è un linguaggio per la grafica 2D che sostituisce Postscript, per visualizzare sul web immagini vettoriali, bitmap e testo.
+ SVG è un linguaggio per la grafica 2D che sostituisce Postscript, per visualizzare sul web \textbf{immagini vettoriali}, bitmap e testo.
  
  \subsection{EXIF}
- EXIF è un formato per immagini da camera digitale. Contiene numerosi tag, come TIFF, con informazioni sulla camera e sulle condizioni di acquisizione. Lo standard EXIF include anche specifiche per l'audio.
+ EXIF è un formato per immagini da \textbf{camera digitale}. Contiene numerosi tag, come TIFF, con informazioni sulla camera e sulle condizioni di acquisizione. Lo standard EXIF include anche specifiche per l'audio.
  
  I tag si suddividono in:
  \begin{itemize}
@@ -65,7 +65,7 @@ TIFF contiene meta informazioni in locazioni di memoria chiamate tag, che includ
  \end{itemize}
  
  \section{Compressione audio}
- La compressione audio è legata a strategie predittive tramite interpolazione dei valori o modelli basati su come alcuni suoni possono apparire (es. parlato), senza introdurre perdita e con rapporti di compressione dipendenti dal tipo di audio: il silenzio può essere eliminato, e i suoni artificiali vengono predetti più difficilmente.
+ La compressione audio è legata a strategie predittive tramite \textit{interpolazione dei valori} o modelli basati su come alcuni suoni possono apparire (es. parlato), senza introdurre perdita e con rapporti di compressione dipendenti dal tipo di audio: il silenzio può essere eliminato, e i suoni artificiali vengono predetti più difficilmente.
  
  I fattori da considerare sono:
  \begin{itemize}
@@ -80,37 +80,37 @@ Gli algoritmi lossy basati su predizione includono:
 	\item ADCPM, che predice il valore di un campione a partire dal valore di più campioni precedenti, e codifica l'errore quantizzando;
 	\item LCP e CELP per il parlato, che sfruttano un modello vocale e ne trasmettono i parametri.
 \end{itemize}
- 
-Un modo più efficace tiene conto del sistema percettivo, eliminando le frequenze fuori dal range di udibilità applicando un filtro passa-banda e rimuovendo gli alias. 
 
-Le curve isofone rapresentano i suoni percepiti con lo stesso volume (pressione acustica o intensità sonora), in foni. Il mascheramento in frequenza 
+Un altro aspetto da sfruttare riguarda gli altri meccanismi dei sistemi umani: il mascheramento e la non linearità degli effetti. 
+ 
+Un modo più efficace tiene conto del \textbf{sistema percettivo}, eliminando le frequenze fuori dal range di udibilità applicando un filtro passa-banda e rimuovendo gli alias. 
+
+Le curve isofone rapresentano i suoni percepiti con lo stesso volume (pressione acustica o intensità sonora), in foni. Il volume percepito dipende dall'intensità e dalla frequenza, e ha come diretta conseguenza il mascheramento in frequenza, cioè l'innalzamento della soglia di udibilità.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.6]{Lezioni/Immagini/mascheramento}
 \end{figure}
-
-Un altro aspetto da sfruttare riguarda gli altri meccanismi dei sistemi umani: il mascheramento e la non linearità degli effetti. 
  
-Il suono mascherante è il suono disturbatore, mentre il suono mascherato è il suono mascherato. Quest'ultimo è condizionato dalla diminuzione di sensibilità, e il mascheramento si misura con l'aumento di intensità necessario per tornare udibile.
+Il suono \textbf{mascherante} è il suono disturbatore, mentre il suono \textbf{mascherato} è il suono mascherato. Quest'ultimo è condizionato dalla diminuzione di sensibilità, e il mascheramento si misura con l'aumento di intensità necessario per tornare udibile.
  
 Maggiore è la frequenza del tono che maschera, maggiore è il suo effetto, cioè è più ampia la banda di frequenze che maschera.
  
 L'udito umano ha una risoluzione limitata in funzione della frequenza, comportandosi come un filtro passa-banda senza principio di sovrapposizione degli effetti.
  
-La banda critica è un intervallo di frequenze in cui le frequenze vengono mescolate, e due toni puri simultanei non possono essere percepiti come distinti. Se la distanza è superiore alla banda critica, la sensazione sonora è doppia (pari alla somma delle sensazioni simili); altrimenti, è inferiore.
+La \textbf{banda critica} è un intervallo di frequenze in cui \textit{le frequenze vengono mescolate}, e due toni puri simultanei non possono essere percepiti come distinti. Se la distanza è superiore alla banda critica, la sensazione sonora è doppia (pari alla somma delle sensazioni simili); altrimenti, è inferiore.
 
 Per ogni range di frequenze udibili, esiste una banda critica larga costante fino a 500 Hz, che poi aumenta linearmente con la frequenza. L'effetto di mascheramento è maggiore se l'intervallo tra frequenza mascherante e mascherata è contenuto in una banda critica.
 
 Ogni suono ad alta intensità provoca una saturazione dei recettori all'interno dell'orecchio, che richiedono del tempo per poter ripristinare le condizione iniziale. Più è lunga la durata del suono mascherante, maggiore è il tempo.
 
-Mascheramento in frequenza:
+Mascheramento \textbf{in frequenza}:
 \begin{enumerate}
 	\item Un tono più basso può mascherare un tono più alto e viceversa;
 	\item Maggiore è la potenza/frequenza del tono che maschera, più è ampia la banda di frequenze che maschera.
 \end{enumerate}
 
-Mascheramento temporale:
+Mascheramento \textbf{temporale}:
 \begin{enumerate}
 	\item Maggiore è la potenza/durata del tono che maschera, maggiore è il tempo necessario per ripristinare l'udibilità;
 	\item Minore è la potenza del tono mascherato, maggiore è il tempo necessario per udirlo.
