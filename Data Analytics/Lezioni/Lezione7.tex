@@ -5,7 +5,11 @@ I dati sono in formato collegato con attributi discreti, e le applicazioni si ba
 
 Scoprire come funzionano le comunità e identificarle permette di capirne il funzionamento e le relazioni tra individui con le stesse caratteristiche. Anche i diversi gruppi interagiscono tra di loro, e possono essere correlati, fornendo informazioni sullo schema globale.
 
-Le reti sociali online sono rappresentate da nodi che comunicano strutturalmente e condivisioni o produzioni di contenuti simili. Questa proprietà distingue la tipologia di rete rispetto alle altre, e viene utilizzata per il sentiment analysis. Predirre quali vertici potrebbero essere connessi (link prediction) è uno dei potenziali usi.
+Le reti sociali online sono rappresentate da nodi che comunicano 
+strutturalmente e condivisioni o produzioni di contenuti simili. Questa 
+proprietà distingue la tipologia di rete rispetto alle altre, e viene utilizzata 
+per il sentiment analysis. Predire quali vertici potrebbero essere connessi 
+(link prediction) è uno dei potenziali usi.
 
 A seconda del risultato cercato, ci sono due distinzioni di comunità: disgiunte o overlapping, con nodi che appartengono a uno o più sottoinsiemi.
 
@@ -24,7 +28,8 @@ Un altro criterio è la raggiungibilità in $k$ step (archi), per individuare un
 
 Una quasi-clique è una sottostruttura con i nodi che soddisfano alcune caratteristiche come la densità minima $\gamma$:
 $$\frac{2\abs{E_s}}{\abs{V_s}(\abs{V_s} - 1)} \geq \gamma$$
-Il problema per trovae $\gamma$ è di ottimizzazione, cioè stabilire quanti nodi possono appartenere a una quasi-clique tramite algoritmi greedy.
+Il problema per trovare $\gamma$ è di ottimizzazione, cioè stabilire quanti 
+nodi possono appartenere a una quasi-clique tramite algoritmi greedy.
 
 La similarità è definita dalla tipologia di interazioni: due nodi sono strutturalmente equivalenti se sono connessi agli stessi vicini. Il concetto può essere esteso dal primo ordine, essendo molto severo e poco probabile. 
 

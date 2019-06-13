@@ -1,7 +1,11 @@
 \subsection{Wrappers}
 I wrappers sono metodologie per riconoscere le possibili interazioni tra le variabili, a discapito del tempo computazionale (al contrario dei filtri).
 
-La subset evaluation viene effettuata tramite wrappers, i quali includono politiche per valutare le features rispetto al potere predittivo del modello di appendimento. Le performances devono soddisfare un determinato livello di qualità per poter accettare il sottoinsieme, e l'obiettivo è la massimizzazione della qualità.
+La subset evaluation viene effettuata tramite wrappers, i quali includono 
+politiche per valutare le features rispetto al potere predittivo del modello di 
+apprendimento. Le performances devono soddisfare un determinato livello 
+di qualità per poter accettare il sottoinsieme, e l'obiettivo è la 
+massimizzazione della qualità.
 
 I risultati possono variare a seconda della ricerca nello spazio delle possibili variabili, e l'output è strettamente dipendente dall'approccio utilizzato (paradigma di predizione). Questi parametri devono essere definiti e valutati attentamente, misurando man mano le performance e la robustezza del modello.
 
@@ -35,7 +39,8 @@ Ci sono diversi metodi di valutazione degli errori:
 	\item Misurazione delle performance, contando quante istanze sono classificate correttamente e in base a ciò calcolare error rate e accuracy;
 	\item Falsi negativi/positivi, da minimizzare;
 	\item Problemi multi-classe, osservando come il modello si comporta in base a ogni classe;
-	\item Precisione, tenendo conto delle singole istanze con recall e self-measure;
+	\item Precisione, tenendo conto delle singole istanze con recall e 
+	F-measure;
 	\item Curve ROC, grafici di veri positivi e falsi negativi al variare della soglia;
 	\item Complessità computazionale.
 \end{itemize}

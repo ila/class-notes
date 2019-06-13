@@ -1,9 +1,13 @@
 \section{Network centrality}
-La conoscenza della struttura di una rete permette di calcolare e catturare particolari carattteristiche, come la centralità in termini di singoli nodi e di intera rete.
+La conoscenza della struttura di una rete permette di calcolare e catturare 
+particolari caratteristiche, come la centralità in termini di singoli nodi e di 
+intera rete.
 
 Il concetto di centralità è strettamente dipendente dal contesto e dallo scopo, e non è univoco: ogni definizione dà informazioni diverse rispetto alle altre, e si distingue in base alle tipologie di nodo. Un nodo può essere più o meno centrale rispetto a un altro in base al criterio di misurazione (indegree, betweenness, \dots). 
 
-Ognuna di questi parametri può essere più o meno informativo a seconda delle applicazioni nella vita reale, ma in generale si parla di misure locali. Il confronto tra reti di grandezza differente è possibile normalizzando i valori. 
+Ognuno di questi parametri può essere più o meno informativo a seconda 
+delle applicazioni nella vita reale, ma in generale si parla di misure locali. Il 
+confronto tra reti di grandezza differente è possibile normalizzando i valori. 
 
 La centralizzazione di una rete mette a confronto il nodo con centralità più alta con tutti gli altri. Per determinarla (per esempio con il grado), viene usata la formula di Freeman:
 $$C_D = \frac{\sum_{i=1}^{N} C_D(n^*) - C_D(i)}{(N - 1) (N - 2)}$$
@@ -45,7 +49,11 @@ Si effettua una sommatoria per tutti i nodi, rapportando il numero di archi entr
 
 Il grafo del Web rappresentato come catena di Markov ha come archi la probabilità di transizione da una pagina all'altra, e PageRank simula tutti i possibili percorsi di navigazione. Ogni nodo è uno stato, e i link sono le probabilità di transizione. 
 
-La distribuzione di probabiità iniziale è uniforme, ma a seconda del contesto cambieranno la matrice di transizione e gli stati. Per simulare il processo, vengono stimati il numero di outlink da ogni nodo per poi calcolare la probabilità di random surfing ($\nicefrac{1}{O_i}$), per poi inserire i valori nella matrice.
+La distribuzione di probabilità iniziale è uniforme, ma a seconda del 
+contesto cambieranno la matrice di transizione e gli stati. Per simulare il 
+processo, vengono stimati il numero di outlink da ogni nodo per poi 
+calcolare la probabilità di random surfing ($\nicefrac{1}{O_i}$), per poi 
+inserire i valori nella matrice.
 
 Si ha $\sum_{i=0}^{n} p_0(i) = 1$, e $\sum_{j=1}^{n} A_{ij}  = 1$ assumendo che ogni pagina all'inizio abbia la stessa importanza, e di non avere informazioni aggiuntive. Se questa proprietà è soddisfatta, la matrice è stocastica. 
 
