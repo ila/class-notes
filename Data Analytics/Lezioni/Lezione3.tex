@@ -12,7 +12,7 @@ Questi metodi sono applicabili con due classi, ma anche con un maggior numero. C
 SMOTE (Synthetic Minority Oversampling Technique) è un algoritmo iterativo di oversampling:
 \begin{enumerate}
 	\item Per ogni campione di minoranza, trova i suoi $k$ elementi di minoranza più vicini;
-	\item Di queste ne sceglie $n$ in modo casuale;
+	\item Di questi ne sceglie $n$ in modo casuale;
 	\item Calcola il punto medio tra quello iniziale e ciascuno degli $n$ (Generated Synthetic Instance);
 	\item Il GSI viene aggiunto al dataset.
 \end{enumerate}
@@ -23,7 +23,9 @@ Tomek Link è un algoritmo che si basa sulla frontiera della classe. Un Tomek Li
 L'undersampling viene effettuato sui campioni della classe di maggioranza che non sono parte di Tomek Link. 
 
 \section{Subset selection and evaluation}
-Questo processo consiste nella selezione di un sottoinsieme di attributi rilevanti per la costruzione del modello. Ciò comporta minore complessità e tempistiche èiù brevi.
+Questo processo consiste nella selezione di un sottoinsieme di attributi 
+rilevanti per la costruzione del modello. Ciò comporta minore complessità e 
+tempistiche più brevi.
 
 \subsection{Feature reduction}
 La riduzione e la modifica dello spazio di input è indispensabile, soprattutto per i modelli predittivi, per permettere una mappatura dall'input all'output (durante l'apprendimento): il target eredita delle caratteristiche, che non devono essere irrilevanti e ridondanti.
@@ -33,7 +35,11 @@ Le risorse computazionali sono ridotte (crescono esponenzialmente al numero dell
 Riducendo le features, si riduce la dimensionalità dello spazio: gli attributi scelti devono essere sufficienti per distinguere i campioni tramite alberi di decisione (valori booleani). 
 
 \subsection{Feature extraction}
-La feature selection trasforma attributi esistenti in uno spazio dimensionale minore. Dato un insieme di attributi $x = \{x_i | i = 1 \dots N\}$, si trova una mappatura $y = f(x) : R^N \rightarrow R^N$ con $M < N$ tale che il vettore trasformato preservi la maggior parte delle informazioni o della struttura.
+La feature extraction trasforma attributi esistenti in uno spazio 
+dimensionale minore. Dato un insieme di attributi $x = \{x_i | i = 1 \dots 
+N\}$, si trova una mappatura $y = f(x) : R^N \rightarrow R^N$ con $M < N$ 
+tale che il vettore trasformato preservi la maggior parte delle informazioni o 
+della struttura.
 
 Un mapping ottimale $y = f(x)$ risulterà in una minima probabilità di errori non incrementata, ma non esiste un modo sistematico per generare trasformazioni non lineari. 
 
